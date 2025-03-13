@@ -1,0 +1,52 @@
+[
+	{
+		"id": 1,
+		"name": "top deal",
+		"img": "/img/trending/like.png"
+	},
+	{
+		"id": 2,
+		"name": "tiki Trending",
+		"img": "/img/trending/trending1.png"
+	},
+	{
+		"id": 3,
+		"name": "Coupon siêu hot",
+		"img": "img/trending/trending2.png"
+	},
+	{
+		"id": 4,
+		"name": "Xả kho giảm nửa giá",
+		"img": "img/trending/trending3.png"
+	},
+	{
+		"id": 5,
+		"name": "Hàng ngoại giá hot",
+		"img": "img/trending/trending4.png"
+	},
+	{
+		"id": 6,
+		"name": "Sức khỏe làm đẹp",
+		"img": "img/trending/trending5.png"
+	},
+	{
+		"id": 7,
+		"name": "Quà tặng valentine",
+		"img": "img/trending/trending6.png"
+	},
+	{
+		"id": 8,
+		"name": "Du lịch đầu năm",
+		"img": "img/trending/trending7.png"
+	},
+	{
+		"id": 9,
+		"name": "top sách bán chạy",
+		"img": "img/trending/trending8.png"
+	},
+	{
+		"id": 10,
+		"name": "Vitamin cho bé",
+		"img": "img/trending/trending9.png"
+	}
+]

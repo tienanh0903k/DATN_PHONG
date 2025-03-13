@@ -1,0 +1,20 @@
+[
+	{
+		"id": 1,
+		"name": "Ưu đãi thẻ, ví",
+		"image": "./img/category/tienich1.png",
+		"url": "./img/category/tienich1.png"
+	},
+	{
+		"id": 2,
+		"name": "Đóng tiền, nạp thẻ",
+		"image": "./img/category/tienich2.png",
+		"url": "./img/category/tienich1.png"
+	},
+	{
+		"id": 3,
+		"name": "Mua trước trả sau",
+		"image": "./img/category/tienich3.png",
+		"url": "./img/category/tienich1.png"
+	}
+]

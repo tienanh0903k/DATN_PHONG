@@ -1,0 +1,177 @@
+
+
+datasource db {
+  provider = "mysql"
+  url      = "mysql://root:28062003@localhost:3306/graduationproject"
+}
+generator client {
+  provider = "prisma-client-js"
+}
+model Account {
+  accountId        Int      @id @default(autoincrement())
+  accountTypeId    Int
+  userName         String
+  password         String
+  status           String
+  Customer         Customer?
+  AccountType      AccountType @relation(fields: [accountTypeId], references: [accountTypeId])
+}
+
+model AccountType {
+  accountTypeId    Int      @id @default(autoincrement())
+  accountTypeName  String
+  Account          Account[]
+}
+
+
+
+model Categories {
+  categoryId       Int      @id @default(autoincrement())
+  categoryName     String
+  parentCategoryId Int?
+  status           String
+  Products         Products[]
+  VariantType      VariantType[]
+}
+
+model Customer {
+  customerId       Int      @id @default(autoincrement())
+  accountId        Int      @unique
+  customerName     String
+  numberPhone      String
+  avatar           String?
+  email            String
+  birthday         DateTime
+  address          String
+  gender           String
+  status           String
+  Account          Account? @relation(fields: [accountId], references: [accountId])
+  Bill             Bill[]
+  Follower         Follower[]
+  DeliveryAddress  DeliveryAddress[]
+  Notification     Notification[]
+  Rating           Rating[]
+  Shop            Shop?
+}
+
+model DeliveryAddress {
+  addressId        Int      @id @default(autoincrement())
+  customerId       Int
+  addressDetail    String
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+}
+
+model Follower {
+  followerId       Int      @id @default(autoincrement())
+  customerId       Int
+  shopId           Int
+  createAt         DateTime @default(now())
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+  Shop             Shop @relation(fields: [shopId], references: [shopId])
+}
+
+model Notification {
+  notifyId         Int      @id @default(autoincrement())
+  notifyTypeId     Int
+  customerId       Int
+  notifyName       String
+  sentAt           DateTime @default(now())
+  status           String
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+  NotificationType NotificationType @relation(fields: [notifyTypeId], references: [notifyTypeId])
+}
+
+model NotificationType {
+  notifyTypeId     Int      @id @default(autoincrement())
+  notifyTypeName   String
+  Notification     Notification[]
+}
+
+model Products {
+  productId        Int      @id @default(autoincrement())
+  productName      String
+  categoryId       Int
+  productDes       String
+  shopId           Int
+  img              String
+  price            Float
+  Categories       Categories @relation(fields: [categoryId], references: [categoryId])
+  Shop             Shop @relation(fields: [shopId], references: [shopId])
+  BillDetail       BillDetail[]
+  ProductVariant   ProductVariant[]
+}
+
+model ProductVariant {
+  id               Int      @id @default(autoincrement())
+  productId        Int
+  typeValueId      Int
+  quantity         Int
+  img              String
+  price            Float
+  Products         Products @relation(fields: [productId], references: [productId])
+  VariantValue     VariantValue @relation(fields: [typeValueId], references: [typeValueId])
+}
+model Shop {
+  shopId           Int      @id @default(autoincrement())
+  customerId       Int      @unique
+  shopName         String
+  shopAddress      String
+  shopAvatar       String?
+  shopBanner       String?
+  shopNumberPhone  String
+  emailShop        String
+  totalSales       Int
+  totalProduct     Int
+  status           String
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+  Products         Products[]
+  Follower         Follower[]
+}
+
+model VariantType {
+  typeId           Int      @id @default(autoincrement())
+  typeName         String
+  categoryId       Int
+  Categories       Categories @relation(fields: [categoryId], references: [categoryId])
+  VariantValue     VariantValue[]
+}
+
+model VariantValue {
+  typeValueId      Int      @id @default(autoincrement())
+  typeId           Int
+  typeValue        String
+  VariantType      VariantType @relation(fields: [typeId], references: [typeId])
+  ProductVariant   ProductVariant[]
+}
+model Bill {
+  billId           Int      @id @default(autoincrement())
+  customerId       Int
+  numberPhone      String
+  status           String
+  BillDetail       BillDetail[]
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+}
+
+model BillDetail {
+  billDetailId     Int      @id @default(autoincrement())
+  billId           Int
+  productId        Int
+  quantity         Int
+  totalPrice       Float
+  Bill             Bill @relation(fields: [billId], references: [billId])
+  Products         Products @relation(fields: [productId], references: [productId])
+  Rating           Rating?
+}
+model Rating {
+  ratingId         Int      @id @default(autoincrement())
+  billDetailId     Int      @unique
+  customerId       Int
+  ratingValue      Int
+  comment          String
+  status           String
+  BillDetail       BillDetail @relation(fields: [billDetailId], references: [billDetailId])
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+}
+
+
+

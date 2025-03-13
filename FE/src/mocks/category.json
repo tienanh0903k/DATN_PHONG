@@ -1,0 +1,132 @@
+[
+	{
+		"id": 1,
+		"name": "Nhà Sách Tiki",
+		"image": "img/category/book.png"
+	},
+	{
+		"id": 2,
+		"name": "Nhà Cửa - Đời Sống",
+		"image": "img/category/dogiadung.png"
+	},
+	{
+		"id": 3,
+		"name": "Điện Thoại - Máy Tính Bảng",
+		"image": "img/category/phone.png"
+	},
+	{
+		"id": 4,
+		"name": "Đồ Chơi - Mẹ & Bé",
+		"image": "img/category/toy.png"
+	},
+	{
+		"id": 5,
+		"name": "Thiết Bị Số - Phụ Kiện Số",
+		"image": "img/category/music.png"
+	},
+	{
+		"id": 6,
+		"name": "Điện Gia Dụng",
+		"image": "img/category/electric.png"
+	},
+	{
+		"id": 7,
+		"name": "Ô Tô - Xe Máy - Xe Đạp",
+		"image": "img/category/car.png"
+	},
+	{
+		"id": 8,
+		"name": "Thời trang nữ",
+		"image": "img/category/fashionWomen.png"
+	},
+	{
+		"id": 9,
+		"name": "Bách Hóa Online",
+		"image": "img/category/taphoa.png"
+	},
+	{
+		"id": 10,
+		"name": "Thể Thao - Dã Ngoại",
+		"image": "img/category/sport.png"
+	},
+	{
+		"id": 11,
+		"name": "Thời trang nam",
+		"image": "img/category/fashionMale.png"
+	},
+	{
+		"id": 9,
+		"name": "Laptop - Máy Vi Tính - Linh kiện",
+		"image": "img/category/laptop.png"
+	},
+	{
+		"id": 10,
+		"name": "Làm Đẹp - Sức Khỏe",
+		"image": "img/category/beautiful.png"
+	},
+	{
+		"id": 1,
+		"name": "Nhà Sách Tiki",
+		"image": "img/category/book.png"
+	},
+	{
+		"id": 2,
+		"name": "Nhà Cửa - Đời Sống",
+		"image": "img/category/dogiadung.png"
+	},
+	{
+		"id": 3,
+		"name": "Điện Thoại - Máy Tính Bảng",
+		"image": "img/category/phone.png"
+	},
+	{
+		"id": 4,
+		"name": "Đồ Chơi - Mẹ & Bé",
+		"image": "img/category/toy.png"
+	},
+	{
+		"id": 5,
+		"name": "Thiết Bị Số - Phụ Kiện Số",
+		"image": "img/category/music.png"
+	},
+	{
+		"id": 6,
+		"name": "Điện Gia Dụng",
+		"image": "img/category/electric.png"
+	},
+	{
+		"id": 7,
+		"name": "Ô Tô - Xe Máy - Xe Đạp",
+		"image": "img/category/car.png"
+	},
+	{
+		"id": 8,
+		"name": "Thời trang nữ",
+		"image": "img/category/fashionWomen.png"
+	},
+	{
+		"id": 9,
+		"name": "Bách Hóa Online",
+		"image": "img/category/taphoa.png"
+	},
+	{
+		"id": 10,
+		"name": "Thể Thao - Dã Ngoại",
+		"image": "img/category/sport.png"
+	},
+	{
+		"id": 11,
+		"name": "Thời trang nam",
+		"image": "img/category/fashionMale.png"
+	},
+	{
+		"id": 9,
+		"name": "Laptop - Máy Vi Tính - Linh kiện",
+		"image": "img/category/laptop.png"
+	},
+	{
+		"id": 10,
+		"name": "Làm Đẹp - Sức Khỏe",
+		"image": "img/category/beautiful.png"
+	}
+]
