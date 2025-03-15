@@ -13,6 +13,7 @@ model Account {
   userName         String
   password         String
   status           String
+  Salt             String
   Customer         Customer?
   AccountType      AccountType @relation(fields: [accountTypeId], references: [accountTypeId])
 }
@@ -22,18 +23,6 @@ model AccountType {
   accountTypeName  String
   Account          Account[]
 }
-
-
-
-model Categories {
-  categoryId       Int      @id @default(autoincrement())
-  categoryName     String
-  parentCategoryId Int?
-  status           String
-  Products         Products[]
-  VariantType      VariantType[]
-}
-
 model Customer {
   customerId       Int      @id @default(autoincrement())
   accountId        Int      @unique
@@ -53,6 +42,18 @@ model Customer {
   Rating           Rating[]
   Shop            Shop?
 }
+
+
+model Categories {
+  categoryId       Int      @id @default(autoincrement())
+  categoryName     String
+  parentCategoryId Int?
+  status           String
+  Products         Products[]
+  VariantType      VariantType[]
+}
+
+
 
 model DeliveryAddress {
   addressId        Int      @id @default(autoincrement())

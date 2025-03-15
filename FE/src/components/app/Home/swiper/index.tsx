@@ -32,7 +32,7 @@ const SwiperCpn = () => {
       <div className="flex relative">
         <button
           ref={prevRef}
-          className="z-10 absolute p-2 bg-[#fff] rounded-[50%] top-[50%] left-[10px]"
+          className="z-10 absolute p-2 bg-[#fff] rounded-[50%] top-[50%] left-[10px] cursor-pointer"
         >
           <IoIosArrowBack />
         </button>
@@ -100,7 +100,7 @@ const SwiperCpn = () => {
         </Swiper>
         <button
           ref={nextRef}
-          className="z-10 absolute p-2 bg-[#fff] rounded-[50%] top-[50%] right-[10px]"
+          className="z-10 absolute p-2 bg-[#fff] rounded-[50%] top-[50%] right-[10px] cursor-pointer"
         >
           <IoIosArrowForward />
         </button>
