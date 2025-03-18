@@ -1,5 +1,3 @@
-
-
 datasource db {
   provider = "mysql"
   url      = "mysql://root:28062003@localhost:3306/graduationproject"

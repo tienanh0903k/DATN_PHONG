@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TiHome } from 'react-icons/ti';
 import { CiFaceSmile } from 'react-icons/ci';
 import { BiCartAlt } from 'react-icons/bi';
@@ -13,7 +14,10 @@ import RegisterModal from '../../app/Resgiter/RegisterModal';
 import HeaderTop from './HeaderTop';
 import HeaderBottom from './HeaderBottom';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { URL_AUTH } from '@/constant/constant';
+import RegisterServices from '@/services/register/registerServices';
+import { setUserInfo, logout } from '@/reducers/slice/authSlice';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
@@ -21,6 +25,12 @@ const HeaderCpn = ({}: Props) => {
 	const [quantity] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
+	const dispatch = useDispatch();
+	const registerServices = new RegisterServices(URL_AUTH || '', () => {
+		console.log('Unauthenticated');
+	});
+
+	console.log('userInfo', isLogin);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const showModalLogin = () => {
@@ -41,6 +51,28 @@ const HeaderCpn = ({}: Props) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
+	useEffect(() => {
+		const hash = window.location.hash.substring(1);
+		if (hash) {
+			const params = new URLSearchParams(hash);
+			const access_token = params.get('access_token');
+			if (access_token) {
+				const handleCallback = async () => {
+					try {
+						const response = await registerServices.callbackGoogle(access_token);
+						dispatch(setUserInfo(response.data.identities[0].identity_data));
+						window.location.hash = '';
+					} catch (error) {
+						console.log(error);
+					}
+				};
+				handleCallback();
+			}
+		}
+	}, [isLogin]);
+	const handleLogout = () => {
+		dispatch(logout());
+	};
 	const items: MenuProps['items'] = [
 		{
 			key: '1',
@@ -56,7 +88,11 @@ const HeaderCpn = ({}: Props) => {
 		},
 		{
 			key: '4',
-			label: <div className="pr-8 py-[5px] leading-[150%] font-[400] ">Đăng xuất</div>,
+			label: (
+				<div onClick={handleLogout} className="pr-8 py-[5px] leading-[150%] font-[400] ">
+					Đăng xuất
+				</div>
+			),
 		},
 	];
 

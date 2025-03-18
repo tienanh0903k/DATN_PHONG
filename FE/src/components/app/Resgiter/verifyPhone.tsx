@@ -1,15 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 import { useForm } from 'react-hook-form';
+import RegisterServices from '@/services/register/registerServices';
+import { URL_AUTH } from '@/constant/constant';
+
+import axios from 'axios';
+
 type Props = {
 	handleEmail: () => void;
 };
 const VerifyPhone = ({ handleEmail }: Props) => {
 	const { register, handleSubmit } = useForm();
 
-	const onSubmit = (data: any) => {
+	const registerServices = new RegisterServices(URL_AUTH || '', () => {
+		console.log('Unauthenticated');
+	});
+
+	const onSubmit = async (data: any) => {
 		console.log(data);
+		try {
+			const response = await registerServices.sendOtp(data.phone);
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
 	};
+	const handleGoogleLogin = async () => {
+		try {
+			const response = await axios.get(`${URL_AUTH}/login/google`);
+
+			if (response?.data) {
+				window.location.href = response.data;
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div>
@@ -45,11 +72,13 @@ const VerifyPhone = ({ handleEmail }: Props) => {
 						alt="facebook"
 						className="w-[58px] h-[58px]"
 					/>
-					<img
-						src="https://salt.tikicdn.com/ts/upload/1c/ac/e8/141c68302262747f5988df2aae7eb161.png"
-						alt="google"
-						className="w-[58px] h-[58px]"
-					/>
+					<div onClick={handleGoogleLogin} className="w-[58px] h-[58px]">
+						<img
+							src="https://salt.tikicdn.com/ts/upload/1c/ac/e8/141c68302262747f5988df2aae7eb161.png"
+							alt="google"
+							className="w-[58px] h-[58px]"
+						/>
+					</div>
 				</div>
 			</div>
 			<p className="text-[12px] text-[#787878] leading-[16px] align-start">
