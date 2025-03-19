@@ -30,7 +30,7 @@ const HeaderCpn = ({}: Props) => {
 		console.log('Unauthenticated');
 	});
 
-	console.log('userInfo', isLogin);
+	// console.log('userInfo', isLogin);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const showModalLogin = () => {

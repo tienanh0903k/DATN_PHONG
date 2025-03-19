@@ -10,25 +10,7 @@ const signUp = async (req: Request, res: Response) => {
     res.status(400).json(error);
   }
 };
-const sendOtpController = async (req: Request, res: Response) => {
-  try {
-    const { phone } = req.body;
-    const result = await AuthService.sendOtp(phone);
-    res.json(result);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
-  }
-};
 
-const verifyOtpController = async (req: Request, res: Response) => {
-  try {
-    const { phone, token } = req.body;
-    const result = await AuthService.verifyOtp(phone, token);
-    res.json(result);
-  } catch (error: any) {
-    res.status(400).json({ error: error.message });
-  }
-};
 const loginGoogleController = async (req: Request, res: Response) => {
   try {
     const result = await AuthService.loginGoogle();
@@ -65,10 +47,4 @@ const callbackGoogleController = async (req: Request, res: Response) => {
 //         res.status(400).json(error);
 //     }
 // }
-export {
-  signUp,
-  sendOtpController,
-  verifyOtpController,
-  loginGoogleController,
-  callbackGoogleController,
-};
+export { signUp, loginGoogleController, callbackGoogleController };

@@ -16,6 +16,7 @@ class RegisterServices extends ServicesBase {
 	}
 
 	verifyOtp(data: IVerifyPhone) {
+		console.log('servicedata : ', data);
 		return this.service.post('/verify-otp', data);
 	}
 	loginGoogle() {

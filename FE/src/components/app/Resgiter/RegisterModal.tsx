@@ -2,8 +2,6 @@
 'use client';
 import { Modal } from 'antd';
 import VerifyPhone from './verifyPhone';
-import LoginEmail from './LoginEmail';
-import { useState } from 'react';
 
 type Props = {
 	open: boolean;
@@ -11,19 +9,11 @@ type Props = {
 };
 
 const LoginModal = ({ open, onClose }: Props) => {
-	const [component, setComponent] = useState<'login' | 'register'>('login');
-	const handleComponent = () => {
-		setComponent(component === 'login' ? 'register' : 'login');
-	};
 	return (
 		<Modal open={open} width={800} height={525} onCancel={onClose} footer={null}>
 			<div className="flex h-full">
 				<div className="w-[500px] px-10 pb-6 pt-[45px]">
-					{component === 'login' ? (
-						<VerifyPhone handleEmail={handleComponent} />
-					) : (
-						<LoginEmail handleBack={handleComponent} />
-					)}
+					<VerifyPhone />
 				</div>
 				<div className="w-[300px] bg-[#deebff]">
 					<div className="flex flex-col items-center justify-center	 min-h-[100%]">
