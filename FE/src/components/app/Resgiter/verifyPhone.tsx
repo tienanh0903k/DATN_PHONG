@@ -7,9 +7,11 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import AuthenEmail from './authenEmail';
 
-type Props = object;
+type Props = {
+	handleRegister: () => void;
+};
 
-const VerifyPhone: React.FC<Props> = () => {
+const VerifyPhone: React.FC<Props> = ({ handleRegister }) => {
 	const { register, handleSubmit } = useForm();
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -63,7 +65,12 @@ const VerifyPhone: React.FC<Props> = () => {
 				<p className="block text-[13px] text-[#0d5cb6] mt-5 cursor-pointer leading-[150%]">Quên mật khẩu</p>
 				<span className="text-[#787878] text-[13px] mt-[10px]">
 					Chưa có tài khoản?{' '}
-					<span className="inline-block text-[13px] text-[#0d5cb6] mt-5 cursor-pointer">Tạo tài khoản</span>
+					<span
+						onClick={handleRegister}
+						className="inline-block text-[13px] text-[#0d5cb6] mt-5 cursor-pointer"
+					>
+						Tạo tài khoản
+					</span>
 				</span>
 			</form>
 			<div className="mt-[10px] mb-[10px] text-center">

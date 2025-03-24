@@ -12,8 +12,11 @@ const signUp = async (req: Request, res: Response) => {
 };
 
 const loginGoogleController = async (req: Request, res: Response) => {
+  const redirectTo = req.query.redirect_to as string;
+
   try {
-    const result = await AuthService.loginGoogle();
+    const result = await AuthService.loginGoogle(redirectTo);
+
     res.json(result);
   } catch (error) {
     console.log("error", error);
@@ -38,13 +41,31 @@ const callbackGoogleController = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-// const SignIn = async (req: Request, res: Response) => {
-//     const data = req.body;
-//     try {
-//         const result = await AuthService.signIn(data);
-//         res.status(200).json(result);
-//     } catch (error) {
-//         res.status(400).json(error);
-//     }
-// }
-export { signUp, loginGoogleController, callbackGoogleController };
+const sendOtpEmail = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  console.log(email);
+  const result = await AuthService.sendOtp(email);
+  res.status(200).json(result);
+};
+const verifyOtpEmail = async (req: Request, res: Response) => {
+  const { email, otp } = req.body;
+  const result = await AuthService.verifyOtp(email, otp);
+  res.status(200).json(result);
+};
+const SignIn = async (req: Request, res: Response) => {
+  const { email } = req.body;
+  try {
+    const result = await AuthService.signIn(email);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+export {
+  signUp,
+  loginGoogleController,
+  callbackGoogleController,
+  sendOtpEmail,
+  verifyOtpEmail,
+  SignIn,
+};

@@ -3,7 +3,7 @@ export interface IAuthen {
   password: string;
   status: string;
   customerName: string;
-  numberPhone: string;
+  numberPhone: string | null;
   avatar: string | null;
   email: string;
   birthday: Date;

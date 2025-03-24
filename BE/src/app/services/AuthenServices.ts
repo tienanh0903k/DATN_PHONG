@@ -36,126 +36,52 @@ const SignUp = async (dataProps: IAuthen) => {
     });
   }
 };
-const sendOtp = async (phone: string) => {
-  console.log(phone);
-
-  if (!phone) throw new Error("Số điện thoại là bắt buộc");
-
+const sendOtp = async (Email: string) => {
   try {
     let customer = await Prismaclient.customer.findFirst({
-      where: { numberPhone: phone },
+      where: { email: Email },
     });
 
     if (!customer) {
-      const Salt = generateRandomString(16);
-      const hashPassword = await bcrypt.hash(
-        generateRandomString(8) + Salt,
-        10
-      );
-
-      const newAccount = await Prismaclient.account.create({
-        data: {
-          userName: phone,
-          password: hashPassword,
-          status: "pending",
-          Salt: Salt,
-          accountTypeId: 3,
-        },
+      await supabase.auth.signInWithOtp({
+        email: Email,
       });
-
-      customer = await Prismaclient.customer.create({
-        data: {
-          accountId: newAccount.accountId,
-          customerName: "customer",
-          avatar:
-            "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1",
-          status: "pending",
-          numberPhone: phone,
-          email: "",
-          birthday: new Date(),
-          address: "",
-          gender: "",
-        },
-      });
+    } else {
+      return {
+        success: false,
+        status: "error",
+        message: "Email đã tồn tại",
+      };
     }
-
-    // Gửi OTP qua Twilio
-    const verification = await twilioClient.verify.v2
-      .services(process.env.TWILIO_VERIFY_SERVICE_SID || "")
-      .verifications.create({ to: phone, channel: "sms" });
-
-    return {
-      success: true,
-      status: verification.status,
-      message: "OTP đã được gửi thành công",
-    };
   } catch (error: any) {
     console.error("Lỗi gửi OTP:", error);
     throw new Error("Lỗi gửi OTP: " + (error.message || "Không xác định"));
   }
 };
 
-const verifyOtp = async (phone: string, token: string) => {
-  if (!phone || !token) {
-    throw new Error("Số điện thoại và mã OTP là bắt buộc");
-  }
-
+const verifyOtp = async (Email: string, otp: string) => {
   try {
-    // Xác thực OTP qua Twilio
-    const verification_check = await twilioClient.verify.v2
-      .services(process.env.TWILIO_VERIFY_SERVICE_SID || "")
-      .verificationChecks.create({ to: phone, code: token });
-
-    if (verification_check.status !== "approved") {
-      throw new Error("Mã OTP không hợp lệ hoặc đã hết hạn");
-    }
-
-    const customer = await Prismaclient.customer.findFirst({
-      where: { numberPhone: phone },
-      include: { Account: true },
+    const response = await supabase.auth.verifyOtp({
+      email: Email,
+      token: otp,
+      type: "email",
     });
-
-    if (customer) {
-      await Prismaclient.account.update({
-        where: { accountId: customer.accountId },
-        data: { status: "active" },
-      });
-
-      await Prismaclient.customer.update({
-        where: { customerId: customer.customerId },
-        data: { status: "active" },
-      });
-
-      const token = jwt.sign(
-        {
-          id: customer.customerId,
-          phone: customer.numberPhone,
-          accountId: customer.accountId,
-        },
-        process.env.JWT_SECRET || "12345",
-        { expiresIn: "7d" }
-      );
-
-      return {
-        success: true,
-        message: "OTP xác thực thành công!",
-        user: customer,
-        token,
-      };
-    } else {
-      throw new Error("Không tìm thấy thông tin người dùng");
-    }
+    return response;
   } catch (error: any) {
     console.error("Lỗi xác minh OTP:", error);
-    throw new Error("Lỗi xác minh OTP: " + (error.message || "Không xác định"));
+    return {
+      success: false,
+      status: "error",
+      message: "Lỗi xác minh OTP",
+    };
   }
 };
-const loginGoogle = async () => {
+const loginGoogle = async (href: string) => {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/",
+        redirectTo: `http://localhost:3000${href}`,
       },
     });
 
@@ -168,7 +94,19 @@ const loginGoogle = async () => {
   }
 };
 
-const signIn = async () => {};
+const signIn = async (email: string) => {
+  try {
+    const customer = await Prismaclient.customer.findFirst({
+      where: {
+        email: email,
+      },
+    });
+
+    return customer;
+  } catch (error) {
+    throw new Error("Lỗi đăng nhập: " + error);
+  }
+};
 
 const handleGoogleCallback = async (access_token: string) => {
   if (!access_token) {

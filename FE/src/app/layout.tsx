@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/LayoutComponents/Header/Header';
-import Sidebar from '@/components/LayoutComponents/Sidebar/Sidebar';
 import { ProviderComponent } from '@/components/base/provider';
-
+import LoadingBar from '@/components/base/loading/LoadingBar';
 const geistSans = Geist({
 	variable: '--font-geist-sans',
 	subsets: ['latin'],
@@ -25,15 +24,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				<ProviderComponent>
+					<LoadingBar />
 					<Header />
-					<div className="bg-[#f6f5fa] h-auto">
-						<div className="container-base">
-							<div className="flex max-w-[100%] justify-between pt-4">
-								<Sidebar />
-								<main className="w-[calc(100%-254px)] overflow-hidden">{children}</main>
-							</div>
-						</div>
-					</div>
+					<main className="bg-[#f6f5fa] h-auto">{children}</main>
 				</ProviderComponent>
 			</body>
 		</html>

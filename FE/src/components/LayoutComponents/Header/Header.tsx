@@ -18,6 +18,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { URL_AUTH } from '@/constant/constant';
 import RegisterServices from '@/services/register/registerServices';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
@@ -26,6 +28,7 @@ const HeaderCpn = ({}: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
 	const dispatch = useDispatch();
+	const router = useRouter();
 	const registerServices = new RegisterServices(URL_AUTH || '', () => {
 		console.log('Unauthenticated');
 	});
@@ -60,7 +63,9 @@ const HeaderCpn = ({}: Props) => {
 				const handleCallback = async () => {
 					try {
 						const response = await registerServices.callbackGoogle(access_token);
-						dispatch(setUserInfo(response.data.identities[0].identity_data));
+
+						handleLogin(response.data.identities[0].identity_data.email);
+
 						window.location.hash = '';
 					} catch (error) {
 						console.log(error);
@@ -70,13 +75,23 @@ const HeaderCpn = ({}: Props) => {
 			}
 		}
 	}, [isLogin]);
+
+	const handleLogin = async (email: string) => {
+		const response: any = await registerServices.signIn(email);
+		dispatch(setUserInfo(response));
+	};
 	const handleLogout = () => {
 		dispatch(logout());
+		router.push('/');
 	};
 	const items: MenuProps['items'] = [
 		{
 			key: '1',
-			label: <div className="pr-8 py-[5px] leading-[150%] font-[400] ">Thông tin tài khoản</div>,
+			label: (
+				<div className="pr-8 py-[5px] leading-[150%] font-[400] ">
+					<Link href={'/customer/account'}>Thông tin tài khoản</Link>
+				</div>
+			),
 		},
 		{
 			key: '2',

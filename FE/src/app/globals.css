@@ -141,6 +141,13 @@ input[type='number']::-webkit-outer-spin-button {
 	margin-right: auto;
 	margin-left: auto;
 }
+.container-customer {
+	width: 1270px;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
 :root {
 	--primary-color: #0a68ff;
 	--header-height: 88px;
@@ -157,4 +164,14 @@ button {
 .swiper-wrapper {
 	display: flex;
 	align-items: center;
+}
+#nprogress .bar {
+	background: #007bff !important;
+	height: 3px !important;
+}
+
+#nprogress .peg {
+	box-shadow:
+		0 0 10px #007bff,
+		0 0 5px #007bff !important;
 }

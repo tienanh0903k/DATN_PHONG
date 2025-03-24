@@ -1,7 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
+import { useState } from 'react';
 import { Modal } from 'antd';
 import VerifyPhone from './verifyPhone';
+import SignIn from './signin';
 
 type Props = {
 	open: boolean;
@@ -9,11 +11,19 @@ type Props = {
 };
 
 const LoginModal = ({ open, onClose }: Props) => {
+	const [component, setComponent] = useState<string>('signin');
+	const handleComponent = () => {
+		setComponent(component === 'signin' ? 'verify' : 'signin');
+	};
 	return (
 		<Modal open={open} width={800} height={525} onCancel={onClose} footer={null}>
 			<div className="flex h-full">
 				<div className="w-[500px] px-10 pb-6 pt-[45px]">
-					<VerifyPhone />
+					{component === 'signin' ? (
+						<SignIn handleLogin={handleComponent} />
+					) : (
+						<VerifyPhone handleRegister={handleComponent} />
+					)}
 				</div>
 				<div className="w-[300px] bg-[#deebff]">
 					<div className="flex flex-col items-center justify-center	 min-h-[100%]">

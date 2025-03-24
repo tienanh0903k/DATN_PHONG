@@ -25,9 +25,10 @@ model Customer {
   customerId       Int      @id @default(autoincrement())
   accountId        Int      @unique
   customerName     String
-  numberPhone      String
+  nickName         String?
   avatar           String?
   email            String
+  numberPhone      String?
   birthday         DateTime
   address          String
   gender           String

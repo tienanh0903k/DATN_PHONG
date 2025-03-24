@@ -1,8 +1,8 @@
 import { ServicesBase } from '../servicesBase';
 
-type IVerifyPhone = {
-	phone: string;
-	token: string;
+type IVerifyEmail = {
+	email: string;
+	otp: string;
 };
 
 class RegisterServices extends ServicesBase {
@@ -10,20 +10,25 @@ class RegisterServices extends ServicesBase {
 		super(baseUrl, onUnauthenticated);
 	}
 
-	sendOtp(phone: string) {
-		const url = `/sendotp`;
-		return this.service.post(url, { phone });
+	sendOtp(email: string) {
+		const url = `/send-otp`;
+		console.log(email);
+		return this.service.post(url, { email });
 	}
 
-	verifyOtp(data: IVerifyPhone) {
-		console.log('servicedata : ', data);
+	verifyOtp(data: IVerifyEmail) {
 		return this.service.post('/verify-otp', data);
 	}
-	loginGoogle() {
-		return this.service.get('/login/google');
+	loginGoogle(redirectPath: string) {
+		const path = redirectPath === '/' ? '' : redirectPath;
+		const queryParams = path ? `?redirect_to=${path}` : '';
+		return this.service.get(`/login/google${queryParams}`);
 	}
 	callbackGoogle(code: string) {
 		return this.service.get(`/callback/google/${code}`);
+	}
+	signIn(email: string) {
+		return this.service.post('/signin', { email });
 	}
 }
 

@@ -1,15 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
-
-import axios from 'axios';
+import RegisterServices from '@/services/register/registerServices';
 
 import { URL_AUTH } from '@/constant/constant';
 const AuthenEmail = () => {
+	const registerServices = new RegisterServices(URL_AUTH || '', () => {
+		console.log('Unauthenticated');
+	});
 	const handleGoogleLogin = async () => {
 		try {
-			const response = await axios.get(`${URL_AUTH}/login/google`);
-
-			if (response?.data) {
-				window.location.href = response.data;
+			const currentPath = window.location.pathname;
+			const pathToSend = currentPath === '' ? '/' : currentPath;
+			const response: any = await registerServices.loginGoogle(pathToSend);
+			console.log(response);
+			if (response) {
+				window.location.href = response;
 			}
 		} catch (error) {
 			console.log(error);
