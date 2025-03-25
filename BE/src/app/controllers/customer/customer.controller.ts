@@ -11,7 +11,7 @@ const updateCustomerController = async (req: Request, res: Response) => {
     );
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    console.log(error);
   }
 };
 const updateNumberPhoneController = async (req: Request, res: Response) => {
@@ -40,9 +40,23 @@ const updateEmailController = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const updateAddressController = async (req: Request, res: Response) => {
+  const { customerId } = req.params;
+  const data = req.body;
+  try {
+    const response = await customerServices.updateAddress(
+      parseInt(customerId),
+      data
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 export {
   updateCustomerController,
   updateNumberPhoneController,
   updateEmailController,
+  updateAddressController,
 };

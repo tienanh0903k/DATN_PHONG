@@ -1,6 +1,7 @@
 export interface ICustomerType {
-  customerName: string;
-  nickName: string;
+  avatar: string;
+  fullName: string;
+  nickname: string;
   birthday: Date;
   gender: string;
 }

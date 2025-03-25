@@ -20,6 +20,7 @@ import RegisterServices from '@/services/register/registerServices';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { RootState } from '@/redux/store';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
@@ -29,6 +30,7 @@ const HeaderCpn = ({}: Props) => {
 	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
 	const dispatch = useDispatch();
 	const router = useRouter();
+	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const registerServices = new RegisterServices(URL_AUTH || '', () => {
 		console.log('Unauthenticated');
 	});
@@ -142,7 +144,9 @@ const HeaderCpn = ({}: Props) => {
 						<div className="ml-[48px] flex items-center ">
 							<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer">
 								<TiHome className="text-[20px] text-[--primary-color] mr-1" />
-								<span className="text-[--primary-color]">{t('Trang chủ')}</span>
+								<Link href="/" className="text-[--primary-color]">
+									{t('Trang chủ')}
+								</Link>
 							</div>
 							{isLogin ? (
 								<ConfigProvider
@@ -195,7 +199,7 @@ const HeaderCpn = ({}: Props) => {
 								<p className="">Giao đến :</p>
 							</div>
 							<div className="text-[#27272a] font-[500] text-[14px] leading-[150%] ">
-								<p className="underline">Q. 1, P. Bến Nghé, Hồ Chí Minh</p>
+								<p className="underline">{user?.address}</p>
 							</div>
 						</div>
 						<ConfigProvider

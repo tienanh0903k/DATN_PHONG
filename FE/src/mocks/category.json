@@ -2,131 +2,131 @@
 	{
 		"id": 1,
 		"name": "Nhà Sách Tiki",
-		"image": "img/category/book.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/book.png"
 	},
 	{
 		"id": 2,
 		"name": "Nhà Cửa - Đời Sống",
-		"image": "img/category/dogiadung.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dogiadung.png"
 	},
 	{
 		"id": 3,
 		"name": "Điện Thoại - Máy Tính Bảng",
-		"image": "img/category/phone.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/phone.png"
 	},
 	{
 		"id": 4,
 		"name": "Đồ Chơi - Mẹ & Bé",
-		"image": "img/category/toy.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/toy.png"
 	},
 	{
 		"id": 5,
 		"name": "Thiết Bị Số - Phụ Kiện Số",
-		"image": "img/category/music.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/music.png"
 	},
 	{
 		"id": 6,
 		"name": "Điện Gia Dụng",
-		"image": "img/category/electric.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/electric.png"
 	},
 	{
 		"id": 7,
 		"name": "Ô Tô - Xe Máy - Xe Đạp",
-		"image": "img/category/car.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/car.png"
 	},
 	{
 		"id": 8,
 		"name": "Thời trang nữ",
-		"image": "img/category/fashionWomen.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/fashionWomen.png"
 	},
 	{
 		"id": 9,
 		"name": "Bách Hóa Online",
-		"image": "img/category/taphoa.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/taphoa.png"
 	},
 	{
 		"id": 10,
 		"name": "Thể Thao - Dã Ngoại",
-		"image": "img/category/sport.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/sport.png"
 	},
 	{
 		"id": 11,
 		"name": "Thời trang nam",
-		"image": "img/category/fashionMale.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/fashionMale.png"
 	},
 	{
 		"id": 9,
 		"name": "Laptop - Máy Vi Tính - Linh kiện",
-		"image": "img/category/laptop.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/laptop.png"
 	},
 	{
 		"id": 10,
 		"name": "Làm Đẹp - Sức Khỏe",
-		"image": "img/category/beautiful.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/beautiful.png"
 	},
 	{
 		"id": 1,
 		"name": "Nhà Sách Tiki",
-		"image": "img/category/book.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/book.png"
 	},
 	{
 		"id": 2,
 		"name": "Nhà Cửa - Đời Sống",
-		"image": "img/category/dogiadung.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dogiadung.png"
 	},
 	{
 		"id": 3,
 		"name": "Điện Thoại - Máy Tính Bảng",
-		"image": "img/category/phone.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/phone.png"
 	},
 	{
 		"id": 4,
 		"name": "Đồ Chơi - Mẹ & Bé",
-		"image": "img/category/toy.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/toy.png"
 	},
 	{
 		"id": 5,
 		"name": "Thiết Bị Số - Phụ Kiện Số",
-		"image": "img/category/music.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/music.png"
 	},
 	{
 		"id": 6,
 		"name": "Điện Gia Dụng",
-		"image": "img/category/electric.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/electric.png"
 	},
 	{
 		"id": 7,
 		"name": "Ô Tô - Xe Máy - Xe Đạp",
-		"image": "img/category/car.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/car.png"
 	},
 	{
 		"id": 8,
 		"name": "Thời trang nữ",
-		"image": "img/category/fashionWomen.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/fashionWomen.png"
 	},
 	{
 		"id": 9,
 		"name": "Bách Hóa Online",
-		"image": "img/category/taphoa.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/taphoa.png"
 	},
 	{
 		"id": 10,
 		"name": "Thể Thao - Dã Ngoại",
-		"image": "img/category/sport.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/sport.png"
 	},
 	{
 		"id": 11,
 		"name": "Thời trang nam",
-		"image": "img/category/fashionMale.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/fashionMale.png"
 	},
 	{
 		"id": 9,
 		"name": "Laptop - Máy Vi Tính - Linh kiện",
-		"image": "img/category/laptop.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/laptop.png"
 	},
 	{
 		"id": 10,
 		"name": "Làm Đẹp - Sức Khỏe",
-		"image": "img/category/beautiful.png"
+		"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/beautiful.png"
 	}
 ]
