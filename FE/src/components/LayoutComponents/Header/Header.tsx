@@ -15,9 +15,11 @@ import HeaderTop from './HeaderTop';
 import HeaderBottom from './HeaderBottom';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { URL_AUTH } from '@/constant/constant';
+import { URL_AUTH, URL_SERVICE } from '@/constant/constant';
 import RegisterServices from '@/services/register/registerServices';
+import ShopServicer from '@/services/shopServicer/shopServicer';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
+import { setShopInfo } from '@/reducers/slice/shopSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
@@ -28,13 +30,14 @@ const HeaderCpn = ({}: Props) => {
 	const [quantity] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
+	const [token, setToken] = useState<string | null>(null);
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const registerServices = new RegisterServices(URL_AUTH || '', () => {
 		console.log('Unauthenticated');
 	});
-
+	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
 	// console.log('userInfo', isLogin);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -57,10 +60,26 @@ const HeaderCpn = ({}: Props) => {
 		setIsModalOpen(false);
 	};
 	useEffect(() => {
+		const token = localStorage.getItem('accessToken');
+		if (token) {
+			const handleCallback = async () => {
+				try {
+					const response = await registerServices.callbackGoogle(token);
+					handleLogin(response.data.identities[0].identity_data.email);
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			handleCallback();
+		}
+	}, []);
+	useEffect(() => {
 		const hash = window.location.hash.substring(1);
+
 		if (hash) {
 			const params = new URLSearchParams(hash);
 			const access_token = params.get('access_token');
+			localStorage.setItem('accessToken', access_token || '');
 			if (access_token) {
 				const handleCallback = async () => {
 					try {
@@ -80,7 +99,9 @@ const HeaderCpn = ({}: Props) => {
 
 	const handleLogin = async (email: string) => {
 		const response: any = await registerServices.signIn(email);
+		const shop: any = await shopServices.getShop(response.customerId);
 		dispatch(setUserInfo(response));
+		dispatch(setShopInfo(shop?.shop));
 	};
 	const handleLogout = () => {
 		dispatch(logout());
@@ -90,23 +111,31 @@ const HeaderCpn = ({}: Props) => {
 		{
 			key: '1',
 			label: (
-				<div className="pr-8 py-[5px] leading-[150%] font-[400] ">
-					<Link href={'/customer/account'}>Thông tin tài khoản</Link>
+				<div className="pr-8 py-[5px] leading-[150%] font-[400]">
+					<Link className="text-[#27272a]" href="/customer/account">
+						Thông tin tài khoản
+					</Link>
 				</div>
 			),
 		},
 		{
 			key: '2',
-			label: <div className="pr-8 py-[5px] leading-[150%] font-[400] ">Đơn hàng của tôi</div>,
+			label: (
+				<div className="pr-8 py-[5px] leading-[150%] font-[400] ">
+					<Link className="text-[#27272a]" href="/customer/order">
+						Đơn hàng của tôi
+					</Link>
+				</div>
+			),
 		},
 		{
 			key: '3',
-			label: <div className="pr-8 py-[5px] leading-[150%] font-[400] ">Trung tâm hỗ trợ</div>,
+			label: <div className="pr-8 py-[5px] leading-[150%] font-[400] text-[#27272a]">Trung tâm hỗ trợ</div>,
 		},
 		{
 			key: '4',
 			label: (
-				<div onClick={handleLogout} className="pr-8 py-[5px] leading-[150%] font-[400] ">
+				<div onClick={handleLogout} className="pr-8 py-[5px] leading-[150%] font-[400] text-[#27272a]">
 					Đăng xuất
 				</div>
 			),
@@ -114,9 +143,9 @@ const HeaderCpn = ({}: Props) => {
 	];
 
 	return (
-		<header className="w-full ">
+		<header className="w-full bg-[#fff]">
 			<HeaderTop />
-			<div className=" h-[--header-height] container-base bg-[#fff] flex items-center gap-[48px] py-2">
+			<div className=" h-[--header-height] container-base flex items-center gap-[48px] py-2">
 				<div className="flex flex-col min-w-[96px]">
 					<Image
 						width={96}

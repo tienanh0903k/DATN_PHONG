@@ -1,0 +1,104 @@
+{
+	"products": [
+		{
+			"id": 1,
+			"name": "iPhone 14 Pro Max 256GB",
+			"price": 27990000,
+			"originalPrice": 29990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dochoi1.png",
+			"rating": 4.8,
+			"sold": 1234,
+			"discount": 7
+		},
+		{
+			"id": 2,
+			"name": "Laptop Gaming Acer Nitro 5 AN515-57-5669 NH.QEHSV.001",
+			"price": 19990000,
+			"originalPrice": 23990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dochoi2.png",
+			"rating": 4.6,
+			"sold": 856,
+			"discount": 17
+		},
+		{
+			"id": 3,
+			"name": "Tai nghe Bluetooth Apple AirPods Pro 2",
+			"price": 5990000,
+			"originalPrice": 6790000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dodientu1.png",
+			"rating": 4.9,
+			"sold": 2345,
+			"discount": 12
+		},
+		{
+			"id": 4,
+			"name": "Điện Thoại Samsung Galaxy S23 Ultra 256GB",
+			"price": 23990000,
+			"originalPrice": 26990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dodientu2.png",
+			"rating": 4.7,
+			"sold": 945,
+			"discount": 11
+		},
+		{
+			"id": 5,
+			"name": "iPad Pro M2 11 inch WiFi 128GB",
+			"price": 20990000,
+			"originalPrice": 23990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dodientu4.png",
+			"rating": 4.8,
+			"sold": 634,
+			"discount": 13
+		},
+		{
+			"id": 6,
+			"name": "Máy Ảnh Sony Alpha A7 IV",
+			"price": 54990000,
+			"originalPrice": 59990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dogiadung2.png",
+			"rating": 4.9,
+			"sold": 123,
+			"discount": 8
+		},
+		{
+			"id": 7,
+			"name": "Đồng Hồ Apple Watch Series 8 GPS 41mm",
+			"price": 9990000,
+			"originalPrice": 11990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dososinh1.png",
+			"rating": 4.7,
+			"sold": 1567,
+			"discount": 17
+		},
+		{
+			"id": 8,
+			"name": "Máy Chơi Game Nintendo Switch OLED",
+			"price": 8490000,
+			"originalPrice": 9990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/dososinh2.png",
+			"rating": 4.6,
+			"sold": 789,
+			"discount": 15
+		},
+		{
+			"id": 9,
+			"name": "Loa Bluetooth Sony SRS-XB43",
+			"price": 3990000,
+			"originalPrice": 4990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/giado1.png",
+			"rating": 4.5,
+			"sold": 432,
+			"discount": 20
+		},
+		{
+			"id": 10,
+			"name": "Máy Hút Bụi Robot Xiaomi Vacuum Mop 2 Pro",
+			"price": 7990000,
+			"originalPrice": 9990000,
+			"image": "https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/avatar/giay1.png",
+			"rating": 4.4,
+			"sold": 678,
+			"discount": 20
+		}
+	]
+}

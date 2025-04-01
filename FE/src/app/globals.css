@@ -45,7 +45,7 @@ input[type='number']::-webkit-outer-spin-button {
 	margin: 0;
 }
 .dark {
-	--background: oklch(0.13 0.028 261.692);
+	--background: #f6f5fa;
 	--foreground: oklch(0.985 0.002 247.839);
 	--card: oklch(0.13 0.028 261.692);
 	--card-foreground: oklch(0.985 0.002 247.839);
@@ -80,7 +80,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 @theme inline {
-	--color-background: var(--background);
+	--color-background: #f6f5fa;
 	--color-foreground: var(--foreground);
 	--color-card: var(--card);
 	--color-card-foreground: var(--card-foreground);
@@ -161,6 +161,9 @@ button {
 .no-scrollbar::-webkit-scrollbar {
 	display: none;
 }
+.ant-rate .ant-rate-star:not(:last-child) {
+	margin-right: 2px;
+}
 .swiper-wrapper {
 	display: flex;
 	align-items: center;
@@ -174,4 +177,7 @@ button {
 	box-shadow:
 		0 0 10px #007bff,
 		0 0 5px #007bff !important;
+}
+a {
+	color: #333;
 }

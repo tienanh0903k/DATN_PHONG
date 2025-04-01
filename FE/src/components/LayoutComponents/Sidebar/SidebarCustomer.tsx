@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/no-img-element */
+'use client';
 import { CiUser, CiBellOn, CiHeart } from 'react-icons/ci';
 import { MdOutlineStorefront } from 'react-icons/md';
 import { IoLocationOutline } from 'react-icons/io5';
@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import Image from 'next/image';
 interface Sidebardata {
 	title: string;
 	icon: React.ReactNode;
@@ -52,7 +53,7 @@ const SidebarCustomer = () => {
 		<div className="w-[250px] mr-[17px]">
 			<div className="flex items-center gap-5 pl-2 mb-3">
 				<div className="w-[45px] h-[45px] rounded-full overflow-hidden mr-3">
-					<img src={user?.avatar} alt="" className="w-full h-full object-cover" />
+					<Image src={user?.avatar} alt="" width={45} height={45} className="w-full h-full object-cover" />
 				</div>
 				<div className="flex flex-col">
 					<span className="text-[14px] text-[#4a4a4a]">Tài khoản của</span>

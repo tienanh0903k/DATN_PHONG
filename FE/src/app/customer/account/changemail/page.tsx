@@ -8,7 +8,7 @@ import CustomerServices from '@/services/CustomerServices/customerServices';
 import { URL_SERVICE } from '@/constant/constant';
 import Link from 'next/link';
 import { HomeOutlined } from '@ant-design/icons';
-import SidebarCustomer from '@/components/LayoutComponents/Sidebar/SidebarCustomer';
+
 import { MdEmail } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -66,7 +66,7 @@ const ChangeEmail = () => {
 	};
 
 	return (
-		<div className="container-customer h-[81vh]">
+		<div className="">
 			{/* Breadcrumb */}
 			{contextHolder}
 			<div className="py-4">
@@ -90,52 +90,45 @@ const ChangeEmail = () => {
 				/>
 			</div>
 
-			<div className="flex">
-				<SidebarCustomer />
-				<div className="w-[calc(100%-254px)] overflow-hidden">
-					<h1 className="text-[20px] leading-[32px] font-[300] mt-1 mb-3">Thay đổi địa chỉ email</h1>
-					<Spin spinning={loading} className="w-full block">
-						<div className="info flex no-wrap justify-between rounded-[8px] bg-white ">
-							<form onSubmit={handleSubmit(onSubmit)} className="w-[400px] p-5 mx-auto">
-								<div className="flex flex-col gap-2 p-4 border-[1px] border-[#ebebf0] border-solid rounded-[8px]">
-									<label htmlFor="numberPhone" className="text-[14px] text-[#4a4a4a]">
-										Email
-									</label>
-									<div className="flex items-center h-9 cursor-pointer gap-2 border-[1px] border-[#c4c4cf] border-solid rounded-[4px] py-[10px] px-2">
-										<MdEmail />
-										<input
-											type="email"
-											{...register('email', {
-												required: 'Vui lòng nhập email',
-												pattern: {
-													value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-													message: 'Email không hợp lệ',
-												},
-											})}
-											className="outline-none border-none w-full"
-										/>
-										{emailValue && (
-											<IoCloseCircle
-												className="text-gray-400 hover:text-gray-600 cursor-pointer text-[18px]"
-												onClick={handleClear}
-											/>
-										)}
-									</div>
-									{errors.email && (
-										<span className="text-red-500 text-sm">{errors.email.message}</span>
-									)}
-									<button
-										type="submit"
-										className="bg-[#007bff] text-white px-4 py-2 rounded-[4px] cursor-pointer hover:bg-[#0056b3] mt-8"
-									>
-										Lưu thay đổi
-									</button>
-								</div>
-							</form>
+			<h1 className="text-[20px] leading-[32px] font-[300] mt-1 mb-3">Thay đổi địa chỉ email</h1>
+			<Spin spinning={loading} className="w-full block">
+				<div className="info flex no-wrap justify-between rounded-[8px] bg-white ">
+					<form onSubmit={handleSubmit(onSubmit)} className="w-[400px] p-5 mx-auto">
+						<div className="flex flex-col gap-2 p-4 border-[1px] border-[#ebebf0] border-solid rounded-[8px]">
+							<label htmlFor="numberPhone" className="text-[14px] text-[#4a4a4a]">
+								Email
+							</label>
+							<div className="flex items-center h-9 cursor-pointer gap-2 border-[1px] border-[#c4c4cf] border-solid rounded-[4px] py-[10px] px-2">
+								<MdEmail />
+								<input
+									type="email"
+									{...register('email', {
+										required: 'Vui lòng nhập email',
+										pattern: {
+											value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+											message: 'Email không hợp lệ',
+										},
+									})}
+									className="outline-none border-none w-full"
+								/>
+								{emailValue && (
+									<IoCloseCircle
+										className="text-gray-400 hover:text-gray-600 cursor-pointer text-[18px]"
+										onClick={handleClear}
+									/>
+								)}
+							</div>
+							{errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
+							<button
+								type="submit"
+								className="bg-[#007bff] text-white px-4 py-2 rounded-[4px] cursor-pointer hover:bg-[#0056b3] mt-8"
+							>
+								Lưu thay đổi
+							</button>
 						</div>
-					</Spin>
+					</form>
 				</div>
-			</div>
+			</Spin>
 		</div>
 	);
 };

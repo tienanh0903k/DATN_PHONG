@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import SidebarCustomer from '@/components/LayoutComponents/Sidebar/SidebarCustomer';
 import { Breadcrumb, Spin, message } from 'antd';
 import Link from 'next/link';
 import { HomeOutlined } from '@ant-design/icons';
@@ -68,7 +67,7 @@ const ChangeNumberPhone = () => {
 	};
 
 	return (
-		<div className="container-customer h-[81vh]">
+		<div className="">
 			{/* Breadcrumb */}
 			{contextHolder}
 			<div className="py-4">
@@ -92,52 +91,47 @@ const ChangeNumberPhone = () => {
 				/>
 			</div>
 
-			<div className="flex">
-				<SidebarCustomer />
-				<div className="w-[calc(100%-254px)] overflow-hidden">
-					<h1 className="text-[20px] leading-[32px] font-[300] mt-1 mb-3">Thông tin tài khoản</h1>
-					<Spin spinning={loading} className="w-full block">
-						<div className="info flex no-wrap justify-between rounded-[8px] bg-white ">
-							<form onSubmit={handleSubmit(onSubmit)} className="w-[400px] p-5 mx-auto">
-								<div className="flex flex-col gap-2 p-4 border-[1px] border-[#ebebf0] border-solid rounded-[8px]">
-									<label htmlFor="numberPhone" className="text-[14px] text-[#4a4a4a]">
-										Số điện thoại
-									</label>
-									<div className="flex items-center h-9 cursor-pointer gap-2 border-[1px] border-[#c4c4cf] border-solid rounded-[4px] py-[10px] px-2">
-										<MdPhone />
-										<input
-											type="number"
-											{...register('numberPhone', {
-												required: 'Vui lòng nhập số điện thoại',
-												pattern: {
-													value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
-													message: 'Số điện thoại không hợp lệ',
-												},
-											})}
-											className="outline-none border-none w-full"
-										/>
-										{numberPhoneValue && (
-											<IoCloseCircle
-												className="text-gray-400 hover:text-gray-600 cursor-pointer text-[18px]"
-												onClick={handleClear}
-											/>
-										)}
-									</div>
-									{errors.numberPhone && (
-										<span className="text-red-500 text-sm">{errors.numberPhone.message}</span>
-									)}
-									<button
-										type="submit"
-										className="bg-[#007bff] text-white px-4 py-2 rounded-[4px] cursor-pointer hover:bg-[#0056b3] mt-8"
-									>
-										Lưu thay đổi
-									</button>
-								</div>
-							</form>
+			<h1 className="text-[20px] leading-[32px] font-[300] mt-1 mb-3">Thông tin tài khoản</h1>
+			<Spin spinning={loading} className="w-full block">
+				<div className="info flex no-wrap justify-between rounded-[8px] bg-white ">
+					<form onSubmit={handleSubmit(onSubmit)} className="w-[400px] p-5 mx-auto">
+						<div className="flex flex-col gap-2 p-4 border-[1px] border-[#ebebf0] border-solid rounded-[8px]">
+							<label htmlFor="numberPhone" className="text-[14px] text-[#4a4a4a]">
+								Số điện thoại
+							</label>
+							<div className="flex items-center h-9 cursor-pointer gap-2 border-[1px] border-[#c4c4cf] border-solid rounded-[4px] py-[10px] px-2">
+								<MdPhone />
+								<input
+									type="number"
+									{...register('numberPhone', {
+										required: 'Vui lòng nhập số điện thoại',
+										pattern: {
+											value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
+											message: 'Số điện thoại không hợp lệ',
+										},
+									})}
+									className="outline-none border-none w-full"
+								/>
+								{numberPhoneValue && (
+									<IoCloseCircle
+										className="text-gray-400 hover:text-gray-600 cursor-pointer text-[18px]"
+										onClick={handleClear}
+									/>
+								)}
+							</div>
+							{errors.numberPhone && (
+								<span className="text-red-500 text-sm">{errors.numberPhone.message}</span>
+							)}
+							<button
+								type="submit"
+								className="bg-[#007bff] text-white px-4 py-2 rounded-[4px] cursor-pointer hover:bg-[#0056b3] mt-8"
+							>
+								Lưu thay đổi
+							</button>
 						</div>
-					</Spin>
+					</form>
 				</div>
-			</div>
+			</Spin>
 		</div>
 	);
 };
