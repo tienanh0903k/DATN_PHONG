@@ -111,22 +111,7 @@ model ProductVariant {
   Products         Products @relation(fields: [productId], references: [productId])
   VariantValue     VariantValue @relation(fields: [typeValueId], references: [typeValueId])
 }
-model Shop {
-  shopId           Int      @id @default(autoincrement())
-  customerId       Int      @unique
-  shopName         String
-  shopAddress      String
-  shopAvatar       String?
-  shopBanner       String?
-  shopNumberPhone  String
-  emailShop        String
-  totalSales       Int
-  totalProduct     Int
-  status           String
-  Customer         Customer @relation(fields: [customerId], references: [customerId])
-  Products         Products[]
-  Follower         Follower[]
-}
+
 
 model VariantType {
   typeId           Int      @id @default(autoincrement())
@@ -142,6 +127,22 @@ model VariantValue {
   typeValue        String
   VariantType      VariantType @relation(fields: [typeId], references: [typeId])
   ProductVariant   ProductVariant[]
+}
+model Shop {
+  shopId           Int      @id @default(autoincrement())
+  customerId       Int      @unique
+  shopName         String
+  shopAddress      String
+  shopAvatar       String?
+  shopBanner       String?
+  shopNumberPhone  String
+  emailShop        String
+  totalSales       Int
+  totalProduct     Int
+  status           String
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+  Products         Products[]
+  Follower         Follower[]
 }
 model Bill {
   billId           Int      @id @default(autoincrement())

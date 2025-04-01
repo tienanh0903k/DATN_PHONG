@@ -10,7 +10,6 @@ const Products = () => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		// Giả lập thời gian loading
 		const timer = setTimeout(() => {
 			setLoading(false);
 		}, 1500);

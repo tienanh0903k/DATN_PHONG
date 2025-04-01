@@ -30,7 +30,6 @@ const HeaderCpn = ({}: Props) => {
 	const [quantity] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
-	const [token, setToken] = useState<string | null>(null);
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
@@ -105,6 +104,7 @@ const HeaderCpn = ({}: Props) => {
 	};
 	const handleLogout = () => {
 		dispatch(logout());
+		localStorage.removeItem('accessToken');
 		router.push('/');
 	};
 	const items: MenuProps['items'] = [

@@ -3,6 +3,7 @@
 
 import { Tabs, Card, Statistic, Row, Col, Avatar } from 'antd';
 import { ShopOutlined, ShoppingOutlined, StarOutlined } from '@ant-design/icons';
+import Products from '@/components/app/Home/Products';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 
@@ -61,7 +62,11 @@ const ProfileShop = () => {
 					{
 						key: '1',
 						label: 'Tất cả sản phẩm',
-						children: <div>Danh sách sản phẩm</div>,
+						children: (
+							<Card>
+								<Products />
+							</Card>
+						),
 					},
 					{
 						key: '2',
