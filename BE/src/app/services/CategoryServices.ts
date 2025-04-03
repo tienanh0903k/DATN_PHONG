@@ -10,7 +10,7 @@ export const CategoryServices = {
     const newCategory = await Prismaclient.categories.create({
       data: {
         categoryName: category.categoryName,
-        parentCategoryId: category.parentCategoryId,
+        parentCategoryId: category.parentCategoryId || 0,
         status: category.status,
       },
     });

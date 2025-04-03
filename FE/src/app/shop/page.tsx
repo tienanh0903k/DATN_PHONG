@@ -37,7 +37,7 @@ const Shop = () => {
 					className="w-full"
 				/>
 			</div>
-			<Link href="/shop" className="w-full mt-[20px] cursor-pointer">
+			<Link href="/shop/create-shop" className="w-full mt-[20px] cursor-pointer">
 				<img
 					src="https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/cefa.png.webp"
 					alt=""

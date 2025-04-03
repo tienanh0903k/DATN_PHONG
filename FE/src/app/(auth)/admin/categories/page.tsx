@@ -1,32 +1,26 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, Drawer, Form, Input, Select, Button, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { ICategory, ICreateCategory } from '@/models/admin/category.model';
+import { ICategory } from '@/models/admin/category.model';
 import CategoryServices from '@/services/categoryServices/categoryServices';
 import { URL_SERVICE } from '@/constant/constant';
 import { useDispatch, useSelector } from 'react-redux';
-import { createCategory, updateCategory, deleteCategory } from '@/reducers/slice/categoriesSlice';
-
+import { setCategories } from '@/reducers/slice/categoriesSlice';
+import { RootState } from '@/redux/store';
 const Categories = () => {
 	const dispatch = useDispatch();
 	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 	const [form] = Form.useForm();
-	const categoriesdata = useSelector((state: ICategoriesState) => state.categories);
-	const [categories, setCategories] = useState<ICategory[]>([
-		{ categoryId: 1, categoryName: 'Electronics', parentCategoryId: null, status: 'active' },
-		{ categoryId: 2, categoryName: 'Smartphones', parentCategoryId: 1, status: 'active' },
-	]);
+	const [isUpdate, setIsUpdate] = useState(false);
+	const categoriesdata = useSelector((state: RootState) => state.categories.categories);
+	const [categories, setCategory] = useState<ICategory[]>(categoriesdata);
 
 	const categoryServices = new CategoryServices(URL_SERVICE, () => {});
 
 	const columns: ColumnsType<ICategory> = [
-		{
-			title: 'ID',
-			dataIndex: 'categoryId',
-			key: 'categoryId',
-			width: 80,
-		},
 		{
 			title: 'Tên danh mục',
 			dataIndex: 'categoryName',
@@ -76,23 +70,43 @@ const Categories = () => {
 	];
 
 	const handleEdit = (category: ICategory) => {
+		setIsUpdate(true);
 		form.setFieldsValue(category);
 		setIsDrawerOpen(true);
 	};
 
 	const handleDelete = (categoryId: number) => {
-		setCategories((prev) => prev.filter((cat) => cat.categoryId !== categoryId));
+		setCategories((prev: ICategory[]) => prev.filter((cat) => cat.categoryId !== categoryId));
 	};
-
-	const onFinish = async (values: ICreateCategory) => {
-		try {
-			const response = await categoryServices.createCategory(values);
-			dispatch(createCategory(response));
-		} catch (error) {
-			console.log(error);
-		} finally {
-			setIsDrawerOpen(false);
-			form.resetFields();
+	useEffect(() => {
+		const fetchData = async () => {
+			const response: any = await categoryServices.getAllCategories();
+			setCategory(response);
+			dispatch(setCategories(response));
+		};
+		fetchData();
+	}, []);
+	const onFinish = async (values: any) => {
+		if (isUpdate) {
+			try {
+				const response: any = await categoryServices.updateCategory(values);
+				setCategory(categories.map((cat) => (cat.categoryId === values.categoryId ? response : cat)));
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setIsDrawerOpen(false);
+				form.resetFields();
+			}
+		} else {
+			try {
+				const response: any = await categoryServices.createCategory(values);
+				setCategory([...categories, response]);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setIsDrawerOpen(false);
+				form.resetFields();
+			}
 		}
 	};
 
@@ -105,6 +119,7 @@ const Categories = () => {
 					onClick={() => {
 						form.resetFields();
 						setIsDrawerOpen(true);
+						setIsUpdate(false);
 					}}
 				>
 					Thêm danh mục

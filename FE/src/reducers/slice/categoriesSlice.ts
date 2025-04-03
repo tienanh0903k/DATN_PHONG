@@ -7,8 +7,8 @@ const categoriesSlice = createSlice({
 	name: 'categories',
 	initialState,
 	reducers: {
-		createCategory: (state, action) => {
-			state.categories.push(action.payload);
+		setCategories: (state, action) => {
+			state.categories = action.payload;
 		},
 		updateCategory: (state, action) => {
 			state.categories = {
@@ -22,5 +22,5 @@ const categoriesSlice = createSlice({
 	},
 });
 
-export const { createCategory, updateCategory, deleteCategory } = categoriesSlice.actions;
+export const { setCategories, updateCategory, deleteCategory } = categoriesSlice.actions;
 export default categoriesSlice.reducer;

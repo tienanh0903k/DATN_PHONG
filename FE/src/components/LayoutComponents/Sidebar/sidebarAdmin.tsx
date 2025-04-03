@@ -15,7 +15,6 @@ import {
 	LogoutOutlined,
 } from '@ant-design/icons';
 import Link from 'next/link';
-
 import { useDispatch } from 'react-redux';
 import { logout } from '@/reducers/slice/authSlice';
 
@@ -32,6 +31,7 @@ const SidebarAdmin = () => {
 
 	const handleLogout = () => {
 		dispatch(logout());
+
 		localStorage.removeItem('accessToken');
 	};
 
@@ -39,7 +39,7 @@ const SidebarAdmin = () => {
 		{
 			key: 'dashboard',
 			icon: <DashboardOutlined />,
-			label: <Link href="/admin/dashboard">Bảng điều khiển</Link>,
+			label: <Link href="/admin/dashboards">Bảng điều khiển</Link>,
 		},
 		{
 			key: 'products',
@@ -48,11 +48,7 @@ const SidebarAdmin = () => {
 			children: [
 				{
 					key: 'product-list',
-					label: <Link href="/admin/products">Danh sách sản phẩm</Link>,
-				},
-				{
-					key: 'product-add',
-					label: <Link href="/admin/products/add">Thêm sản phẩm</Link>,
+					label: <Link href="/admin/list_products">Danh sách sản phẩm</Link>,
 				},
 				{
 					key: 'categories',
@@ -173,7 +169,8 @@ const SidebarAdmin = () => {
 		{
 			key: 'logout',
 			icon: <LogoutOutlined />,
-			label: 'Đăng xuất',
+			label: <Link href="/">Đăng xuất</Link>,
+
 			onClick: handleLogout,
 		},
 	];

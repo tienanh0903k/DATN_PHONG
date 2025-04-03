@@ -75,7 +75,7 @@ const SideBar = ({}: Props) => {
 			) : (
 				<div className="w-full bg-[#fff] mt-4 px-2 py-3 rounded-[8px] mb-8">
 					<Link
-						href="/shop/create-shop"
+						href="/shop"
 						className="flex items-center py-[7px] px-4 rounded-[8px] cursor-pointer hover:bg-[#27272a1f]"
 					>
 						<div className="w-[32px] h-[32px] mr-[6px]">

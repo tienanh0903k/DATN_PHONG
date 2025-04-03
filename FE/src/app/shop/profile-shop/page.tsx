@@ -1,11 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { Tabs, Card, Statistic, Row, Col, Avatar } from 'antd';
-import { ShopOutlined, ShoppingOutlined, StarOutlined } from '@ant-design/icons';
+import { Tabs, Card, Statistic, Row, Col } from 'antd';
+import { ShoppingOutlined, StarOutlined } from '@ant-design/icons';
 import Products from '@/components/app/Home/Products';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import Image from 'next/image';
 
 const ProfileShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
@@ -25,12 +26,15 @@ const ProfileShop = () => {
 					</div>
 
 					<div className="flex items-start px-6 -mt-12">
-						<Avatar
-							size={96}
-							src={shop?.shopAvatar}
-							icon={<ShopOutlined />}
-							className="border-4 border-white"
-						/>
+						<div className="w-[96px] h-[96px] rounded-full border-4 border-white overflow-hidden bg-gray-100">
+							<Image
+								width={96}
+								height={96}
+								src={shop?.shopAvatar}
+								alt="Shop Avatar"
+								className="object-cover"
+							/>
+						</div>
 						<div className="ml-6 mt-12">
 							<h1 className="text-2xl font-bold">{shop?.shopName}</h1>
 							<p className="text-gray-600">{shop?.shopAddress}</p>
