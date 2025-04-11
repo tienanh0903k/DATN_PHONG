@@ -9,7 +9,6 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@next/swc-win32-x64-msvc": "^15.2.4",
 		"@radix-ui/react-label": "^2.1.2",
 		"@radix-ui/react-popover": "^1.1.6",
 		"@radix-ui/react-radio-group": "^1.2.3",
@@ -17,6 +16,14 @@
 		"@radix-ui/react-slot": "^1.1.2",
 		"@reduxjs/toolkit": "^2.6.1",
 		"@supabase/supabase-js": "^2.49.3",
+		"@tiptap/extension-bullet-list": "^2.11.7",
+		"@tiptap/extension-list-item": "^2.11.7",
+		"@tiptap/extension-task-item": "^2.11.7",
+		"@tiptap/extension-task-list": "^2.11.7",
+		"@tiptap/extension-underline": "^2.11.7",
+		"@tiptap/pm": "^2.11.7",
+		"@tiptap/react": "^2.11.7",
+		"@tiptap/starter-kit": "^2.11.7",
 		"antd": "^5.24.3",
 		"axios": "^1.8.3",
 		"chart.js": "^4.4.8",

@@ -58,6 +58,10 @@ const SidebarAdmin = () => {
 					key: 'brands',
 					label: <Link href="/admin/brands">Thương hiệu</Link>,
 				},
+				{
+					key: 'variant-type',
+					label: <Link href="/admin/variant">Biến thể sản phẩm</Link>,
+				},
 			],
 		},
 		{

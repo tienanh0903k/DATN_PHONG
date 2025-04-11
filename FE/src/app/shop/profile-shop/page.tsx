@@ -1,15 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { Tabs, Card, Statistic, Row, Col } from 'antd';
-import { ShoppingOutlined, StarOutlined } from '@ant-design/icons';
+import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
+import { ShoppingOutlined, StarOutlined, PlusOutlined } from '@ant-design/icons';
 import Products from '@/components/app/Home/Products';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 const ProfileShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
+	const router = useRouter();
 
 	return (
 		<div className="container-base p-6">
@@ -68,6 +70,12 @@ const ProfileShop = () => {
 						label: 'Tất cả sản phẩm',
 						children: (
 							<Card>
+								<div className="flex justify-between items-center mb-4">
+									<h3 className="text-lg font-semibold mb-4">Danh sách sản phẩm</h3>
+									<Button onClick={() => router.push('/shop/create-product')} icon={<PlusOutlined />}>
+										Thêm sản phẩm
+									</Button>
+								</div>
 								<Products />
 							</Card>
 						),
