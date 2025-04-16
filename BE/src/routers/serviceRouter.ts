@@ -11,6 +11,7 @@ import {
   createCategory,
   updateCategory,
   deleteCategory,
+  unusedCategories,
 } from "../app/controllers/categories/category.controller";
 
 import { createProduct } from "../app/controllers/products/products.controller";
@@ -22,6 +23,8 @@ import {
   updateVariantValue,
   getVariantType,
   getVariantValue,
+  getProductVariantByCategoryId,
+  getProductVariantByTypeId,
 } from "../app/controllers/productVariant/productVariant.controller";
 
 const serviceRouter = express.Router();
@@ -42,6 +45,7 @@ serviceRouter.get("/get-all-categories", getAllCategories);
 serviceRouter.post("/create-category", createCategory);
 serviceRouter.put("/update-category", updateCategory);
 serviceRouter.delete("/delete-category", deleteCategory);
+serviceRouter.get("/unused-categories", unusedCategories);
 
 //products
 serviceRouter.post("/create-product", createProduct);
@@ -54,4 +58,12 @@ serviceRouter.put("/update-variant-type", updateVariantType);
 serviceRouter.put("/update-variant-value", updateVariantValue);
 serviceRouter.get("/get-variant-type", getVariantType);
 serviceRouter.get("/get-variant-value", getVariantValue);
+serviceRouter.get(
+  "/get-product-variant-by-category-id/:categoryId",
+  getProductVariantByCategoryId
+);
+serviceRouter.get(
+  "/get-product-variant-by-type-id/:typeId",
+  getProductVariantByTypeId
+);
 export default serviceRouter;

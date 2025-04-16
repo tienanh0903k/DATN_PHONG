@@ -30,4 +30,28 @@ export const CategoryServices = {
   deleteCategory: async (categoryId: number): Promise<void> => {
     await Prismaclient.categories.delete({ where: { categoryId } });
   },
+  unusedCategories: async (): Promise<ICategory[]> => {
+    const parentCategoryIds = await Prismaclient.categories.findMany({
+      select: {
+        parentCategoryId: true,
+      },
+      where: {
+        parentCategoryId: {
+          not: null,
+        },
+      },
+    });
+
+    const unusedCategories = await Prismaclient.categories.findMany({
+      where: {
+        categoryId: {
+          notIn: parentCategoryIds
+            .map((category) => category.parentCategoryId)
+            .filter((id): id is number => id !== null),
+        },
+      },
+    });
+
+    return unusedCategories;
+  },
 };

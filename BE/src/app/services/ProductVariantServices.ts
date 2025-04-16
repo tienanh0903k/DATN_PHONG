@@ -53,5 +53,21 @@ const VariantServices = {
     });
     return response;
   },
+  getProductVariantByCategoryId: async (categoryId: number) => {
+    const response = await Prismaclient.variantType.findMany({
+      where: {
+        categoryId: categoryId,
+      },
+    });
+    return response;
+  },
+  getProductVariantByTypeId: async (typeId: number) => {
+    const response = await Prismaclient.variantValue.findMany({
+      where: {
+        typeId: typeId,
+      },
+    });
+    return response;
+  },
 };
 export default VariantServices;

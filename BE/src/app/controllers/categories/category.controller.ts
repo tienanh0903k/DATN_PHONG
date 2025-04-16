@@ -38,5 +38,19 @@ const deleteCategory = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const unusedCategories = async (req: Request, res: Response) => {
+  try {
+    const unusedCategories = await CategoryServices.unusedCategories();
+    res.status(200).json(unusedCategories);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-export { getAllCategories, createCategory, updateCategory, deleteCategory };
+export {
+  getAllCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  unusedCategories,
+};

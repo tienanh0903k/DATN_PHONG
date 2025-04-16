@@ -105,6 +105,34 @@ const createProductVariant = async (req: Request, res: Response) => {
     });
   }
 };
+const getProductVariantByCategoryId = async (req: Request, res: Response) => {
+  const categoryId = Number(req.params.categoryId);
+  try {
+    const response = await ProductVariantService.getProductVariantByCategoryId(
+      categoryId
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Get product variant by category id failed",
+      error: error,
+    });
+  }
+};
+const getProductVariantByTypeId = async (req: Request, res: Response) => {
+  const typeId = Number(req.params.typeId);
+  try {
+    const response = await ProductVariantService.getProductVariantByTypeId(
+      typeId
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      message: "Get product variant by type id failed",
+      error: error,
+    });
+  }
+};
 
 export {
   createVariantType,
@@ -114,4 +142,6 @@ export {
   createProductVariant,
   getVariantType,
   getVariantValue,
+  getProductVariantByCategoryId,
+  getProductVariantByTypeId,
 };

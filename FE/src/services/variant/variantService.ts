@@ -24,6 +24,12 @@ class VariantService extends ServicesBase {
 	updateVariantValue(data: any) {
 		return this.service.put('/update-variant-value', data);
 	}
+	getProductVariantByCategoryId(categoryId: number) {
+		return this.service.get(`/get-product-variant-by-category-id/${categoryId}`);
+	}
+	getProductVariantByTypeId(typeId: number) {
+		return this.service.get(`/get-product-variant-by-type-id/${typeId}`);
+	}
 }
 
 export default VariantService;

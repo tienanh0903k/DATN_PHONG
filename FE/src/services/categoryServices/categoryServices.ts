@@ -19,5 +19,8 @@ class CategoryServices extends ServicesBase {
 	deleteCategory(data: any) {
 		return this.service.delete('/delete-category', data);
 	}
+	unusedCategories() {
+		return this.service.get('/unused-categories');
+	}
 }
 export default CategoryServices;

@@ -7,5 +7,5 @@ export interface IProducts {
   shopId: number;
   img: string;
   price: number;
-  productVariant: IProductVariant[];
+  variants: IProductVariant[];
 }
