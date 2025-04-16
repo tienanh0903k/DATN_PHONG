@@ -95,6 +95,7 @@ model Products {
   shopId           Int
   img              String
   price            Float
+  status           String @default("pending")
   Categories       Categories @relation(fields: [categoryId], references: [categoryId])
   Shop             Shop @relation(fields: [shopId], references: [shopId])
   BillDetail       BillDetail[]

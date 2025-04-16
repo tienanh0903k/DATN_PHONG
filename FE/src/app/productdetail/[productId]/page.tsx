@@ -1,47 +1,36 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { formatPrice } from '@/utils/formatprice';
 import { Rate } from 'antd';
-import Image from 'next/image';
+import { FaRegMessage } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
-
-interface Product {
-	id: number;
-	name: string;
-	salePrice: number;
-	originalPrice: number;
-	promotionPercent: number;
-	rating: number;
-	sold: number;
-	images: string[];
-}
-
-const mockProduct: Product = {
-	id: 1,
-	name: 'iPhone 15 Pro Max 256GB Chính Hãng VN/A',
-	salePrice: 34990000,
-	originalPrice: 39990000,
-	promotionPercent: 12,
-	rating: 5.0,
-	sold: 3055,
-	images: [
-		'https://salt.tikicdn.com/cache/750x750/ts/product/f2/53/10/2bc6e0d343e7c9b7e53ffc55cc2815d3.jpg.webp',
-		'/images/products/iphone15-2.jpg',
-		'/images/products/iphone15-3.jpg',
-	],
-};
+import { useParams } from 'next/navigation';
+import ProductServices from '@/services/prouduct/productServices';
+import { URL_SERVICE } from '@/constant/constant';
+import { Button } from 'antd';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
+	const [data, setData] = useState<any>([]);
+	const productServices = new ProductServices(URL_SERVICE || '', () => {});
+	const { productId } = useParams();
+	console.log('productId', productId);
+	const fetchDataProduct = async () => {
+		try {
+			const response: any = await productServices.getProductById(productId);
 
-	// const params = useParams();
-	const [product] = useState<Product>(mockProduct);
-	const [insuranceProduct, setInsuranceProduct] = useState(0);
-
+			setData(response.data);
+		} catch (error) {
+			console.error('Error fetching products:', error);
+		}
+	};
 	useEffect(() => {
-		setInsuranceProduct(product.originalPrice * 0.005);
-	}, [product.originalPrice]);
+		fetchDataProduct();
+	}, [productId]);
+	// const params = useParams();
 
 	const handleIncreaseQuantity = () => {
 		setQuantity((prev) => {
@@ -57,6 +46,15 @@ export default function DetailProduct() {
 			return prev - 1;
 		});
 	};
+	const handleProduct = (item: any) => {
+		setData((prev: any) => {
+			return {
+				...prev,
+				img: item.img,
+				price: item.price,
+			};
+		});
+	};
 
 	return (
 		<div className="">
@@ -64,19 +62,38 @@ export default function DetailProduct() {
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="grid grid-cols-[400px_1fr] gap-6 rounder-[8px] items-start">
 						{/* product image */}
-						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[400px] w-[400px]">
+						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[450px] w-[400px]">
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex flex-col gap-1">
 									<div className="flex gap-2 items-center">
 										<div className="w-[368px]">
-											<Image
-												src="https://salt.tikicdn.com/cache/750x750/ts/product/f2/53/10/2bc6e0d343e7c9b7e53ffc55cc2815d3.jpg.webp"
+											<img
+												src={data.img}
 												alt="brand"
 												width={368}
 												height={368}
 												className="object-contain w-full h-full block"
 											/>
 										</div>
+									</div>
+									<div className="flex gap-2 items-center">
+										{data.productVariant.map((item: any, index: number) => (
+											<div
+												key={index}
+												onClick={() => {
+													handleProduct(item);
+												}}
+												className="border-[1px] border-solid border-[#e5e5e5] rounded-lg p-2"
+											>
+												<div className="w-[42px] h-[42px]">
+													<img
+														src={item.img}
+														alt="brand"
+														className="object-contain w-[100%] h-[100%] "
+													/>
+												</div>
+											</div>
+										))}
 									</div>
 								</div>
 							</div>
@@ -85,7 +102,7 @@ export default function DetailProduct() {
 						<div className="flex flex-col min-w-[586px]  gap-4">
 							<div className="bg-white rounded-lg p-4">
 								<h1 className="m-0 text-[#27272a] text-2xl font-medium leading-[150%] break-words whitespace-break-spaces">
-									{product?.name}
+									{data?.productName}
 								</h1>
 								<div className="flex">
 									<div className="flex items-center justify-between">
@@ -102,10 +119,10 @@ export default function DetailProduct() {
 								</div>
 								<div className="flex items-center text-[#27272a] gap-2">
 									<div className="text-[24px] font-semibold leading-[150%]">
-										{formatPrice(product?.salePrice || 1)}
+										{formatPrice(data?.price || 1)}
 									</div>
 									<div className="font-normal text-xs leading-[150%] px-1 bg-[#f5f5fa] rounded-lg text-[#27272a]">
-										-{product?.promotionPercent}%
+										-12%
 									</div>
 								</div>
 							</div>
@@ -174,10 +191,32 @@ export default function DetailProduct() {
 				</div>
 				{/* pricing */}
 				<div className="grid grid-cols-[100%] gap-4">
-					<div className="flex min-w-[354px] flex-col bg-white rounded-lg p-4 gap-4 mr-5 sticky top-3 max-h-[350px]">
+					<div className="flex min-w-[354px] flex-col bg-white rounded-lg p-4 gap-4 mr-5 sticky top-3 max-h-[460px]">
+						<div className="flex items-center justify-between h-[65px] pb-3 border-b-[1px] border-solid border-[#ebebf0]">
+							<div className="flex items-center gap-2 flex-1">
+								<div className="w-10 h-10 rounded-full overflow-hidden border-[1px] border-solid border-[#dddde3] mr-2">
+									<img src={data.shopAvatar} alt="" className="w-full h-full" />
+								</div>
+								<div className="">
+									<p className="line-clamp-1 text-[16px] font-[500] text-[#242424]">
+										{data.shopName}
+									</p>
+									<img
+										src="https://salt.tikicdn.com/cache/w100/ts/upload/6b/25/fb/c288b5bcee51f35f2df0a5f5f03de2e1.png.webp"
+										alt=""
+										className=""
+									/>
+								</div>
+							</div>
+							<div className="p-[6px] border-[1px] h-[34px] w-[34px] border-solid border-[#dddde3] rounded-[4px] cursor-pointer flex items-center justify-center">
+								<FaRegMessage />
+							</div>
+						</div>
 						<div className="flex flex-col items-stretch gap-3">
-							<div className="max-h-[350px] flex flex-col">
-								<div className="text-base font-normal text-[var(--black-color)]">{product?.name}</div>
+							<div className="h-[50px]  ">
+								<h4 className="text-base font-normal text-[var(--black-color)] line-clamp-2">
+									{data?.productName}
+								</h4>
 							</div>
 							<div className="flex flex-col gap-4">
 								<div className="grid grid-cols-1 gap-2">
@@ -205,33 +244,16 @@ export default function DetailProduct() {
 								<div className="grid grid-cols-1 gap-2">
 									<p className="text-sm font-semibold leading-[150%] m-0">Tạm tính</p>
 									<div className="text-[24px] font-semibold leading-[150%] text-[var(--black-color)]">
-										{formatPrice((product?.salePrice || 1) * quantity)}
+										{formatPrice((data?.price || 1) * quantity)}
 									</div>
 								</div>
 								<div className="grid grid-cols-1 gap-2">
-									<p className="text-sm font-semibold leading-[150%] m-0">Dịch vụ bổ sung</p>
-									<div className="flex items-center">
-										<div className="text-[#27272a]">
-											<img
-												src="#"
-												alt="insurance"
-												className="object-contain w-full h-full block"
-											/>
-										</div>
-										<div className="text-[#27272a]">
-											<span className="text-[#27272a]">Bảo hiểm Thiết bị di động nâng cao</span>
-											<div className="text-[#27272a]">
-												<img
-													src="#"
-													alt="shock"
-													className="object-contain w-full h-full block"
-												/>
-											</div>
-										</div>
-										<div className="text-[#27272a]">
-											<span className="text-[#27272a]">{formatPrice(insuranceProduct)}</span>
-										</div>
-									</div>
+									<Button color="danger" variant="solid">
+										Mua ngay
+									</Button>
+									<Button color="primary" variant="outlined">
+										Thêm vào giỏ hàng
+									</Button>
 								</div>
 							</div>
 						</div>

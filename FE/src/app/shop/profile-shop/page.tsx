@@ -1,9 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
 import { ShoppingOutlined, StarOutlined, PlusOutlined } from '@ant-design/icons';
 import Products from '@/components/app/Home/Products';
+import ProductServices from '@/services/prouduct/productServices';
+import { useEffect, useState } from 'react';
+import { URL_SERVICE } from '@/constant/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
@@ -12,7 +16,21 @@ import Image from 'next/image';
 const ProfileShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
 	const router = useRouter();
-
+	console.log('shop', shop);
+	const [products, setProducts] = useState([]);
+	const productService = new ProductServices(URL_SERVICE, () => {});
+	const fetchDataProduct = async () => {
+		try {
+			const response = await productService.getProductByShopId(shop?.shopId);
+			console.log(response.data);
+			setProducts(response.data);
+		} catch (error) {
+			console.error('Error fetching products:', error);
+		}
+	};
+	useEffect(() => {
+		fetchDataProduct();
+	}, [shop?.shopId]);
 	return (
 		<div className="container-base p-6">
 			<Card className="mb-6">
@@ -76,7 +94,7 @@ const ProfileShop = () => {
 										Thêm sản phẩm
 									</Button>
 								</div>
-								<Products />
+								<Products products={products} />
 							</Card>
 						),
 					},

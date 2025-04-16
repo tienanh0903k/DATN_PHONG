@@ -14,7 +14,13 @@ import {
   unusedCategories,
 } from "../app/controllers/categories/category.controller";
 
-import { createProduct } from "../app/controllers/products/products.controller";
+import {
+  createProduct,
+  getAllProducts,
+  getProductByID,
+  getProductByShopId,
+  getProductByCateoryID,
+} from "../app/controllers/products/products.controller";
 import {
   createVariantType,
   createVariantValue,
@@ -49,6 +55,10 @@ serviceRouter.get("/unused-categories", unusedCategories);
 
 //products
 serviceRouter.post("/create-product", createProduct);
+serviceRouter.get("/get-all-products", getAllProducts);
+serviceRouter.get("/get-product-by-id/:id", getProductByID);
+serviceRouter.get("/get-product-by-category-id/:id", getProductByCateoryID);
+serviceRouter.get("/get-product-by-shop-id/:id", getProductByShopId);
 
 //product variant
 serviceRouter.post("/create-variant-type", createVariantType);
