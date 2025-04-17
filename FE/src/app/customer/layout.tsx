@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import '../globals.css';
 import Header from '@/components/LayoutComponents/Header/Header';
 
-import LoadingBar from '@/components/base/loading/LoadingBar';
+// import LoadingBar from '@/components/base/loading/LoadingBar';
 import SidebarCustomer from '@/components/LayoutComponents/Sidebar/SidebarCustomer';
 import Footer from '@/components/LayoutComponents/footer';
 const geistSans = Geist({
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<LoadingBar />
+				{/* <LoadingBar /> */}
 				<Header />
 				<div className=" h-[81vh] bg-[#f6f5fa]">
 					<div className=" container-customer flex gap-4 pt-4">

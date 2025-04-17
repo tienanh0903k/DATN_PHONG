@@ -1,11 +1,10 @@
 'use client';
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import NProgress from 'nprogress';
 
 const LoadingBar = () => {
 	const pathname = usePathname();
-	const searchParams = useSearchParams();
 
 	useEffect(() => {
 		NProgress.configure({ showSpinner: false });
@@ -16,7 +15,7 @@ const LoadingBar = () => {
 		setTimeout(() => {
 			NProgress.done();
 		}, 500);
-	}, [pathname, searchParams]);
+	}, [pathname]);
 
 	return null;
 };

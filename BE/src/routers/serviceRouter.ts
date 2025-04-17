@@ -32,7 +32,11 @@ import {
   getProductVariantByCategoryId,
   getProductVariantByTypeId,
 } from "../app/controllers/productVariant/productVariant.controller";
-
+import {
+  getCartByCustomerId,
+  addToCart,
+  deleteCart,
+} from "../app/controllers/cart/cart.controller";
 const serviceRouter = express.Router();
 
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
@@ -76,4 +80,9 @@ serviceRouter.get(
   "/get-product-variant-by-type-id/:typeId",
   getProductVariantByTypeId
 );
+
+//cart
+serviceRouter.get("/get-cart/:customerId", getCartByCustomerId);
+serviceRouter.post("/add-to-cart", addToCart);
+serviceRouter.delete("/delete-cart/:cartId", deleteCart);
 export default serviceRouter;

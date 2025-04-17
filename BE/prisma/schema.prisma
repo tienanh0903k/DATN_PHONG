@@ -40,6 +40,7 @@ model Customer {
   Notification     Notification[]
   Rating           Rating[]
   Shop            Shop?
+  Cart             Cart[]
 }
 
 
@@ -98,7 +99,6 @@ model Products {
   status           String @default("pending")
   Categories       Categories @relation(fields: [categoryId], references: [categoryId])
   Shop             Shop @relation(fields: [shopId], references: [shopId])
-  BillDetail       BillDetail[]
   ProductVariant   ProductVariant[]
 }
 
@@ -110,9 +110,19 @@ model ProductVariant {
   img              String
   price            Float
   Products         Products @relation(fields: [productId], references: [productId])
+  BillDetail       BillDetail[]
   VariantValue     VariantValue @relation(fields: [typeValueId], references: [typeValueId])
+  Cart             Cart[]
 }
 
+model Cart {
+  cartId           Int      @id @default(autoincrement())
+  id               Int
+  customerId       Int
+  quantity         Int
+  ProductVariant   ProductVariant @relation(fields: [id], references: [id])
+  Customer         Customer @relation(fields: [customerId], references: [customerId])
+}
 
 model VariantType {
   typeId           Int      @id @default(autoincrement())
@@ -157,11 +167,11 @@ model Bill {
 model BillDetail {
   billDetailId     Int      @id @default(autoincrement())
   billId           Int
-  productId        Int
+  id               Int
   quantity         Int
   totalPrice       Float
   Bill             Bill @relation(fields: [billId], references: [billId])
-  Products         Products @relation(fields: [productId], references: [productId])
+  ProductVariant   ProductVariant @relation(fields: [id], references: [id])
   Rating           Rating?
 }
 model Rating {
