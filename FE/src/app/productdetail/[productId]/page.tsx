@@ -4,24 +4,37 @@
 'use client';
 
 import { formatPrice } from '@/utils/formatprice';
-import { Rate } from 'antd';
+import { ConfigProvider, Modal, Rate } from 'antd';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import ProductServices from '@/services/prouduct/productServices';
 import { URL_SERVICE } from '@/constant/constant';
 import { Button } from 'antd';
+import CartServices from '@/services/CartServices/CartServices';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@/redux/store';
+import ModalAddress from '@/components/LayoutComponents/Header/modalAddress';
+import { useRouter } from 'next/navigation';
+import { updateCart } from '@/reducers/slice/cartSlice';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
+	const dispatch = useDispatch();
 	const [data, setData] = useState<any>([]);
 	const productServices = new ProductServices(URL_SERVICE || '', () => {});
+	const user = useSelector((state: RootState) => state.auth.userInfo);
+	const router = useRouter();
 	const { productId } = useParams();
-	console.log('productId', productId);
+	const [itemProduct, setItemProduct] = useState<any>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const cartServices = new CartServices(URL_SERVICE || '', () => {});
+
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
-
+			console.log('response', response);
 			setData(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
@@ -30,8 +43,22 @@ export default function DetailProduct() {
 	useEffect(() => {
 		fetchDataProduct();
 	}, [productId]);
-	// const params = useParams();
+	const showModal = () => {
+		if (user != null) {
+			setIsModalOpen(true);
+		} else {
+			alert('đăng nhập để thêm địa chỉ giao hàng');
+			router.push('/login');
+		}
+	};
 
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
 	const handleIncreaseQuantity = () => {
 		setQuantity((prev) => {
 			return prev + 1;
@@ -51,21 +78,34 @@ export default function DetailProduct() {
 			return {
 				...prev,
 				img: item.img,
-				price: item.price,
 			};
 		});
 	};
 
+	const handleAddToCart = async () => {
+		const formatdata = {
+			id: itemProduct.id,
+			customerId: user.customerId,
+			quantity: quantity,
+		};
+		try {
+			const response = await cartServices.addToCart(formatdata);
+			console.log(response);
+			dispatch(updateCart(response));
+		} catch (err) {
+			console.log(err);
+		}
+	};
 	return (
 		<div className="">
 			<div className="grid grid-cols-[1fr_360px] gap-6 pt-4">
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="grid grid-cols-[400px_1fr] gap-6 rounder-[8px] items-start">
 						{/* product image */}
-						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[450px] w-[400px]">
+						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[480px] w-[400px]">
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex flex-col gap-1">
-									<div className="flex gap-2 items-center">
+									<div className="flex gap-2 items-center border-b border-[#ebebf0] pb-2">
 										<div className="w-[368px]">
 											<img
 												src={data.img}
@@ -76,8 +116,8 @@ export default function DetailProduct() {
 											/>
 										</div>
 									</div>
-									<div className="flex gap-2 items-center">
-										{data.productVariant.map((item: any, index: number) => (
+									<div className="flex gap-2 items-center mt-2">
+										{data.productVariant?.map((item: any, index: number) => (
 											<div
 												key={index}
 												onClick={() => {
@@ -125,6 +165,44 @@ export default function DetailProduct() {
 										-12%
 									</div>
 								</div>
+
+								<div className="mb-4">
+									<p className="text-gray-800 font-semibold mb-2">Loại biến thể</p>
+									<div className="flex flex-col gap-4">
+										{[
+											...new Set(
+												data.productVariant?.map(
+													(item: any) => item.VariantValue?.VariantType?.typeName,
+												),
+											),
+										].map((typeName: any | undefined, index: number) => (
+											<div key={index}>
+												<p className="text-gray-600 text-sm font-semibold">{typeName}</p>
+
+												<div className="flex gap-2 mt-2">
+													{data.productVariant
+														?.filter(
+															(item: any) =>
+																item.VariantValue?.VariantType?.typeName === typeName,
+														)
+														.map((item: any, idx: number) => (
+															<button
+																key={idx}
+																onClick={() => setItemProduct(item)}
+																className={`border px-4 py-2 rounded-lg ${
+																	itemProduct === item
+																		? 'border-blue-500 bg-blue-100'
+																		: 'border-gray-300'
+																}`}
+															>
+																{item.VariantValue?.typeValue}
+															</button>
+														))}
+												</div>
+											</div>
+										))}
+									</div>
+								</div>
 							</div>
 							<div className="bg-white rounded-lg p-4">
 								<div className="font-semibold text-base leading-[150%] text-[#27272a]">
@@ -133,9 +211,32 @@ export default function DetailProduct() {
 								<div className="flex flex-row items-center py-2 border-b border-[#ebebf0] text-[14px] leading-[150%] font-normal text-[#27272a] gap-2">
 									<div className="flex items-center cursor-pointer gap-1 text-sm font-normal leading-[150%] flex-1">
 										<div className="text-[#27272a] overflow-hidden line-clamp-1 w-full">
-											Giao đến
+											Giao đến : {user?.address}
 										</div>
-										<span className="text-[#0a68ff]">Đổi</span>
+										<span onClick={showModal} className="text-[#0a68ff]">
+											Đổi
+										</span>
+										<ConfigProvider
+											theme={{
+												components: {
+													Modal: {
+														colorBgElevated: '#f8f8f8',
+													},
+												},
+											}}
+										>
+											<Modal
+												open={isModalOpen}
+												onOk={handleOk}
+												footer={false}
+												onCancel={handleCancel}
+												closable={false}
+												maskClosable={true}
+												width={'600px'}
+											>
+												<ModalAddress />
+											</Modal>
+										</ConfigProvider>
 									</div>
 								</div>
 								<div className="flex flex-row items-center py-2 border-b border-[#ebebf0] text-[14px] leading-[150%] font-normal text-[#27272a] gap-2">
@@ -144,7 +245,11 @@ export default function DetailProduct() {
 											Giao siêu tốc 2h
 										</div>
 										<div className="text-[#27272a]">
-											<img src="#" alt="now" className="object-contain w-full h-full block" />
+											<img
+												src="https://salt.tikicdn.com/ts/upload/14/11/46/13b71dceb805fb57ce37d57585bc3762.png"
+												alt="now"
+												className="object-contain w-[32px] h-full block"
+											/>
 										</div>
 									</div>
 								</div>
@@ -251,7 +356,7 @@ export default function DetailProduct() {
 									<Button color="danger" variant="solid">
 										Mua ngay
 									</Button>
-									<Button color="primary" variant="outlined">
+									<Button onClick={handleAddToCart} color="primary" variant="outlined">
 										Thêm vào giỏ hàng
 									</Button>
 								</div>

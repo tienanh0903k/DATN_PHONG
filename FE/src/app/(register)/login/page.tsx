@@ -26,7 +26,7 @@ const Login = () => {
 						<div className="flex flex-col items-center justify-center min-h-full">
 							<div className="w-[200px] h-[200px]">
 								<Image
-									src="https://hocvien.tiki.vn/wp-content/uploads/2023/08/Tiki-2D-mascot-19-1920x1920.png"
+									src="https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/Tiki-2D-mascot-19-1920x1920.png"
 									alt=""
 									width={200}
 									height={200}

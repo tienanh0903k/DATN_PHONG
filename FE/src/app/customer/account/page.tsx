@@ -35,6 +35,7 @@ type FormValues = {
 };
 const Account = () => {
 	const user = useSelector((state: RootState) => state.auth.userInfo);
+	console.log(user);
 	const dispatch = useDispatch();
 	const { register, handleSubmit, control } = useForm<FormValues>({
 		defaultValues: {
@@ -49,7 +50,7 @@ const Account = () => {
 
 	const fileInputRef = useRef(null);
 	const [img, setImg] = useState<any>(null);
-	const [avatar, setAvatar] = useState<any>(user?.avatar || '');
+	const [avatar, setAvatar] = useState<any>(user?.avatar);
 	const [loading, setLoading] = useState(false);
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

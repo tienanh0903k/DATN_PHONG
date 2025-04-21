@@ -12,7 +12,7 @@ class RegisterServices extends ServicesBase {
 
 	sendOtp(email: string) {
 		const url = `/send-otp`;
-		console.log(email);
+
 		return this.service.post(url, { email });
 	}
 

@@ -67,24 +67,27 @@ const ProductService = {
         include: {
           Categories: true,
           Shop: true,
-          ProductVariant: {
-            include: {
-              VariantValue: true,
-            },
-          },
         },
       });
       const productVariant = await Prismaclient.productVariant.findMany({
         where: { productId },
         include: {
-          VariantValue: true,
+          VariantValue: {
+            include: {
+              VariantType: true,
+            },
+          },
         },
       });
       const dataformat = {
         ...product,
         ...product?.Shop,
         ...product?.Categories,
-        productVariant: productVariant,
+        productVariant: productVariant.map((item) => ({
+          ...item,
+          ...item.VariantValue,
+          ...item.VariantValue.VariantType,
+        })),
       };
       return dataformat;
     } catch (error) {

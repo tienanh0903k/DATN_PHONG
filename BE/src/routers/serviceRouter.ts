@@ -39,6 +39,8 @@ import {
 } from "../app/controllers/cart/cart.controller";
 const serviceRouter = express.Router();
 
+import { AiController } from "../app/controllers/AI/ai.controller";
+
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
   "/change-number-phone/:customerId",
@@ -85,4 +87,8 @@ serviceRouter.get(
 serviceRouter.get("/get-cart/:customerId", getCartByCustomerId);
 serviceRouter.post("/add-to-cart", addToCart);
 serviceRouter.delete("/delete-cart/:cartId", deleteCart);
+
+//ai
+serviceRouter.post("/chat", AiController);
+
 export default serviceRouter;

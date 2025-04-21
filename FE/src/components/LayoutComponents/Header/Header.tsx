@@ -20,16 +20,21 @@ import RegisterServices from '@/services/register/registerServices';
 import ShopServicer from '@/services/shopServicer/shopServicer';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
 import { setShopInfo } from '@/reducers/slice/shopSlice';
+import { addtoCart } from '@/reducers/slice/cartSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
+import CartServices from '@/services/CartServices/CartServices';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
 	const { t } = useTranslation();
-	const [quantity] = useState(1);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const isLogin = useSelector((state: any) => state.auth.isAuthenticated);
+	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
+
+	const cart = useSelector((state: RootState) => state.cart);
+	const [quantity, setQuantity] = useState(cart?.cart.length);
+
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
@@ -37,7 +42,8 @@ const HeaderCpn = ({}: Props) => {
 		console.log('Unauthenticated');
 	});
 	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
-	// console.log('userInfo', isLogin);
+	const cartServices = new CartServices(URL_SERVICE || '', () => {});
+
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const showModalLogin = () => {
@@ -58,6 +64,19 @@ const HeaderCpn = ({}: Props) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
+	const fetchdataCart = async () => {
+		try {
+			const data = await cartServices.getCartByCustomerId(user.customerId);
+			dispatch(addtoCart(data));
+			setQuantity(cart.cart.length);
+		} catch (err) {
+			console.log(err);
+		}
+	};
+	useEffect(() => {
+		fetchdataCart();
+	}, []);
+
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken');
 		if (token) {
@@ -203,12 +222,15 @@ const HeaderCpn = ({}: Props) => {
 									<RegisterModal open={isModalVisible} onClose={handleCloseLogin} />
 								</div>
 							)}
-							<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd]">
+							<Link
+								href={'/cart'}
+								className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd]"
+							>
 								<BiCartAlt className="text-[20px] text-[--primary-color]" />
 								<span className="absolute -top-1 -right-2 min-w-[16px] h-[16px] rounded-full bg-[#ff424f] text-white text-[12px] flex items-center justify-center">
 									{quantity}
 								</span>
-							</div>
+							</Link>
 						</div>
 					</div>
 					<div className="flex justify-between">
