@@ -1,16 +1,32 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { Radio } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { formatPrice } from '@/utils/formatprice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import PaymentServices from '@/services/payment/paymentServices';
+import { URL_SERVICE } from '@/constant/constant';
 
 const CheckOut = () => {
 	const [deliveryMethod, setDeliveryMethod] = useState('standard');
 	const [paymentMethod, setPaymentMethod] = useState('cod');
 	const user = useSelector((state: RootState) => state.auth.userInfo);
-	console.log(user);
+	const selectedItems = JSON.parse(localStorage.getItem('selectedItems') || '[]');
+	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
+	const [product, setProduct] = useState<any>(null);
+	const getProduct = async () => {
+		const response = await paymentServices.getProduct(selectedItems[0].id);
+		setProduct(response);
+		console.log(selectedItems);
+	};
+	useEffect(() => {
+		getProduct();
+	}, []);
+
+	const handlePayment = async () => {};
 	return (
 		<div className=" py-4">
 			<div className="flex gap-8">
@@ -28,28 +44,58 @@ const CheckOut = () => {
 										<span className="text-[15px]">{formatPrice(39700)}</span>
 									</div>
 								</Radio>
-								<div className="ml-6 mt-2 text-[13px] text-[#808089]">
-									Được giao bởi TikiNOW Smart Logistics (giao từ Hồ Chí Minh)
-								</div>
 							</div>
 						</Radio.Group>
+						{product && (
+							<div className="bg-white p-4 rounded mb-4">
+								<h2 className="text-[18px] font-medium mb-4">Sản phẩm</h2>
+								<div className="flex gap-4 items-start w-full justify-between ">
+									<div className="flex gap-4 items-start ">
+										<img
+											src={product?.img}
+											alt={product?.productName}
+											className="w-[80px] h-[80px] object-cover border rounded"
+										/>
+										<div className="flex flex-col justify-between">
+											<div className="text-[15px] font-medium">
+												{product?.productName}({product?.typeValue})
+											</div>
+											<div className="text-[#808089] text-[13px]">
+												SL: x{selectedItems[0].quantity}
+											</div>
+										</div>
+									</div>
+									<div className="flex gap-2 items-center mt-1">
+										<span className="text-[#808089] line-through text-[14px]">
+											{formatPrice(selectedItems[0]?.totalPrice)}
+										</span>
+										<span className="text-[#FF424E] font-medium text-[16px]">
+											{formatPrice(selectedItems[0]?.totalPrice)}
+										</span>
+									</div>
+									<div className="ml-6 mt-2 text-[13px] text-[#808089] w-[30%]">
+										Được giao bởi TikiNOW Smart Logistics (giao từ Hồ Chí Minh)
+									</div>
+								</div>
+							</div>
+						)}
 					</div>
 
 					<div className="bg-white p-4 rounded">
 						<h2 className="text-[18px] font-medium mb-4">Chọn hình thức thanh toán</h2>
 						<Radio.Group value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
 							<div className="flex flex-col gap-4">
-								<Radio value="cod" className="p-4 border rounded">
+								<Radio value="cod" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/92/b2/78/1b3b9cda5208b323eb9ec56b84c7eb87.png"
 											alt="COD"
 											className="w-[32px] h-[32px] mr-2"
 										/>
-										<span>Thanh toán tiền mặt</span>
+										<span>Thanh toán sau khi nhận hàng</span>
 									</div>
 								</Radio>
-								<Radio value="momo" className="p-4 border rounded">
+								<Radio value="ViettelPay" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/5f/f9/75/d7ac8660aae903818dd7da8e4772e145.png"
@@ -59,27 +105,7 @@ const CheckOut = () => {
 										<span>Viettel Pay</span>
 									</div>
 								</Radio>
-								<Radio value="momo" className="p-4 border rounded">
-									<div className="flex items-center">
-										<img
-											src="https://salt.tikicdn.com/ts/upload/ce/f6/e8/ea880ef285856f744e3ffb5d282d4b2d.jpg"
-											alt="Momo"
-											className="w-[32px] h-[32px] mr-2"
-										/>
-										<span>Ví Momo</span>
-									</div>
-								</Radio>
-								<Radio value="zalopay" className="p-4 border rounded">
-									<div className="flex items-center">
-										<img
-											src="https://salt.tikicdn.com/ts/upload/2f/43/da/dd7ded6d3659036f15f95fe81ac76d93.png"
-											alt="ZaloPay"
-											className="w-[32px] h-[32px] mr-2"
-										/>
-										<span>Ví ZaloPay</span>
-									</div>
-								</Radio>
-								<Radio value="vnpay" className="p-4 border rounded">
+								<Radio value="vnpay" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/77/6a/df/a35cb9c62b9215dbc6d334a77cda4327.png"
@@ -90,17 +116,6 @@ const CheckOut = () => {
 										<span className="text-[13px] text-[#808089] ml-2">
 											Quét Mã QR từ ứng dụng ngân hàng
 										</span>
-									</div>
-								</Radio>
-								<Radio value="card" className="p-4 border rounded">
-									<div className="flex items-center">
-										<img src="/img/card.png" alt="Card" className="w-[32px] h-[32px] mr-2" />
-										<span>Thẻ tín dụng/Ghi nợ</span>
-									</div>
-									<div className="flex gap-2 mt-2 ml-8">
-										<img src="/img/visa.png" alt="Visa" className="h-6" />
-										<img src="/img/mastercard.png" alt="Mastercard" className="h-6" />
-										<img src="/img/jcb.png" alt="JCB" className="h-6" />
 									</div>
 								</Radio>
 							</div>
@@ -126,7 +141,7 @@ const CheckOut = () => {
 						<div className="border-t border-b my-4 py-4">
 							<div className="flex justify-between mb-2">
 								<span>Tạm tính</span>
-								<span>{formatPrice(483000)}</span>
+								<span>{formatPrice(selectedItems[0]?.totalPrice)}</span>
 							</div>
 							<div className="flex justify-between mb-2">
 								<span>Phí vận chuyển</span>
@@ -134,11 +149,13 @@ const CheckOut = () => {
 							</div>
 							<div className="flex justify-between mb-2">
 								<span>Giảm giá</span>
-								<span className="text-[#FF424E]">-{formatPrice(233000)}</span>
+								<span className="text-[#FF424E]">
+									-{formatPrice(selectedItems[0]?.totalPrice * 0.1)}
+								</span>
 							</div>
 							<div className="flex justify-between">
 								<span>Giảm giá vận chuyển</span>
-								<span className="text-[#FF424E]">-{formatPrice(25000)}</span>
+								<span className="text-[#FF424E]">-{formatPrice(20000)}</span>
 							</div>
 						</div>
 
@@ -146,13 +163,17 @@ const CheckOut = () => {
 							<div className="flex justify-between mb-1">
 								<span>Tổng tiền</span>
 								<div className="text-right">
-									<div className="text-[#FF424E] text-[20px] font-medium">{formatPrice(289700)}</div>
+									<div className="text-[#FF424E] text-[20px] font-medium">
+										{formatPrice(selectedItems[0]?.totalPrice * 0.9)}
+									</div>
 									<div className="text-[#808089] text-[13px]">(Đã bao gồm VAT nếu có)</div>
 								</div>
 							</div>
 						</div>
 
-						<button className="w-full bg-[#FF424E] text-white py-3 rounded">Đặt hàng</button>
+						<button onClick={handlePayment} className="w-full bg-[#FF424E] text-white py-3 rounded">
+							Đặt hàng
+						</button>
 					</div>
 				</div>
 			</div>

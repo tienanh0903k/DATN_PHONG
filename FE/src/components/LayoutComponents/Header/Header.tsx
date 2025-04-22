@@ -20,7 +20,7 @@ import RegisterServices from '@/services/register/registerServices';
 import ShopServicer from '@/services/shopServicer/shopServicer';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
 import { setShopInfo } from '@/reducers/slice/shopSlice';
-import { addtoCart } from '@/reducers/slice/cartSlice';
+import { addtoCart, clearCart } from '@/reducers/slice/cartSlice';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
@@ -32,8 +32,7 @@ const HeaderCpn = ({}: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-	const cart = useSelector((state: RootState) => state.cart);
-	const [quantity, setQuantity] = useState(cart?.cart.length);
+	const cart = useSelector((state: RootState) => state.cart.cart);
 
 	const dispatch = useDispatch();
 	const router = useRouter();
@@ -64,18 +63,10 @@ const HeaderCpn = ({}: Props) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	const fetchdataCart = async () => {
-		try {
-			const data = await cartServices.getCartByCustomerId(user.customerId);
-			dispatch(addtoCart(data));
-			setQuantity(cart.cart.length);
-		} catch (err) {
-			console.log(err);
-		}
-	};
-	useEffect(() => {
-		fetchdataCart();
-	}, []);
+
+	// useEffect(() => {
+	// 	fetchdataCart();
+	// }, []);
 
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken');
@@ -120,9 +111,12 @@ const HeaderCpn = ({}: Props) => {
 		const shop: any = await shopServices.getShop(response.customerId);
 		dispatch(setUserInfo(response));
 		dispatch(setShopInfo(shop?.shop));
+		const data = await cartServices.getCartByCustomerId(response.customerId);
+		dispatch(addtoCart(data));
 	};
 	const handleLogout = () => {
 		dispatch(logout());
+		dispatch(clearCart());
 		localStorage.removeItem('accessToken');
 		router.push('/');
 	};
@@ -228,7 +222,7 @@ const HeaderCpn = ({}: Props) => {
 							>
 								<BiCartAlt className="text-[20px] text-[--primary-color]" />
 								<span className="absolute -top-1 -right-2 min-w-[16px] h-[16px] rounded-full bg-[#ff424f] text-white text-[12px] flex items-center justify-center">
-									{quantity}
+									{cart.length}
 								</span>
 							</Link>
 						</div>

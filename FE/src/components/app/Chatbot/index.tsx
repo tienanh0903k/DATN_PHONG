@@ -69,7 +69,7 @@ const Chatbot = () => {
 			const response: any = await aiServices.chat(currentInput);
 			console.log(response);
 
-			const aiText = response?.candidates?.[0]?.content?.parts?.[0]?.text;
+			const aiText = response.reply;
 
 			if (aiText) {
 				const newAiMessage: Message = {
@@ -107,11 +107,11 @@ const Chatbot = () => {
 	};
 
 	return (
-		<div className="fixed bottom-4 right-4 z-50">
+		<div className="fixed bottom-4 right-4 z-50 ">
 			{!isOpen ? (
 				<button
 					onClick={() => setIsOpen(true)}
-					className="bg-[#0B74E5] text-white rounded-full p-4 flex items-center gap-2"
+					className="bg-[#0B74E5] text-white rounded-full p-4 flex items-center gap-2 cursor-pointer"
 				>
 					<img
 						src="https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/a2b2c31ea7b0ad4b2e7d0e6ef817241b.png"
@@ -125,7 +125,7 @@ const Chatbot = () => {
 					{/* Header */}
 					<div className="p-4 border-b flex justify-between items-center">
 						<h3 className="font-medium">Trợ lý AI</h3>
-						<button onClick={() => setIsOpen(false)}>
+						<button className="cursor-pointer" onClick={() => setIsOpen(false)}>
 							<IoClose size={24} />
 						</button>
 					</div>
@@ -137,16 +137,20 @@ const Chatbot = () => {
 							<div className="flex justify-center gap-4">
 								<button
 									onClick={() => setSelectedSupport('ai')}
-									className="flex flex-col items-center p-4 border rounded-lg hover:border-blue-500"
+									className="flex flex-col items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer"
 								>
-									<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-2">
-										<img src="/img/ai-avatar.png" alt="AI" className="w-10 h-10" />
+									<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-2 ">
+										<img
+											src="https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/a2b2c31ea7b0ad4b2e7d0e6ef817241b.png"
+											alt="AI"
+											className="w-10 h-10"
+										/>
 									</div>
 									<span>Hỏi Trợ lý AI</span>
 								</button>
 								<button
 									onClick={() => setSelectedSupport('human')}
-									className="flex flex-col items-center p-4 border rounded-lg hover:border-blue-500"
+									className="flex flex-col items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer"
 								>
 									<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-2">
 										<img src="/img/human-avatar.png" alt="Human" className="w-10 h-10" />

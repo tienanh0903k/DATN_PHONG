@@ -159,6 +159,7 @@ model Bill {
   billId           Int      @id @default(autoincrement())
   customerId       Int
   numberPhone      String
+  address          String
   status           String
   BillDetail       BillDetail[]
   Customer         Customer @relation(fields: [customerId], references: [customerId])

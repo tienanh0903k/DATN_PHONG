@@ -23,7 +23,7 @@ type Props = {
 
 const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
 	const [quantity, setQuantity] = useState<number>(quantities);
-	const [totalPrice, setTotalPrice] = useState<number>(price);
+	const [totalPrice, setTotalPrice] = useState<number>(price * quantities);
 	const [isSelected, setIsSelected] = useState<boolean>(false);
 
 	const onChange: CheckboxProps['onChange'] = (e) => {

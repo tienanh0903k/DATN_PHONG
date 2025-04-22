@@ -6,6 +6,7 @@ import CartItem from './cartItem';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { formatPrice } from '@/utils/formatprice';
+import { useRouter } from 'next/navigation';
 type CartItemType = {
 	id: number;
 	name: string;
@@ -19,6 +20,7 @@ const CartList = () => {
 	const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 	const cart = useSelector((state: RootState) => state.cart.cart);
 	const isAllSelected = cart.length > 0 && selectedItems.length === cart.length;
+	const router = useRouter();
 
 	const handleSelectAll: CheckboxProps['onChange'] = (e) => {
 		if (e.target.checked) {
@@ -38,6 +40,7 @@ const CartList = () => {
 	const handleDelete = () => {
 		console.log('Delete selected items');
 	};
+	console.log('selectedItems', selectedItems);
 
 	const handleSelect = (item: CartItemType) => {
 		setSelectedItems((prev) => {
@@ -58,7 +61,10 @@ const CartList = () => {
 
 	const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
 	const totalPrice = selectedItems.reduce((sum, item) => sum + item.totalPrice, 0);
-
+	const handleBuy = () => {
+		localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+		router.push('/checkout');
+	};
 	return (
 		<div className="w-full flex">
 			<div className="flex-1 w-[(calc(100% - 380px))] mr-5">
@@ -123,6 +129,7 @@ const CartList = () => {
 					</div>
 					<button
 						disabled={totalQuantity === 0}
+						onClick={handleBuy}
 						className="w-full bg-[#ff424e] cursor-pointer text-white py-3 rounded-sm mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						Mua Hàng ({selectedItems.length})

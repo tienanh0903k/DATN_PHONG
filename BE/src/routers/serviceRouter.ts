@@ -40,6 +40,10 @@ import {
 const serviceRouter = express.Router();
 
 import { AiController } from "../app/controllers/AI/ai.controller";
+import {
+  getProduct,
+  createBillAndPayment,
+} from "../app/controllers/payment/payment.controller";
 
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
@@ -90,5 +94,9 @@ serviceRouter.delete("/delete-cart/:cartId", deleteCart);
 
 //ai
 serviceRouter.post("/chat", AiController);
+
+//payment
+serviceRouter.get("/get-product/:id", getProduct);
+serviceRouter.post("/create-bill-and-payment", createBillAndPayment);
 
 export default serviceRouter;
