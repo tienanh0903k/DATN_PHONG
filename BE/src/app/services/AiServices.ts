@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 const AiServices = {
   chat: async (message: string) => {
     const keywords = message.toLowerCase().split(" ");
-    console.log(keywords);
+
     const products = await prisma.products.findMany({
       where: {
         OR: keywords.map((kw) => ({

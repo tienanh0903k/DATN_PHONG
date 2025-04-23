@@ -160,11 +160,16 @@ model Bill {
   customerId       Int
   numberPhone      String
   address          String
-  status           String
+  statusId         Int
   BillDetail       BillDetail[]
   Customer         Customer @relation(fields: [customerId], references: [customerId])
+  StatusBill       StatusBill @relation(fields: [statusId], references: [statusId])
 }
-
+model StatusBill {
+  statusId         Int      @id @default(autoincrement())
+  statusName       String
+  Bill             Bill[]
+}
 model BillDetail {
   billDetailId     Int      @id @default(autoincrement())
   billId           Int

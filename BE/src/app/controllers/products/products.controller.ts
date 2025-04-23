@@ -76,7 +76,6 @@ const getProductByShopId = async (req: Request, res: Response) => {
       message: "Get product by shop ID successfully",
       data: dataformat,
     });
-    console.log("response", response);
   } catch (error) {
     res.status(500).json({
       message: "Get product by shop ID failed",

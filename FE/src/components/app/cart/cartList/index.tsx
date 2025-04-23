@@ -7,18 +7,24 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { formatPrice } from '@/utils/formatprice';
 import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { SelectedItems } from '@/reducers/slice/checkout';
 type CartItemType = {
 	id: number;
 	name: string;
 	quantity: number;
 	price: number;
+	img: string;
+	variantValue: string;
 	totalPrice: number;
 	isSelected: boolean;
 };
 const CartList = () => {
 	// const [quantity, setQuantity] = useState(0);
+	const dispatch = useDispatch();
 	const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 	const cart = useSelector((state: RootState) => state.cart.cart);
+	console.log('cart', cart);
 	const isAllSelected = cart.length > 0 && selectedItems.length === cart.length;
 	const router = useRouter();
 
@@ -29,6 +35,8 @@ const CartList = () => {
 				name: item.productName,
 				quantity: item.quantity,
 				price: item.price,
+				img: item.image,
+				variantValue: item.typeValue,
 				totalPrice: item.quantity * item.price,
 				isSelected: true,
 			}));
@@ -40,7 +48,6 @@ const CartList = () => {
 	const handleDelete = () => {
 		console.log('Delete selected items');
 	};
-	console.log('selectedItems', selectedItems);
 
 	const handleSelect = (item: CartItemType) => {
 		setSelectedItems((prev) => {
@@ -62,7 +69,7 @@ const CartList = () => {
 	const totalQuantity = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
 	const totalPrice = selectedItems.reduce((sum, item) => sum + item.totalPrice, 0);
 	const handleBuy = () => {
-		localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+		dispatch(SelectedItems(selectedItems));
 		router.push('/checkout');
 	};
 	return (
@@ -90,6 +97,7 @@ const CartList = () => {
 							name={item.productName}
 							quantities={item.quantity}
 							price={item.price}
+							variantValue={item.typeValue}
 							onSelect={handleSelect}
 							isSelected={selectedItems.some((selected) => selected.id === item.id)}
 						/>

@@ -10,22 +10,25 @@ type Props = {
 	name: string;
 	quantities: number;
 	price: number;
+	variantValue: string;
 	isSelected: boolean;
 	onSelect?: (item: {
 		id: number;
 		name: string;
 		quantity: number;
 		price: number;
+		img: string;
+		variantValue: string;
 		totalPrice: number;
 		isSelected: boolean;
 	}) => void;
 };
 
-const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
+const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: Props) => {
 	const [quantity, setQuantity] = useState<number>(quantities);
 	const [totalPrice, setTotalPrice] = useState<number>(price * quantities);
 	const [isSelected, setIsSelected] = useState<boolean>(false);
-
+	console.log('quantities', quantities);
 	const onChange: CheckboxProps['onChange'] = (e) => {
 		setIsSelected(e.target.checked);
 		if (onSelect) {
@@ -34,6 +37,8 @@ const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
 				name,
 				quantity,
 				price,
+				img,
+				variantValue,
 				totalPrice: price * quantities,
 				isSelected: e.target.checked,
 			});
@@ -56,6 +61,8 @@ const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
 					name,
 					quantity: newQuantity,
 					price,
+					img,
+					variantValue,
 					totalPrice: newTotalPrice,
 					isSelected,
 				});
@@ -74,6 +81,8 @@ const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
 				name,
 				quantity: newQuantity,
 				price,
+				img,
+				variantValue,
 				totalPrice: newTotalPrice,
 				isSelected,
 			});
@@ -92,7 +101,7 @@ const CartItem = ({ id, img, name, quantities, price, onSelect }: Props) => {
 						<h3 className="text-[14px] leading-[150%] text-[#27272a] line-clamp-2 hover:text-[#0b74e5]">
 							{name}
 						</h3>
-						<p className="cart-item__description">Product Description</p>
+						<p className="cart-item__description">{variantValue}</p>
 					</div>
 				</div>
 			</div>

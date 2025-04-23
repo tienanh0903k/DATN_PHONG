@@ -1,32 +1,42 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client';
 import { Radio } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { formatPrice } from '@/utils/formatprice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+
 import PaymentServices from '@/services/payment/paymentServices';
 import { URL_SERVICE } from '@/constant/constant';
 
 const CheckOut = () => {
 	const [deliveryMethod, setDeliveryMethod] = useState('standard');
 	const [paymentMethod, setPaymentMethod] = useState('cod');
-	const user = useSelector((state: RootState) => state.auth.userInfo);
-	const selectedItems = JSON.parse(localStorage.getItem('selectedItems') || '[]');
-	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
-	const [product, setProduct] = useState<any>(null);
-	const getProduct = async () => {
-		const response = await paymentServices.getProduct(selectedItems[0].id);
-		setProduct(response);
-		console.log(selectedItems);
-	};
-	useEffect(() => {
-		getProduct();
-	}, []);
 
-	const handlePayment = async () => {};
+	const user = useSelector((state: RootState) => state.auth.userInfo);
+	const selectedItems = useSelector((state: RootState) => state.checkout.selectedItems);
+
+	const totalPrice = selectedItems.reduce((acc: number, item: any) => acc + item.totalPrice, 0);
+
+	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
+
+	const handlePayment = async () => {
+		const data = {
+			customerId: user?.customerId,
+			numberPhone: user?.numberPhone,
+			address: user?.address,
+			cartItems: selectedItems,
+		};
+		if (paymentMethod === '1') {
+			console.log('Thanh toán sau khi nhận hàng');
+		} else if (paymentMethod != '1') {
+			const response: any = await paymentServices.createOrder(data);
+			if (response?.checkoutUrl) {
+				window.location.href = response.checkoutUrl;
+			}
+		}
+	};
 	return (
 		<div className=" py-4">
 			<div className="flex gap-8">
@@ -46,46 +56,45 @@ const CheckOut = () => {
 								</Radio>
 							</div>
 						</Radio.Group>
-						{product && (
-							<div className="bg-white p-4 rounded mb-4">
-								<h2 className="text-[18px] font-medium mb-4">Sản phẩm</h2>
-								<div className="flex gap-4 items-start w-full justify-between ">
-									<div className="flex gap-4 items-start ">
-										<img
-											src={product?.img}
-											alt={product?.productName}
-											className="w-[80px] h-[80px] object-cover border rounded"
-										/>
-										<div className="flex flex-col justify-between">
-											<div className="text-[15px] font-medium">
-												{product?.productName}({product?.typeValue})
-											</div>
-											<div className="text-[#808089] text-[13px]">
-												SL: x{selectedItems[0].quantity}
+						{selectedItems &&
+							selectedItems.map((item: any, index: number) => (
+								<div key={index} className="bg-white p-4 rounded mb-4">
+									<h2 className="text-[18px] font-medium mb-4">Sản phẩm</h2>
+									<div className="flex gap-4 items-start w-full justify-between ">
+										<div className="flex gap-4 items-start ">
+											<img
+												src={item?.img}
+												alt={item?.name}
+												className="w-[80px] h-[80px] object-cover border rounded"
+											/>
+											<div className="flex flex-col justify-between">
+												<div className="text-[15px] font-medium">
+													{item?.name}({item?.variantValue})
+												</div>
+												<div className="text-[#808089] text-[13px]">SL: x{item.quantity}</div>
 											</div>
 										</div>
-									</div>
-									<div className="flex gap-2 items-center mt-1">
-										<span className="text-[#808089] line-through text-[14px]">
-											{formatPrice(selectedItems[0]?.totalPrice)}
-										</span>
-										<span className="text-[#FF424E] font-medium text-[16px]">
-											{formatPrice(selectedItems[0]?.totalPrice)}
-										</span>
-									</div>
-									<div className="ml-6 mt-2 text-[13px] text-[#808089] w-[30%]">
-										Được giao bởi TikiNOW Smart Logistics (giao từ Hồ Chí Minh)
+										<div className="flex gap-2 items-center mt-1">
+											<span className="text-[#808089] line-through text-[14px]">
+												{formatPrice(item?.totalPrice)}
+											</span>
+											<span className="text-[#FF424E] font-medium text-[16px]">
+												{formatPrice(item?.totalPrice)}
+											</span>
+										</div>
+										<div className="ml-6 mt-2 text-[13px] text-[#808089] w-[30%]">
+											Được giao bởi TikiNOW Smart Logistics (giao từ Hồ Chí Minh)
+										</div>
 									</div>
 								</div>
-							</div>
-						)}
+							))}
 					</div>
 
 					<div className="bg-white p-4 rounded">
 						<h2 className="text-[18px] font-medium mb-4">Chọn hình thức thanh toán</h2>
 						<Radio.Group value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
 							<div className="flex flex-col gap-4">
-								<Radio value="cod" className="p-4 rounded">
+								<Radio value="1" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/92/b2/78/1b3b9cda5208b323eb9ec56b84c7eb87.png"
@@ -95,7 +104,7 @@ const CheckOut = () => {
 										<span>Thanh toán sau khi nhận hàng</span>
 									</div>
 								</Radio>
-								<Radio value="ViettelPay" className="p-4 rounded">
+								<Radio value="2" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/5f/f9/75/d7ac8660aae903818dd7da8e4772e145.png"
@@ -105,7 +114,7 @@ const CheckOut = () => {
 										<span>Viettel Pay</span>
 									</div>
 								</Radio>
-								<Radio value="vnpay" className="p-4 rounded">
+								<Radio value="3" className="p-4 rounded">
 									<div className="flex items-center">
 										<img
 											src="https://salt.tikicdn.com/ts/upload/77/6a/df/a35cb9c62b9215dbc6d334a77cda4327.png"
@@ -141,7 +150,7 @@ const CheckOut = () => {
 						<div className="border-t border-b my-4 py-4">
 							<div className="flex justify-between mb-2">
 								<span>Tạm tính</span>
-								<span>{formatPrice(selectedItems[0]?.totalPrice)}</span>
+								<span>{formatPrice(totalPrice)}</span>
 							</div>
 							<div className="flex justify-between mb-2">
 								<span>Phí vận chuyển</span>
@@ -149,9 +158,7 @@ const CheckOut = () => {
 							</div>
 							<div className="flex justify-between mb-2">
 								<span>Giảm giá</span>
-								<span className="text-[#FF424E]">
-									-{formatPrice(selectedItems[0]?.totalPrice * 0.1)}
-								</span>
+								<span className="text-[#FF424E]">-{formatPrice(totalPrice * 0.1)}</span>
 							</div>
 							<div className="flex justify-between">
 								<span>Giảm giá vận chuyển</span>
@@ -164,7 +171,7 @@ const CheckOut = () => {
 								<span>Tổng tiền</span>
 								<div className="text-right">
 									<div className="text-[#FF424E] text-[20px] font-medium">
-										{formatPrice(selectedItems[0]?.totalPrice * 0.9)}
+										{formatPrice(totalPrice * 0.9)}
 									</div>
 									<div className="text-[#808089] text-[13px]">(Đã bao gồm VAT nếu có)</div>
 								</div>

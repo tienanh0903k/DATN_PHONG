@@ -1,54 +1,54 @@
-import Prismaclient from "../../../prisma";
+import PrismaClient from "../../../prisma";
+import PayOS from "@payos/node";
 
 const PAYOS_CLIENT_ID = process.env.ClientID!;
 const PAYOS_API_KEY = process.env.APIKey!;
+const PAYOS_CHECKSUM_KEY = process.env.ChecksumKey!;
 
-const createBillAndPayment = async (data: any) => {
-  try {
-    const bill = await Prismaclient.bill.create({
-      data: {
-        customerId: data.customerId,
-        numberPhone: data.numberPhone,
-        address: data.address,
-        status: "PENDING",
-        BillDetail: {
-          create: data.cartItems.map((item: any) => ({
-            id: item.id,
-            quantity: item.quantity,
-            totalPrice: item.totalPrice,
-          })),
+const payOS = new PayOS(PAYOS_CLIENT_ID, PAYOS_API_KEY, PAYOS_CHECKSUM_KEY);
+
+export const PayOsServices = {
+  createOrder: async (data: any) => {
+    try {
+      // 1. Tạo hóa đơn trong database
+      const bill = await PrismaClient.bill.create({
+        data: {
+          customerId: data.customerId,
+          numberPhone: data.numberPhone,
+          address: data.address,
+          statusId: 1,
+          BillDetail: {
+            create: data.cartItems.map((item: any) => ({
+              id: item.id,
+              quantity: item.quantity,
+              totalPrice: item.totalPrice,
+            })),
+          },
         },
-      },
-    });
-    const totalAmount = data.cartItems.reduce(
-      (sum: number, item: any) => sum + item.totalPrice,
-      0
-    );
-    const response = await fetch("https://api.payos.vn/v1/payment-requests", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Client-Id": PAYOS_CLIENT_ID,
-        "Api-Key": PAYOS_API_KEY,
-      },
-      body: JSON.stringify({
+      });
+
+      // 3. Gửi yêu cầu tạo đơn thanh toán lên PayOS
+      console.log(PAYOS_CLIENT_ID, PAYOS_API_KEY, PAYOS_CHECKSUM_KEY);
+      const paymentLinkResponse = await payOS.createPaymentLink({
         orderCode: bill.billId,
-        amount: totalAmount,
+        amount: 5000,
         description: `Thanh toán hóa đơn #${bill.billId}`,
-        returnUrl: "https://your-frontend.com/payment-success",
-        cancelUrl: "https://your-frontend.com/payment-cancel",
-      }),
-    });
-
-    const payosRes = await response.json();
-
-    return {
-      billId: bill.billId,
-      checkoutUrl: payosRes.checkoutUrl,
-    };
-  } catch (err) {
-    console.error("Error in createBillAndPayment:", err);
-    throw err;
-  }
+        returnUrl: "http://localhost:3000/checkout/success",
+        cancelUrl:
+          "http://localhost:3000/checkout/failure?message=Thanh toán không thành công",
+        items: data.cartItems.map((item: any) => ({
+          name: item.name || `Sản phẩm #${item.id}`,
+          quantity: item.quantity,
+          price: item.totalPrice,
+        })),
+      });
+      return {
+        billId: bill.billId,
+        checkoutUrl: paymentLinkResponse.checkoutUrl,
+      };
+    } catch (err) {
+      console.error("Lỗi tạo đơn thanh toán:", err);
+      throw new Error("Không thể tạo đơn thanh toán");
+    }
+  },
 };
-export default { createBillAndPayment };

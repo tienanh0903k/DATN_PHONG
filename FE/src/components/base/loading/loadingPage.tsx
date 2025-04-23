@@ -1,11 +1,9 @@
-/* eslint-disable @next/next/no-img-element */
-
-'use client';
+import { Spin } from 'antd';
 
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-const LoadingOverlay = () => {
+const LoadingPage = () => {
 	const [loading, setLoading] = useState(false);
 	const pathname = usePathname();
 
@@ -14,7 +12,7 @@ const LoadingOverlay = () => {
 
 		const timer = setTimeout(() => {
 			setLoading(false);
-		}, 1000);
+		}, 500);
 
 		return () => clearTimeout(timer);
 	}, [pathname]);
@@ -22,28 +20,10 @@ const LoadingOverlay = () => {
 	if (!loading) return null;
 
 	return (
-		<div style={overlayStyle}>
-			<img src="/loading.gif" alt="loading" style={gifStyle} />
+		<div className="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+			<Spin size="large" />
 		</div>
 	);
 };
 
-const overlayStyle: React.CSSProperties = {
-	position: 'fixed',
-	top: 0,
-	left: 0,
-	width: '100vw',
-	height: '100vh',
-	backgroundColor: 'rgba(0,0,0,0.4)',
-	display: 'flex',
-	justifyContent: 'center',
-	alignItems: 'center',
-	zIndex: 9999,
-};
-
-const gifStyle: React.CSSProperties = {
-	width: '80px',
-	height: '80px',
-};
-
-export default LoadingOverlay;
+export default LoadingPage;

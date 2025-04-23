@@ -42,7 +42,7 @@ const serviceRouter = express.Router();
 import { AiController } from "../app/controllers/AI/ai.controller";
 import {
   getProduct,
-  createBillAndPayment,
+  createOrder,
 } from "../app/controllers/payment/payment.controller";
 
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
@@ -97,6 +97,6 @@ serviceRouter.post("/chat", AiController);
 
 //payment
 serviceRouter.get("/get-product/:id", getProduct);
-serviceRouter.post("/create-bill-and-payment", createBillAndPayment);
+serviceRouter.post("/create-order", createOrder);
 
 export default serviceRouter;

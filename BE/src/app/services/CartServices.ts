@@ -9,7 +9,11 @@ const CartService = {
           customerId: customerId,
         },
         include: {
-          ProductVariant: true,
+          ProductVariant: {
+            include: {
+              VariantValue: true,
+            },
+          },
         },
       });
 
@@ -29,6 +33,7 @@ const CartService = {
         );
         return {
           ...item,
+          ...item.ProductVariant.VariantValue,
           productName: product?.productName,
           price: product?.price,
           image: product?.img,
