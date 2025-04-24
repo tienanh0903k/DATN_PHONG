@@ -42,6 +42,10 @@ const Chatbot = () => {
 		scrollToBottom();
 	}, [messages]);
 
+	useEffect(() => {
+		console.log('Messages updated:', messages);
+	}, [messages]);
+
 	const formatMessage = (text: string) => {
 		return text.split('\n').map((line, index) => (
 			<span key={index}>
@@ -67,14 +71,12 @@ const Chatbot = () => {
 
 		try {
 			const response: any = await aiServices.chat(currentInput);
-			console.log(response);
-
 			const aiText = response.reply;
-
+			console.log(aiText);
 			if (aiText) {
 				const newAiMessage: Message = {
 					id: Date.now() + 1,
-					text: aiText,
+					text: aiText.response,
 					isAI: true,
 				};
 				setMessages((prev) => [...prev, newAiMessage]);
@@ -165,8 +167,8 @@ const Chatbot = () => {
 					{selectedSupport && (
 						<>
 							<div className="flex-1 overflow-y-auto p-4">
-								{messages.map((message) => (
-									<div key={message.id} className={`flex mb-4 ${message.isAI ? '' : 'justify-end'}`}>
+								{messages.map((message, index: number) => (
+									<div key={index} className={`flex mb-4 ${message.isAI ? '' : 'justify-end'}`}>
 										{message.isAI && (
 											<div className="w-8 h-8 rounded-full bg-blue-100 mr-2 flex-shrink-0">
 												<img

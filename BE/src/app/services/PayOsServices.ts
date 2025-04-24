@@ -27,13 +27,11 @@ export const PayOsServices = {
         },
       });
 
-      // 3. Gửi yêu cầu tạo đơn thanh toán lên PayOS
-      console.log(PAYOS_CLIENT_ID, PAYOS_API_KEY, PAYOS_CHECKSUM_KEY);
       const paymentLinkResponse = await payOS.createPaymentLink({
         orderCode: bill.billId,
         amount: 5000,
         description: `Thanh toán hóa đơn #${bill.billId}`,
-        returnUrl: "http://localhost:3000/checkout/success",
+        returnUrl: `http://localhost:3000/checkout/success?billId=${bill.billId}`,
         cancelUrl:
           "http://localhost:3000/checkout/failure?message=Thanh toán không thành công",
         items: data.cartItems.map((item: any) => ({

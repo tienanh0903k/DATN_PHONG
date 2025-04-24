@@ -1,9 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-
+import { useSearchParams } from 'next/navigation';
+import PaymentServices from '@/services/payment/paymentServices';
+import { URL_SERVICE } from '@/constant/constant';
+import { useEffect } from 'react';
 export default function SuccessPage() {
+	const searchParams = useSearchParams();
+	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
+	const billId = searchParams.get('billId');
+
+	const updateBill = async () => {
+		try {
+			await paymentServices.updateBill(Number(billId), 2);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		updateBill();
+	}, []);
+
 	return (
 		<div className=" bg-gray-50 flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
@@ -24,7 +44,7 @@ export default function SuccessPage() {
 						Quay về trang chủ
 					</Link>
 					<Link
-						href="/orders"
+						href="customer/order"
 						className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 					>
 						Xem đơn hàng của tôi

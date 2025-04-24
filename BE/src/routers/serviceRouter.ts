@@ -43,6 +43,8 @@ import { AiController } from "../app/controllers/AI/ai.controller";
 import {
   getProduct,
   createOrder,
+  updateBill,
+  createOrderPaylate,
 } from "../app/controllers/payment/payment.controller";
 
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
@@ -98,5 +100,7 @@ serviceRouter.post("/chat", AiController);
 //payment
 serviceRouter.get("/get-product/:id", getProduct);
 serviceRouter.post("/create-order", createOrder);
+serviceRouter.post("/create-order-paylate", createOrderPaylate);
+serviceRouter.put("/update-bill", updateBill);
 
 export default serviceRouter;

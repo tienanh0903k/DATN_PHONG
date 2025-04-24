@@ -11,5 +11,11 @@ class PaymentServices extends ServicesBase {
 	createOrder(data: any) {
 		return this.service.post('/create-order', data);
 	}
+	updateBill(billId: number, status: number) {
+		return this.service.put('/update-bill', { billId, status });
+	}
+	createOrderPaylate(data: any) {
+		return this.service.post('/create-order-paylate', data);
+	}
 }
 export default PaymentServices;

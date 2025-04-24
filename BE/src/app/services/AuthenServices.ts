@@ -3,7 +3,7 @@ import { IAuthen } from "./interfaces/IAuthen";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import generateRandomString from "../../utils";
-import { supabase, twilioClient } from "../../config/supabase";
+import { supabase } from "../../config/supabase";
 const SignUp = async (dataProps: IAuthen) => {
   const existingAccount = await Prismaclient.account.findFirst({
     where: { userName: dataProps.userName },

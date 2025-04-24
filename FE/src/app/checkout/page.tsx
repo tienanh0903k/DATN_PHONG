@@ -1,19 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { Radio } from 'antd';
+import { Radio, message, Spin } from 'antd';
 import { useState } from 'react';
 import { formatPrice } from '@/utils/formatprice';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-
+import { useRouter } from 'next/navigation';
 import PaymentServices from '@/services/payment/paymentServices';
 import { URL_SERVICE } from '@/constant/constant';
 
 const CheckOut = () => {
 	const [deliveryMethod, setDeliveryMethod] = useState('standard');
 	const [paymentMethod, setPaymentMethod] = useState('cod');
-
+	const [isLoading, setIsLoading] = useState(false);
+	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const selectedItems = useSelector((state: RootState) => state.checkout.selectedItems);
 
@@ -28,13 +29,26 @@ const CheckOut = () => {
 			address: user?.address,
 			cartItems: selectedItems,
 		};
-		if (paymentMethod === '1') {
-			console.log('Thanh toán sau khi nhận hàng');
-		} else if (paymentMethod != '1') {
-			const response: any = await paymentServices.createOrder(data);
-			if (response?.checkoutUrl) {
-				window.location.href = response.checkoutUrl;
+
+		setIsLoading(true);
+		try {
+			if (paymentMethod === '1') {
+				const response = await paymentServices.createOrderPaylate(data);
+				if (response) {
+					message.success('Đặt hàng thành công! Đơn hàng sẽ được giao trong thời gian sớm nhất.');
+					router.push('/customer/order');
+				}
+			} else if (paymentMethod != '1') {
+				const response: any = await paymentServices.createOrder(data);
+				if (response?.checkoutUrl) {
+					window.location.href = response.checkoutUrl;
+				}
 			}
+		} catch (error) {
+			console.error('Error:', error);
+			message.error('Đặt hàng thất bại. Vui lòng thử lại sau.');
+		} finally {
+			setIsLoading(false);
 		}
 	};
 	return (
@@ -178,8 +192,19 @@ const CheckOut = () => {
 							</div>
 						</div>
 
-						<button onClick={handlePayment} className="w-full bg-[#FF424E] text-white py-3 rounded">
-							Đặt hàng
+						<button
+							onClick={handlePayment}
+							disabled={isLoading}
+							className={`w-full bg-[#FF424E] text-white py-3 rounded flex items-center justify-center gap-2 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+						>
+							{isLoading ? (
+								<>
+									<Spin size="small" className="text-white" />
+									<span>Đang xử lý...</span>
+								</>
+							) : (
+								'Đặt hàng'
+							)}
 						</button>
 					</div>
 				</div>

@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { createGeminiChain } from "../../utils/langchainClient";
 
 const prisma = new PrismaClient();
+const chain = createGeminiChain();
 
 const AiServices = {
   chat: async (message: string) => {
-    const keywords = message.toLowerCase().split(" ");
+    const keywords = message.toLowerCase().split(/\s+/);
 
     const products = await prisma.products.findMany({
       where: {
@@ -14,43 +16,24 @@ const AiServices = {
       },
       take: 5,
     });
-    if (products.length === 0) {
-      return { reply: "Không tìm thấy sản phẩm phù hợp với yêu cầu của bạn." };
+
+    let input = "";
+
+    if (products.length > 0) {
+      const productContext = products
+        .map(
+          (p, i) =>
+            `${i + 1}. ${p.productName}: ${p.productDes} (Giá: ${p.price}đ)`
+        )
+        .join("\n");
+
+      input = `Dưới đây là danh sách sản phẩm trong cửa hàng:\n${productContext}\n\nCâu hỏi của người dùng: "${message}"`;
+    } else {
+      input = `Câu hỏi của người dùng: "${message}". Hãy trả lời như một trợ lý thương mại điện tử chuyên nghiệp.`;
     }
 
-    const productContext = products
-      .map(
-        (p, i) =>
-          `${i + 1}. ${p.productName}: ${p.productDes} (Giá: ${p.price}đ)`
-      )
-      .join("\n");
+    const reply = await chain.invoke({ input });
 
-    const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" +
-        process.env.GEMINI_API_KEY,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: `Bạn là một trợ lý tư vấn thương mại điện tử. Dưới đây là danh sách sản phẩm liên quan:\n${productContext}\n\nYêu cầu từ người dùng: ${message}`,
-                },
-              ],
-            },
-          ],
-        }),
-      }
-    );
-
-    const data = await response.json();
-    const reply =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "Không có phản hồi từ AI.";
     return { reply };
   },
 };
