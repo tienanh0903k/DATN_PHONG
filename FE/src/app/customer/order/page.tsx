@@ -7,6 +7,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
+import OderList from '@/components/app/oderlist';
+import payment from '@/mocks/payment.json';
 export default function OrderHistory() {
 	const [tabs, setTabs] = useState([
 		{ id: 0, title: 'Tất cả đơn', status: true },
@@ -75,7 +77,7 @@ export default function OrderHistory() {
 			</div>
 
 			{/* Search Section */}
-			<div className="w-full relative my-3">
+			<div className=" relative my-3">
 				<CiSearch className="text-[#808089] absolute left-[10px] top-1/2 -translate-y-1/2 w-6 h-6" />
 				<input
 					className="transition-all duration-150 h-9 w-full rounded-[4px] py-[10px] px-3 
@@ -90,16 +92,22 @@ export default function OrderHistory() {
 					Tìm đơn hàng
 				</div>
 			</div>
-			<div>
-				<div className="flex flex-col items-center bg-white w-full p-[35px]">
-					<img
-						src="https://frontend.tikicdn.com/_desktop-next/static/img/account/empty-order.png"
-						alt="Empty Order"
-						className="w-[200px] h-[200px]"
-					/>
-					<p className="mt-[15px] text-[#38383d] text-base font-normal">Chưa có đơn hàng</p>
+			{payment.length > 0 ? (
+				<div className="w-full h-full overflow-y-auto">
+					<OderList orderList={payment as any} />
 				</div>
-			</div>
+			) : (
+				<div>
+					<div className="flex flex-col items-center bg-white w-full p-[35px]">
+						<img
+							src="https://frontend.tikicdn.com/_desktop-next/static/img/account/empty-order.png"
+							alt="Empty Order"
+							className="w-[200px] h-[200px]"
+						/>
+						<p className="mt-[15px] text-[#38383d] text-base font-normal">Chưa có đơn hàng</p>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

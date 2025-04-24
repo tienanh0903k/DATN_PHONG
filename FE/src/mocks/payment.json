@@ -1,0 +1,88 @@
+[
+	{
+		"id": "ORDER123",
+		"sellerName": "13719169537.vn",
+		"sellerId": "SELLER001",
+		"items": [
+			{
+				"productId": 101,
+				"name": "Mắt Kính Gọng Vuông Chữ V Thời Trang MS05",
+				"variation": "Đen (kính!!!)",
+				"quantity": 1,
+				"imageUrl": "/img/glasses.jpg",
+				"originalPrice": 22800,
+				"currentPrice": 15900
+			}
+		],
+		"status": "CANCELLED",
+		"orderTotal": 15900,
+		"cancellationReason": "you",
+		"deliveryStatus": null
+	},
+	{
+		"id": "ORDER124",
+		"sellerName": "2STOREGLE",
+		"sellerId": "SELLER002",
+		"items": [
+			{
+				"productId": 201,
+				"name": "Quần Jeans Nam Rách Gối Chất Jean Cotton Co Giãn Dáng Ôm Thời Trang",
+				"variation": "Rách Gối, Size 29",
+				"quantity": 1,
+				"imageUrl": "/img/jeans.jpg",
+				"currentPrice": 140000
+			}
+		],
+		"status": "COMPLETED",
+		"orderTotal": 140000,
+		"cancellationReason": null,
+		"deliveryStatus": "Giao hàng thành công"
+	},
+	{
+		"id": "ORDER125",
+		"sellerName": "Tech World",
+		"sellerId": "SELLER003",
+		"items": [
+			{
+				"productId": 301,
+				"name": "Tai Nghe Bluetooth Pro",
+				"variation": "Trắng",
+				"quantity": 1,
+				"imageUrl": "/img/earbuds.jpg",
+				"originalPrice": 750000,
+				"currentPrice": 599000
+			},
+			{
+				"productId": 302,
+				"name": "Chuột Không Dây Silent",
+				"variation": "Đen",
+				"quantity": 1,
+				"imageUrl": "/img/mouse.jpg",
+				"currentPrice": 250000
+			}
+		],
+		"status": "PROCESSING",
+		"orderTotal": 849000,
+		"cancellationReason": null,
+		"deliveryStatus": "Đang vận chuyển"
+	},
+	{
+		"id": "ORDER126",
+		"sellerName": "Book Haven",
+		"sellerId": "SELLER004",
+		"items": [
+			{
+				"productId": 401,
+				"name": "Sách - Nhà Giả Kim",
+				"variation": "Bìa mềm",
+				"quantity": 2,
+				"imageUrl": "/img/book.jpg",
+				"currentPrice": 85000
+			}
+		],
+		"status": "COMPLETED",
+		"orderTotal": 170000,
+		"cancellationReason": null,
+		"deliveryStatus": "Giao hàng thành công"
+	}
+]

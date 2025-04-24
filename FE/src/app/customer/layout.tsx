@@ -27,11 +27,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 				{/* <LoadingBar /> */}
 				<Header />
-				<div className=" h-[81vh] bg-[#f6f5fa]">
+				<div className=" min-h-[81vh] bg-[#f6f5fa]">
 					<div className=" container-customer flex gap-4 pt-4">
 						<SidebarCustomer />
 						<div className="w-[calc(100%-254px)] overflow-hidden">
-							<main className=" h-auto">{children}</main>
+							<main className="max-h-full overflow-y-auto">{children}</main>
 						</div>
 					</div>
 				</div>
