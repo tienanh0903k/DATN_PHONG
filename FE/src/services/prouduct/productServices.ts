@@ -21,5 +21,8 @@ class ProductServices extends ServicesBase {
 	getProductByShopId(shopId: number) {
 		return this.service.get(`/get-product-by-shop-id/${shopId}`);
 	}
+	updateProduct(productId: any, data: any) {
+		return this.service.put(`/update-product/${productId}`, data);
+	}
 }
 export default ProductServices;

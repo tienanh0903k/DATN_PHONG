@@ -116,7 +116,6 @@ const ProductService = {
     }
   },
   getproductByShopId: async (shopId: number) => {
-    console.log("shopId", shopId);
     try {
       const products = await Prismaclient.products.findMany({
         where: { shopId: shopId },
@@ -125,11 +124,54 @@ const ProductService = {
           Shop: true,
         },
       });
-
-      return products;
+      const productData = products.map((product) => ({
+        ...product,
+        ...product.Categories,
+        ...product.Shop,
+      }));
+      return productData;
     } catch (error) {
       console.error("Error fetching products by shop ID:", error);
       throw new Error("Failed to fetch products by shop ID");
+    }
+  },
+  updateProduct: async (productId: number, product: any) => {
+    try {
+      const updatedProduct = await Prismaclient.products.update({
+        where: { productId },
+        data: {
+          productName: product.productName,
+          productDes: product.productDes,
+          price: parseInt(product.price),
+          img: product.img,
+          Categories: {
+            connect: {
+              categoryId: parseInt(product.categoryId),
+            },
+          },
+        },
+      });
+      let updateVariant: any;
+      console.log(product.variants);
+      for (const variant of product.variants) {
+        updateVariant = await Prismaclient.productVariant.update({
+          where: { id: variant.id },
+          data: {
+            typeValueId: parseInt(variant.typeValueId),
+            quantity: parseInt(variant.quantity),
+            price: parseInt(variant.price),
+            img: variant.img,
+          },
+        });
+      }
+      const data = {
+        ...updatedProduct,
+        ...updateVariant,
+      };
+      return data;
+    } catch (error) {
+      console.error("Error updating product:", error);
+      throw new Error("Failed to update product");
     }
   },
 };

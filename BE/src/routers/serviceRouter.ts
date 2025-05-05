@@ -20,6 +20,7 @@ import {
   getProductByID,
   getProductByShopId,
   getProductByCateoryID,
+  updateProduct,
 } from "../app/controllers/products/products.controller";
 import {
   createVariantType,
@@ -71,6 +72,7 @@ serviceRouter.get("/get-all-products", getAllProducts);
 serviceRouter.get("/get-product-by-id/:id", getProductByID);
 serviceRouter.get("/get-product-by-category-id/:id", getProductByCateoryID);
 serviceRouter.get("/get-product-by-shop-id/:id", getProductByShopId);
+serviceRouter.put("/update-product/:id", updateProduct);
 
 //product variant
 serviceRouter.post("/create-variant-type", createVariantType);

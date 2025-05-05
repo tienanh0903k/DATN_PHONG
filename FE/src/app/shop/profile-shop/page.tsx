@@ -4,7 +4,8 @@
 
 import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
 import { ShoppingOutlined, StarOutlined, PlusOutlined } from '@ant-design/icons';
-import Products from '@/components/app/Home/Products';
+// import Products from '@/components/app/Home/Products';
+import ListProduct from '@/components/app/shop/listproduct';
 import ProductServices from '@/services/prouduct/productServices';
 import { useEffect, useState } from 'react';
 import { URL_SERVICE } from '@/constant/constant';
@@ -94,7 +95,7 @@ const ProfileShop = () => {
 										Thêm sản phẩm
 									</Button>
 								</div>
-								<Products products={products} />
+								<ListProduct products={products} />
 							</Card>
 						),
 					},

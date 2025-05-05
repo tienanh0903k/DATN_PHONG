@@ -83,10 +83,27 @@ const getProductByShopId = async (req: Request, res: Response) => {
     });
   }
 };
+const updateProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const data = req.body;
+  try {
+    const response = await ProductService.updateProduct(parseInt(id), data);
+    res.status(200).json({
+      message: "Update product successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Update product failed",
+      error: error,
+    });
+  }
+};
 export {
   createProduct,
   getAllProducts,
   getProductByID,
   getProductByShopId,
   getProductByCateoryID,
+  updateProduct,
 };

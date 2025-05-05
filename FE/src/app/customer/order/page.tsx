@@ -55,10 +55,7 @@ export default function OrderHistory() {
 					]}
 				/>
 			</div>
-
-			<h2 className="text-[16px] text-[#64646d] leading-[24px] font-[400] mb-2 ">Đơn hàng của tôi</h2>
-
-			{/* Tabs */}
+			<h2 className="text-[16px] text-[#64646d] leading-[24px] font-[400] mb-2 ">Đơn hàng của tôi</h2>s
 			<div className="cursor-pointer bg-white w-full flex flex-row overflow-hidden sticky top-0 z-10">
 				{tabs.map((item: any) => (
 					<div
@@ -75,7 +72,6 @@ export default function OrderHistory() {
 					</div>
 				))}
 			</div>
-
 			{/* Search Section */}
 			<div className=" relative my-3">
 				<CiSearch className="text-[#808089] absolute left-[10px] top-1/2 -translate-y-1/2 w-6 h-6" />

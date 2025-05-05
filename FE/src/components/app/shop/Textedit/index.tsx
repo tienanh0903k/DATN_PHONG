@@ -82,7 +82,7 @@ const MenuBar = ({ editor }: any) => {
 	);
 };
 
-const Tiptap = ({ onChange, initialContent = '<p></p>' }: TiptapProps) => {
+const Tiptap = ({ onChange, initialContent }: TiptapProps) => {
 	const editor = useEditor({
 		extensions: [
 			StarterKit.configure({
@@ -110,7 +110,6 @@ const Tiptap = ({ onChange, initialContent = '<p></p>' }: TiptapProps) => {
 			},
 		},
 	});
-
 	useEffect(() => {
 		if (editor && onChange) {
 			editor.on('update', () => {
