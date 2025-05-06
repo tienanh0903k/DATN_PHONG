@@ -15,6 +15,9 @@ class ShopServicer extends ServicesBase {
 	getOrderListByShopId(shopId: number) {
 		return this.service.get(`/get-order-list-by-shop-id/${shopId}`);
 	}
+	getOderbyStatus(data: any) {
+		return this.service.get(`get-order-list-by-status/${data.status}/${data.shopId}`);
+	}
 	getStatusOder() {
 		return this.service.get('/getstatus-order');
 	}

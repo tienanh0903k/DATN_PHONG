@@ -68,20 +68,35 @@ const ShopServicer = {
       console.log(error);
     }
   },
-  getOrderListByStatus: async (status: number) => {
+  getOrderListByStatus: async (data: any) => {
+    console.log(data);
     try {
       const bills = await Prismaclient.bill.findMany({
-        where: { statusId: status },
+        where: {
+          statusId: parseInt(data.status),
+          BillDetail: {
+            some: {
+              ProductVariant: {
+                Products: {
+                  shopId: parseInt(data.shopId),
+                },
+              },
+            },
+          },
+        },
         include: {
           BillDetail: {
             include: {
               ProductVariant: {
                 include: {
                   Products: true,
+                  VariantValue: true,
                 },
               },
             },
           },
+          Customer: true,
+          StatusBill: true,
         },
       });
       return bills;

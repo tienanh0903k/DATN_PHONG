@@ -66,7 +66,10 @@ serviceRouter.put("/change-address/:customerId", updateAddressController);
 serviceRouter.post("/create-shop", createShop);
 serviceRouter.get("/get-shop/:customerId", getShop);
 serviceRouter.get("/get-order-list-by-shop-id/:shopId", getOrderListByShopId);
-serviceRouter.get("/get-order-list-by-status/:status", getOrderListByStatus);
+serviceRouter.get(
+  "/get-order-list-by-status/:status/:shopId",
+  getOrderListByStatus
+);
 serviceRouter.get("/getstatus-order", getStatusOder);
 
 //categories

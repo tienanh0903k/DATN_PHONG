@@ -19,8 +19,8 @@ interface Order {
 	items: OrderItem[];
 	status: 'CANCELLED' | 'COMPLETED' | 'PROCESSING' | string;
 	orderTotal: number;
-	cancellationReason?: string; // Optional, for cancelled orders
-	deliveryStatus?: string; // Optional, for completed/processing orders
+	cancellationReason?: string;
+	deliveryStatus?: string;
 }
 
 type OderListProps = {

@@ -55,7 +55,7 @@ export default function OrderHistory() {
 					]}
 				/>
 			</div>
-			<h2 className="text-[16px] text-[#64646d] leading-[24px] font-[400] mb-2 ">Đơn hàng của tôi</h2>s
+			<h2 className="text-[16px] text-[#64646d] leading-[24px] font-[400] mb-2 ">Đơn hàng của tôi</h2>
 			<div className="cursor-pointer bg-white w-full flex flex-row overflow-hidden sticky top-0 z-10">
 				{tabs.map((item: any) => (
 					<div

@@ -52,10 +52,10 @@ const getOrderListByStatus = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { status } = req.params;
-    const orderList = await ShopServicer.getOrderListByStatus(Number(status));
+    const data = req.params;
+
+    const orderList = await ShopServicer.getOrderListByStatus(data);
     res.status(200).json({
-      message: "Order list fetched successfully",
       data: orderList,
     });
   } catch (error) {

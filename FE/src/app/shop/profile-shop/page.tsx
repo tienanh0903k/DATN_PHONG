@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client';
@@ -34,18 +35,31 @@ const ProfileShop = () => {
 	const fetchDataOrder = async () => {
 		try {
 			const response = await shopService.getOrderListByShopId(shop?.shopId);
-			console.log('oder ', response);
 			setOrderList(response.data);
 		} catch (error) {
 			console.error('Error fetching orders:', error);
+		}
+	};
+	const fetchOrderByStatus = async (status: number) => {
+		const data: any = {
+			status,
+			shopId: shop?.shopId,
+		};
+		try {
+			const response: any = await shopService.getOderbyStatus(data);
+			console.log('data oder', response.data);
+			setOrderList(response.data);
+		} catch (err) {
+			console.log(err);
 		}
 	};
 	useEffect(() => {
 		fetchDataProduct();
 		fetchDataOrder();
 	}, [shop?.shopId]);
-	const handleStatusChange = (orderId: number, newStatus: number) => {
-		console.log(`Order ${orderId} status changed to ${newStatus}`);
+	const handleStatusChange = (newStatus: number) => {
+		console.log(newStatus);
+		fetchOrderByStatus(newStatus);
 	};
 	return (
 		<div className="container-base p-6">
@@ -141,6 +155,7 @@ const ProfileShop = () => {
 								<div className="flex justify-between items-center mb-4">
 									<h3 className="text-lg font-semibold mb-4">Danh sách đơn hàng</h3>
 								</div>
+
 								<ListOder orderList={orderList} onStatusChange={handleStatusChange} />
 							</Card>
 						),
