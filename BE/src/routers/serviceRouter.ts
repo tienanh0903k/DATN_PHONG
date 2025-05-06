@@ -11,6 +11,7 @@ import {
   getOrderListByShopId,
   getOrderListByStatus,
   getStatusOder,
+  updateShop,
 } from "../app/controllers/shop/shop.controller";
 import {
   getAllCategories,
@@ -64,6 +65,7 @@ serviceRouter.put("/change-address/:customerId", updateAddressController);
 
 //shop
 serviceRouter.post("/create-shop", createShop);
+serviceRouter.put("/update-shop/:shopId", updateShop);
 serviceRouter.get("/get-shop/:customerId", getShop);
 serviceRouter.get("/get-order-list-by-shop-id/:shopId", getOrderListByShopId);
 serviceRouter.get(

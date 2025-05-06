@@ -33,6 +33,24 @@ const ShopServicer = {
       console.log(error);
     }
   },
+  updateShop: async (shopId: number, data: any) => {
+    try {
+      const shop = await Prismaclient.shop.update({
+        where: { shopId },
+        data: {
+          shopName: data.shopName,
+          shopAddress: data.shopAddress,
+          shopAvatar: data.shopAvatar,
+          shopBanner: data.shopBanner,
+          shopNumberPhone: data.shopNumberPhone,
+          emailShop: data.emailShop,
+        },
+      });
+      return shop;
+    } catch (error) {
+      console.log(error);
+    }
+  },
   getOrderListByShopId: async (id: number) => {
     console.log(id);
     try {

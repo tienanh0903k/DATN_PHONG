@@ -16,6 +16,21 @@ const createShop = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const updateShop = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { shopId } = req.params;
+    const data = req.body;
+    const shop = await ShopServicer.updateShop(Number(data.shopId), data);
+    res.status(200).json({
+      message: "Shop updated successfully",
+      shop,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getShop = async (req: Request, res: Response): Promise<void> => {
   try {
     const { customerId } = req.params;
@@ -81,4 +96,5 @@ export {
   getOrderListByShopId,
   getOrderListByStatus,
   getStatusOder,
+  updateShop,
 };

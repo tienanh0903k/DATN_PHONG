@@ -4,7 +4,7 @@
 'use client';
 
 import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
-import { ShoppingOutlined, StarOutlined, PlusOutlined } from '@ant-design/icons';
+import { ShoppingOutlined, StarOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 // import Products from '@/components/app/Home/Products';
 import ListProduct from '@/components/app/shop/listproduct';
 import ListOder from '@/components/app/shop/listOder';
@@ -134,10 +134,19 @@ const ProfileShop = () => {
 						children: (
 							<Card>
 								<div className="space-y-4">
-									<div>
-										<h3 className="font-semibold">Thông tin liên hệ</h3>
-										<p>Email: {shop?.emailShop}</p>
-										<p>Số điện thoại: {shop?.shopNumberPhone}</p>
+									<div className="flex justify-between items-start">
+										<div>
+											<h3 className="font-semibold">Thông tin liên hệ</h3>
+											<p>Email: {shop?.emailShop}</p>
+											<p>Số điện thoại: {shop?.shopNumberPhone}</p>
+										</div>
+										<Button
+											type="primary"
+											icon={<EditOutlined />}
+											onClick={() => router.push('/shop/update-shop')}
+										>
+											Chỉnh sửa
+										</Button>
 									</div>
 									<div>
 										<h3 className="font-semibold">Địa chỉ</h3>
