@@ -37,9 +37,7 @@ const HeaderCpn = ({}: Props) => {
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
-	const registerServices = new RegisterServices(URL_AUTH || '', () => {
-		console.log('Unauthenticated');
-	});
+	const registerServices = new RegisterServices(URL_AUTH || '', () => {});
 	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
 
