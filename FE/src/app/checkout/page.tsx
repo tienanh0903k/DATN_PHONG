@@ -46,6 +46,7 @@ const CheckOut = () => {
 			}
 		} catch (error) {
 			console.error('Error:', error);
+			alert('vui lòng cập nhật đầy đủ thông tin');
 			message.error('Đặt hàng thất bại. Vui lòng thử lại sau.');
 		} finally {
 			setIsLoading(false);

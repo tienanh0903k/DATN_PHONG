@@ -33,6 +33,70 @@ const ShopServicer = {
       console.log(error);
     }
   },
+  getOrderListByShopId: async (id: number) => {
+    console.log(id);
+    try {
+      const bills = await Prismaclient.bill.findMany({
+        where: {
+          BillDetail: {
+            some: {
+              ProductVariant: {
+                Products: {
+                  shopId: id,
+                },
+              },
+            },
+          },
+        },
+        include: {
+          BillDetail: {
+            include: {
+              ProductVariant: {
+                include: {
+                  Products: true,
+                  VariantValue: true,
+                },
+              },
+            },
+          },
+          Customer: true,
+          StatusBill: true,
+        },
+      });
+      return bills;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getOrderListByStatus: async (status: number) => {
+    try {
+      const bills = await Prismaclient.bill.findMany({
+        where: { statusId: status },
+        include: {
+          BillDetail: {
+            include: {
+              ProductVariant: {
+                include: {
+                  Products: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return bills;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  getStatusOder: async () => {
+    try {
+      const response = await Prismaclient.statusBill.findMany();
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 export default ShopServicer;

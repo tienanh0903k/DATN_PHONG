@@ -5,7 +5,13 @@ import {
   updateAddressController,
   updateCustomerController,
 } from "../app/controllers/customer/customer.controller";
-import { createShop, getShop } from "../app/controllers/shop/shop.controller";
+import {
+  createShop,
+  getShop,
+  getOrderListByShopId,
+  getOrderListByStatus,
+  getStatusOder,
+} from "../app/controllers/shop/shop.controller";
 import {
   getAllCategories,
   createCategory,
@@ -59,6 +65,10 @@ serviceRouter.put("/change-address/:customerId", updateAddressController);
 //shop
 serviceRouter.post("/create-shop", createShop);
 serviceRouter.get("/get-shop/:customerId", getShop);
+serviceRouter.get("/get-order-list-by-shop-id/:shopId", getOrderListByShopId);
+serviceRouter.get("/get-order-list-by-status/:status", getOrderListByStatus);
+serviceRouter.get("/getstatus-order", getStatusOder);
+
 //categories
 serviceRouter.get("/get-all-categories", getAllCategories);
 serviceRouter.post("/create-category", createCategory);

@@ -6,7 +6,9 @@ import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
 import { ShoppingOutlined, StarOutlined, PlusOutlined } from '@ant-design/icons';
 // import Products from '@/components/app/Home/Products';
 import ListProduct from '@/components/app/shop/listproduct';
+import ListOder from '@/components/app/shop/listOder';
 import ProductServices from '@/services/prouduct/productServices';
+import ShopServicer from '@/services/shopServicer/shopServicer';
 import { useEffect, useState } from 'react';
 import { URL_SERVICE } from '@/constant/constant';
 import { useSelector } from 'react-redux';
@@ -16,22 +18,35 @@ import Image from 'next/image';
 
 const ProfileShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
+	const [orderList, setOrderList] = useState([]);
 	const router = useRouter();
-	console.log('shop', shop);
 	const [products, setProducts] = useState([]);
 	const productService = new ProductServices(URL_SERVICE, () => {});
+	const shopService = new ShopServicer(URL_SERVICE, () => {});
 	const fetchDataProduct = async () => {
 		try {
 			const response = await productService.getProductByShopId(shop?.shopId);
-			console.log(response.data);
 			setProducts(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		}
 	};
+	const fetchDataOrder = async () => {
+		try {
+			const response = await shopService.getOrderListByShopId(shop?.shopId);
+			console.log('oder ', response);
+			setOrderList(response.data);
+		} catch (error) {
+			console.error('Error fetching orders:', error);
+		}
+	};
 	useEffect(() => {
 		fetchDataProduct();
+		fetchDataOrder();
 	}, [shop?.shopId]);
+	const handleStatusChange = (orderId: number, newStatus: number) => {
+		console.log(`Order ${orderId} status changed to ${newStatus}`);
+	};
 	return (
 		<div className="container-base p-6">
 			<Card className="mb-6">
@@ -120,6 +135,18 @@ const ProfileShop = () => {
 					},
 					{
 						key: '3',
+						label: 'Lịch sử đơn hàng',
+						children: (
+							<Card>
+								<div className="flex justify-between items-center mb-4">
+									<h3 className="text-lg font-semibold mb-4">Danh sách đơn hàng</h3>
+								</div>
+								<ListOder orderList={orderList} onStatusChange={handleStatusChange} />
+							</Card>
+						),
+					},
+					{
+						key: '4',
 						label: 'Đánh giá',
 						children: <div>Danh sách đánh giá</div>,
 					},

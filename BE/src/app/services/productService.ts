@@ -152,7 +152,6 @@ const ProductService = {
         },
       });
       let updateVariant: any;
-      console.log(product.variants);
       for (const variant of product.variants) {
         updateVariant = await Prismaclient.productVariant.update({
           where: { id: variant.id },

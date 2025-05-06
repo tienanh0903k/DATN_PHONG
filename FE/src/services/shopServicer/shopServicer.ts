@@ -12,5 +12,11 @@ class ShopServicer extends ServicesBase {
 	createShop(data: any) {
 		return this.service.post(`/create-shop`, data);
 	}
+	getOrderListByShopId(shopId: number) {
+		return this.service.get(`/get-order-list-by-shop-id/${shopId}`);
+	}
+	getStatusOder() {
+		return this.service.get('/getstatus-order');
+	}
 }
 export default ShopServicer;

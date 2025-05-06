@@ -17,7 +17,7 @@ interface Order {
 	sellerName: string;
 	sellerId: string;
 	items: OrderItem[];
-	status: 'CANCELLED' | 'COMPLETED' | 'PROCESSING' | string; // Add more statuses as needed
+	status: 'CANCELLED' | 'COMPLETED' | 'PROCESSING' | string;
 	orderTotal: number;
 	cancellationReason?: string; // Optional, for cancelled orders
 	deliveryStatus?: string; // Optional, for completed/processing orders
