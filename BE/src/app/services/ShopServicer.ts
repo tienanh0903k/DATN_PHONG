@@ -130,6 +130,53 @@ const ShopServicer = {
       console.log(err);
     }
   },
+  getShopById: async (shopId: number) => {
+    try {
+      const shop = await Prismaclient.shop.findUnique({
+        where: { shopId },
+        include: { Follower: true },
+      });
+
+      const ratings = await Prismaclient.rating.findMany({
+        where: {
+          BillDetail: {
+            ProductVariant: {
+              Products: {
+                shopId: shopId,
+              },
+            },
+          },
+        },
+      });
+      const productByShop = await Prismaclient.products.findMany({
+        where: {
+          shopId,
+        },
+      });
+      const productCount = await Prismaclient.products.count({
+        where: { shopId: shopId },
+      });
+
+      const followerCount = shop?.Follower.length || 0;
+      const totalRatings = ratings.length;
+      const avgRating =
+        totalRatings > 0
+          ? ratings.reduce((sum, r) => sum + r.ratingValue, 0) / totalRatings
+          : 0;
+
+      return {
+        ...shop,
+        followerCount,
+        totalRatings,
+        avgRating,
+        productCount,
+        productByShop,
+      };
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  },
 };
 
 export default ShopServicer;

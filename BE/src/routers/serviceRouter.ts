@@ -12,6 +12,7 @@ import {
   getOrderListByStatus,
   getStatusOder,
   updateShop,
+  getShopById,
 } from "../app/controllers/shop/shop.controller";
 import {
   getAllCategories,
@@ -74,6 +75,7 @@ serviceRouter.get(
   getOrderListByStatus
 );
 serviceRouter.get("/getstatus-order", getStatusOder);
+serviceRouter.get("/get-shop-by-id/:shopId", getShopById);
 
 //categories
 serviceRouter.get("/get-all-categories", getAllCategories);

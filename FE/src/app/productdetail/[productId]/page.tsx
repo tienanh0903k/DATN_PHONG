@@ -17,6 +17,7 @@ import { RootState } from '@/redux/store';
 import ModalAddress from '@/components/LayoutComponents/Header/modalAddress';
 import { useRouter } from 'next/navigation';
 import { updateCart } from '@/reducers/slice/cartSlice';
+import Link from 'next/link';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
@@ -298,7 +299,7 @@ export default function DetailProduct() {
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="flex min-w-[354px] flex-col bg-white rounded-lg p-4 gap-4 mr-5 sticky top-3 max-h-[460px]">
 						<div className="flex items-center justify-between h-[65px] pb-3 border-b-[1px] border-solid border-[#ebebf0]">
-							<div className="flex items-center gap-2 flex-1">
+							<Link href={`/shop-infor/${data.shopId}`} className="flex items-center gap-2 flex-1">
 								<div className="w-10 h-10 rounded-full overflow-hidden border-[1px] border-solid border-[#dddde3] mr-2">
 									<img src={data.shopAvatar} alt="" className="w-full h-full" />
 								</div>
@@ -312,7 +313,7 @@ export default function DetailProduct() {
 										className=""
 									/>
 								</div>
-							</div>
+							</Link>
 							<div className="p-[6px] border-[1px] h-[34px] w-[34px] border-solid border-[#dddde3] rounded-[4px] cursor-pointer flex items-center justify-center">
 								<FaRegMessage />
 							</div>

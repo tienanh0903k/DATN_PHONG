@@ -89,6 +89,17 @@ const getStatusOder = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+const getShopById = async (req: Request, res: Response): Promise<void> => {
+  const { shopId } = req.params;
+  try {
+    const response = await ShopServicer.getShopById(Number(shopId));
+    res.status(200).json({
+      data: response,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 export {
   createShop,
@@ -97,4 +108,5 @@ export {
   getOrderListByStatus,
   getStatusOder,
   updateShop,
+  getShopById,
 };
