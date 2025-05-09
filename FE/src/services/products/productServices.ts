@@ -24,5 +24,8 @@ class ProductServices extends ServicesBase {
 	updateProduct(productId: any, data: any) {
 		return this.service.put(`/update-product/${productId}`, data);
 	}
+	searchProduct(search: string) {
+		return this.service.post('/search-product', { search });
+	}
 }
 export default ProductServices;

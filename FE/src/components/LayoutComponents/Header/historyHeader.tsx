@@ -67,7 +67,7 @@ const Categories: SuggestSearchType[] = [
 	{ id: 7, to: '/', thumbnail: images.category8, name: 'Điện Thoại - Máy Tính Bảng' },
 ];
 
-const HistoryHeader = ({ data }: { data: any }) => {
+const HistoryHeader = ({ data }: { data: any[] }) => {
 	const [isShowMore, setIsShowMore] = useState(true);
 	const [numberItemShow, setNumberItemShow] = useState(3);
 	const [searchSuggestList, setSearchSuggestList] = useState<SuggestSearchType[]>([]);
@@ -89,10 +89,17 @@ const HistoryHeader = ({ data }: { data: any }) => {
 		setCategoryList(Categories);
 	}, []);
 	useEffect(() => {
-		if (data.length > 0) {
-			setSearchSuggestList(data);
+		if (data && data.length > 0) {
+			const formattedData = data.map((item, index) => ({
+				id: index,
+				to: '/',
+				name: item.name,
+				thumbnail: images.search2,
+			}));
+			setSearchSuggestList(formattedData);
 		}
 	}, [data]);
+
 	return (
 		<>
 			{/* Overlay */}
@@ -105,7 +112,7 @@ const HistoryHeader = ({ data }: { data: any }) => {
 					{searchSuggestList.slice(0, numberItemShow).map((item) => (
 						<Link
 							key={item.id}
-							href="/"
+							href={item.to}
 							className="text-[#27272a] text-[14px] leading-[150%] h-9 font-medium flex items-center px-4 hover:bg-[#27272a]/12"
 						>
 							<Image
@@ -121,21 +128,21 @@ const HistoryHeader = ({ data }: { data: any }) => {
 				</div>
 
 				{/* Show More Section */}
-				<div className="text-xs leading-[1.67] flex justify-center items-center text-[#0d5cb6]">
-					<div className="flex p-[6px_16px] items-center cursor-pointer select-none">
-						{isShowMore ? (
-							<div onClick={handleShowMore} className="flex items-center">
-								Xem thêm
-								{/* <Arrow className="ml-2 rotate-90" /> */}
-							</div>
-						) : (
-							<div onClick={handleCollapse} className="flex items-center">
-								Thu gọn
-								{/* <Arrow className="ml-2 -rotate-90" /> */}
-							</div>
-						)}
+				{searchSuggestList.length > 3 && (
+					<div className="text-xs leading-[1.67] flex justify-center items-center text-[#0d5cb6]">
+						<div className="flex p-[6px_16px] items-center cursor-pointer select-none">
+							{isShowMore ? (
+								<div onClick={handleShowMore} className="flex items-center">
+									Xem thêm
+								</div>
+							) : (
+								<div onClick={handleCollapse} className="flex items-center">
+									Thu gọn
+								</div>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 
 				{/* Trending List */}
 				<div className="bg-white p-[8px_12px_12px] border-t border-[#f2f2f2]">

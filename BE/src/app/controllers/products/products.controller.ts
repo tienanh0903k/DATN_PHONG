@@ -99,6 +99,22 @@ const updateProduct = async (req: Request, res: Response) => {
     });
   }
 };
+const searchProduct = async (req: Request, res: Response) => {
+  const { search } = req.body;
+
+  try {
+    const response = await ProductService.searchProduct(search);
+    res.status(200).json({
+      message: "Search product successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Search product failed",
+      error: error,
+    });
+  }
+};
 export {
   createProduct,
   getAllProducts,
@@ -106,4 +122,5 @@ export {
   getProductByShopId,
   getProductByCateoryID,
   updateProduct,
+  searchProduct,
 };

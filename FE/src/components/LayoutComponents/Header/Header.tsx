@@ -25,13 +25,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
 import CartServices from '@/services/CartServices/CartServices';
+import { useForm } from 'react-hook-form';
+import HistoryHeader from './historyHeader';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
 	const { t } = useTranslation();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
-
+	const { register, handleSubmit } = useForm();
 	const cart = useSelector((state: RootState) => state.cart.cart);
 
 	const dispatch = useDispatch();
@@ -40,7 +43,6 @@ const HeaderCpn = ({}: Props) => {
 	const registerServices = new RegisterServices(URL_AUTH || '', () => {});
 	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
-
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	const showModalLogin = () => {
@@ -61,10 +63,10 @@ const HeaderCpn = ({}: Props) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-
-	// useEffect(() => {
-	// 	fetchdataCart();
-	// }, []);
+	const onSubmit = async (data: any) => {
+		console.log(data.contentSearch);
+		router.push(`/search?q=${data.contentSearch}`);
+	};
 
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken');
@@ -167,19 +169,28 @@ const HeaderCpn = ({}: Props) => {
 					/>
 					<span className="text-[14px] text-[#003ea1] font-[600] mt-2 ml-2">{t('Tốt & Nhanh')}</span>
 				</div>
-				<div className="w-full block ">
+				<div className="w-full block relative">
 					<div className="flex w-full mb-2">
-						<div className="header-search flex border border-[#ccc] rounded-[8px] h-[40px] flex-1 items-center ">
+						<form
+							onSubmit={handleSubmit(onSubmit)}
+							className="header-search flex border border-[#ccc] rounded-[8px] h-[40px] flex-1 items-center "
+						>
 							<IoSearchOutline className="text-[#828181] text-[20px] ml-[18px]" />
 							<input
 								placeholder="Tìm kiếm sản phẩm"
+								{...register('contentSearch')}
 								type="text"
-								className="w-full   outline-none text-[#333] mx-2"
+								className="w-full outline-none text-[#333] mx-2"
+								onFocus={() => setIsSearchFocused(true)}
+								onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
 							/>
-							<button className="bg-[#fff] h-full text-[14px] w-[92px] rounded-md max-h-9 text-center text-[#0a68ff] relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd] hover:bg-[#0a68ff33] active:bg-[#0a68ff66]">
+							<button
+								type="submit"
+								className="bg-[#fff] h-full text-[14px] w-[92px] rounded-md max-h-9 text-center text-[#0a68ff] relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd] hover:bg-[#0a68ff33] active:bg-[#0a68ff66]"
+							>
 								{t('Tìm kiếm')}
 							</button>
-						</div>
+						</form>
 
 						<div className="ml-[48px] flex items-center ">
 							<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer">
@@ -225,6 +236,7 @@ const HeaderCpn = ({}: Props) => {
 							</Link>
 						</div>
 					</div>
+					{isSearchFocused && <HistoryHeader data={historySearch} />}
 					<div className="flex justify-between">
 						<ul className="history flex gap-[12px] w-[820px] overflow-hidden h-6 ">
 							{historySearch?.map((item: { name: string }, index: number) => (

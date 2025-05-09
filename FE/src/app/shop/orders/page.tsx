@@ -51,7 +51,7 @@ const OrdersPage = () => {
 	};
 
 	return (
-		<div className="max-w-7xl mx-auto p-6">
+		<div className="max-w-7xl mx-auto p-6 min-h-[80vh] overflow-y-auto">
 			<div className="mb-6">
 				<h1 className="text-2xl font-semibold mb-4">Quản lý đơn hàng</h1>
 

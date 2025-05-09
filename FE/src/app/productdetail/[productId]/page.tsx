@@ -8,7 +8,7 @@ import { ConfigProvider, Modal, Rate } from 'antd';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import ProductServices from '@/services/prouduct/productServices';
+import ProductServices from '@/services/products/productServices';
 import { URL_SERVICE } from '@/constant/constant';
 import { Button } from 'antd';
 import CartServices from '@/services/CartServices/CartServices';

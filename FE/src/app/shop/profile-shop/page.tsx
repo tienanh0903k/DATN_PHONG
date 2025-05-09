@@ -6,7 +6,7 @@ import { Tabs, Card, Statistic, Row, Col, Button } from 'antd';
 import { ShoppingOutlined, StarOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 // import Products from '@/components/app/Home/Products';
 import ListProduct from '@/components/app/shop/listproduct';
-import ProductServices from '@/services/prouduct/productServices';
+import ProductServices from '@/services/products/productServices';
 import { useEffect, useState } from 'react';
 import { URL_SERVICE } from '@/constant/constant';
 import { useSelector } from 'react-redux';
@@ -38,7 +38,7 @@ const ProfileShop = () => {
 		<div className="container-base p-6">
 			<Card className="mb-6">
 				<div className="relative">
-					<div className="h-48 bg-gray-200 rounded-t-lg">
+					<div className="h-56 bg-gray-200 rounded-t-lg">
 						{shop?.shopBanner && (
 							<img
 								src={shop.shopBanner}
@@ -49,10 +49,10 @@ const ProfileShop = () => {
 					</div>
 
 					<div className="flex items-start px-6 -mt-12">
-						<div className="w-[96px] h-[96px] rounded-full border-4 border-white overflow-hidden bg-gray-100">
+						<div className="w-[116px] h-[116px] rounded-full border-4 border-white overflow-hidden bg-gray-100">
 							<Image
-								width={96}
-								height={96}
+								width={116}
+								height={116}
 								src={shop?.shopAvatar}
 								alt="Shop Avatar"
 								className="object-cover"
@@ -109,9 +109,9 @@ const ProfileShop = () => {
 								<div className="space-y-4">
 									<div className="flex justify-between items-start">
 										<div>
-											<h3 className="font-semibold">Thông tin liên hệ</h3>
-											<p>Email: {shop?.emailShop}</p>
-											<p>Số điện thoại: {shop?.shopNumberPhone}</p>
+											<h3 className="font-semibold text-2xl">Thông tin liên hệ</h3>
+											<p className="text-lg">Email: {shop?.emailShop}</p>
+											<p className="text-lg">Số điện thoại: {shop?.shopNumberPhone}</p>
 										</div>
 										<Button
 											type="primary"
@@ -122,8 +122,8 @@ const ProfileShop = () => {
 										</Button>
 									</div>
 									<div>
-										<h3 className="font-semibold">Địa chỉ</h3>
-										<p>{shop?.shopAddress}</p>
+										<h3 className="font-semibold text-2xl">Địa chỉ</h3>
+										<p className="text-lg">{shop?.shopAddress}</p>
 									</div>
 								</div>
 							</Card>

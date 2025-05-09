@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import SwiperComponents from '@/components/app/Home/swiper';
 import Trending from '@/components/app/Home/trending';
-import ProductServices from '@/services/prouduct/productServices';
+import ProductServices from '@/services/products/productServices';
 import { URL_SERVICE } from '@/constant/constant';
 
 const Products = dynamic(() => import('@/components/app/Home/Products'), {
@@ -30,7 +30,9 @@ export default function Home() {
 		<div className="">
 			<SwiperComponents />
 			<Trending />
-			<Products products={products} />
+			<div className="flex gap-6">
+				<Products products={products} />
+			</div>
 		</div>
 	);
 }

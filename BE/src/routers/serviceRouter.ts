@@ -28,6 +28,7 @@ import {
   getProductByShopId,
   getProductByCateoryID,
   updateProduct,
+  searchProduct,
 } from "../app/controllers/products/products.controller";
 import {
   createVariantType,
@@ -120,4 +121,6 @@ serviceRouter.post("/create-order", createOrder);
 serviceRouter.post("/create-order-paylate", createOrderPaylate);
 serviceRouter.put("/update-bill", updateBill);
 
+//search
+serviceRouter.post("/search-product", searchProduct);
 export default serviceRouter;

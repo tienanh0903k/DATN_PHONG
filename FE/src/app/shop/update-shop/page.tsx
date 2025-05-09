@@ -109,7 +109,7 @@ export default function UpdateShop() {
 	};
 
 	return (
-		<div className="max-w-6xl mx-auto p-6">
+		<div className="max-w-6xl mx-auto mt-10 p-6 min-h-[80vh] overflow-y-auto">
 			<Spin spinning={loading}>
 				<div className="grid grid-cols-2 gap-8">
 					<div className="bg-white rounded-lg shadow p-6">

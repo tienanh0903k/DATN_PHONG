@@ -173,6 +173,21 @@ const ProductService = {
       throw new Error("Failed to update product");
     }
   },
+  searchProduct: async (search: string) => {
+    try {
+      const product = await Prismaclient.products.findMany({
+        where: {
+          productName: {
+            contains: search.toLowerCase(),
+          },
+        },
+      });
+      return product;
+    } catch (error) {
+      console.error("Error searching product:", error);
+      throw new Error("Failed to search product");
+    }
+  },
 };
 
 export default ProductService;

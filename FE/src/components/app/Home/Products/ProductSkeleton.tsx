@@ -1,6 +1,6 @@
 const ProductSkeleton = () => {
 	return (
-		<div className="w-[16%] border-[1px] border-solid border-[#ebebf0] bg-white rounded-[8px] overflow-hidden animate-pulse">
+		<div className="w-[19%] border-[1px] border-solid border-[#ebebf0] bg-white rounded-[8px] overflow-hidden animate-pulse">
 			<div className="w-full aspect-square bg-gray-200"></div>
 			<div className="p-2">
 				<div className="h-[68px]">

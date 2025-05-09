@@ -1,16 +1,21 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Rate } from 'antd';
 
 import { formatPrice } from '@/utils/formatprice';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import ProductSkeleton from './ProductSkeleton';
 
-const Products = (products: any) => {
-	const [loading, setLoading] = useState(true);
+interface ProductsProps {
+	products: any;
+	itemsPerRow?: number; // Số sản phẩm trên mỗi hàng
+}
 
+const Products = ({ products, itemsPerRow = 5 }: ProductsProps) => {
+	const [loading, setLoading] = useState(true);
+	console.log(products);
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setLoading(false);
@@ -18,6 +23,8 @@ const Products = (products: any) => {
 
 		return () => clearTimeout(timer);
 	}, []);
+
+	const itemWidth = `${100 / itemsPerRow}%`;
 
 	if (loading) {
 		return (
@@ -31,11 +38,20 @@ const Products = (products: any) => {
 
 	return (
 		<div className="w-full flex gap-2 flex-wrap mr-[-16px] mt-6">
-			{products.products.map((item: any, index: number) => (
-				<Link key={index} href={`/productdetail/${item.productId}`} className="w-[16%] flex gap-2 ">
-					<div className=" cursor-pointer flex-wrap mr-[-16px] mt-6  border-[1px] overflow-hidden border-solid border-[#ebebf0] bg-white rounded-[8px]">
-						<div className="">
-							<img src={item.img} alt={item.categoryName} className="w-[180px] h-[180px] shadow" />
+			{products?.map((item: any, index: number) => (
+				<Link
+					key={index}
+					href={`/productdetail/${item.productId}`}
+					className="flex gap-2"
+					style={{ width: itemWidth }}
+				>
+					<div className="cursor-pointer flex-wrap mr-[-16px] mt-6 border-[1px] overflow-hidden border-solid border-[#ebebf0] bg-white rounded-[8px] w-full">
+						<div className="flex justify-center">
+							<img
+								src={item.img}
+								alt={item.categoryName}
+								className="w-[200px] h-[200px] object-contain"
+							/>
 						</div>
 						<div className="p-2">
 							<div className="h-[68px]">
@@ -46,12 +62,12 @@ const Products = (products: any) => {
 									theme={{
 										components: {
 											Rate: {
-												starSize: 10,
+												starSize: 14,
 											},
 										},
 									}}
 								>
-									{/* <Rate className="h-[18px] " disabled defaultValue={item.rating} /> */}
+									<Rate className="h-[18px] " disabled defaultValue={3} />
 								</ConfigProvider>
 							</div>
 							<p className="text-[16px] text-[#ff424e] font-[600] text-left leading-[150%] ">
