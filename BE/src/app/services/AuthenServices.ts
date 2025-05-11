@@ -1,39 +1,58 @@
 import Prismaclient from "../../../prisma";
-import { IAuthen } from "./interfaces/IAuthen";
+import { IAuthen, ISignUp } from "./interfaces/IAuthen";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import generateRandomString from "../../utils";
 import { supabase } from "../../config/supabase";
-const SignUp = async (dataProps: IAuthen) => {
-  const existingAccount = await Prismaclient.account.findFirst({
-    where: { userName: dataProps.userName },
-  });
-  if (!existingAccount) {
-    const Salt = generateRandomString(16);
-    const hashPassword = await bcrypt.hash(dataProps.password + Salt, 10);
 
-    return await Prismaclient.customer.create({
-      data: {
-        customerName: dataProps.customerName,
-        avatar:
-          "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1",
-        birthday: new Date("1990-01-01"),
-        email: "",
-        address: "",
-        gender: "",
-        status: "active",
-        numberPhone: dataProps.numberPhone,
-        Account: {
-          create: {
-            userName: dataProps.userName,
-            password: hashPassword,
-            accountTypeId: 3,
-            status: "active",
-            Salt: Salt,
+const SignUp = async (dataProps: IAuthen) => {
+  try {
+    const existingAccount = await Prismaclient.account.findFirst({
+      where: { userName: dataProps.userName },
+    });
+    if (!existingAccount) {
+      const Salt = await bcrypt.genSalt(10);
+      const randomSuffix = generateRandomString(3);
+      const fullName = `User${randomSuffix}`;
+      const hashPassword = await bcrypt.hash(dataProps.password, Salt);
+
+      const newCustomer = await Prismaclient.customer.create({
+        data: {
+          customerName: fullName,
+          avatar:
+            "https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1",
+          birthday: new Date("1990-01-01"),
+          email: dataProps.email,
+          address: "",
+          gender: "",
+          status: "active",
+          numberPhone: dataProps.numberPhone,
+          Account: {
+            create: {
+              userName: dataProps.userName,
+              password: hashPassword,
+              accountTypeId: 3,
+              status: "active",
+              Salt: Salt,
+            },
           },
         },
-      },
-    });
+      });
+      return {
+        status: "success",
+        data: newCustomer,
+      };
+    }
+    return {
+      status: "error",
+      message: "Tài khoản đã tồn tại",
+    };
+  } catch (error: any) {
+    console.error("Lỗi đăng ký:", error);
+    return {
+      status: "error",
+      message: error.message || "Đăng ký thất bại",
+    };
   }
 };
 const sendOtp = async (Email: string) => {
@@ -93,7 +112,43 @@ const loginGoogle = async (href: string) => {
     throw error;
   }
 };
+const login = async (data: ISignUp) => {
+  try {
+    const existingUser = await Prismaclient.account.findFirst({
+      where: {
+        userName: data.userName,
+      },
+    });
 
+    if (!existingUser) {
+      throw Error("thông tin k hợp lệ");
+    }
+    const hashPassword = await bcrypt.hash(data.password, existingUser.Salt);
+
+    if (existingUser.password !== hashPassword) {
+      throw Error("Kiểm tra lại tài khoản mật khẩu");
+    }
+    if (!process.env.KEY_JWT) {
+      throw new Error("JWT key is not configured");
+    }
+    const token = jwt.sign(
+      { customerId: existingUser.accountId },
+      process.env.KEY_JWT,
+      {
+        expiresIn: "8h",
+      }
+    );
+    return {
+      status: "success",
+      data: { token },
+    };
+  } catch (error: any) {
+    return {
+      status: "error",
+      message: error.message,
+    };
+  }
+};
 const signIn = async (email: string) => {
   try {
     const customer = await Prismaclient.customer.findFirst({
@@ -169,4 +224,5 @@ export {
   verifyOtp,
   loginGoogle,
   handleGoogleCallback,
+  login,
 };

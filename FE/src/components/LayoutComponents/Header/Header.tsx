@@ -83,6 +83,20 @@ const HeaderCpn = ({}: Props) => {
 		}
 	}, []);
 	useEffect(() => {
+		const token = localStorage.getItem('tokenlogin');
+		if (token) {
+			const handleLogin = async () => {
+				try {
+					const response: any = await registerServices.getCustomer(token);
+					dispatch(setUserInfo(response));
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			handleLogin();
+		}
+	}, []);
+	useEffect(() => {
 		const hash = window.location.hash.substring(1);
 
 		if (hash) {
@@ -118,6 +132,8 @@ const HeaderCpn = ({}: Props) => {
 		dispatch(logout());
 		dispatch(clearCart());
 		localStorage.removeItem('accessToken');
+		localStorage.removeItem('tokenlogin');
+
 		router.push('/');
 	};
 	const items: MenuProps['items'] = [

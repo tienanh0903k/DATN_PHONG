@@ -4,38 +4,64 @@ import jwt from "jsonwebtoken";
 import Prismaclient from "../../prisma";
 import { Request, Response, NextFunction } from "express";
 
+declare global {
+  namespace Express {
+    interface Request {
+      customer: any;
+    }
+  }
+}
+
 const Middleware = async (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
-  if (!token) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return next(
-      new UnauthorizedException("Unauthorized", errorCode.UNAUTHORIZED)
+      new UnauthorizedException("Token không hợp lệ", errorCode.UNAUTHORIZED)
     );
   }
+  const token = authHeader.split(" ")[1];
   try {
-    if (!process.env.JWT_SECRET) {
-      throw new Error("JWT_SECRET is not defined");
+    if (!process.env.KEY_JWT) {
+      throw new Error("KEY_JWT is not defined");
     }
-    const payload = jwt.verify(token, process.env.JWT_SECRET) as {
+
+    const payload = jwt.verify(token, process.env.KEY_JWT) as {
       customerId: number;
     };
     const account = await Prismaclient.customer.findFirst({
       where: {
         accountId: payload.customerId,
-      },
-      include: {
-        Account: true,
+        Account: {
+          status: "active",
+        },
       },
     });
-
     if (!account) {
       return next(
-        new UnauthorizedException("Unauthorized", errorCode.UNAUTHORIZED)
+        new UnauthorizedException(
+          "Tài khoản không tồn tại hoặc đã bị khóa",
+          errorCode.UNAUTHORIZED
+        )
       );
     }
-    res.json(account);
+
+    req.customer = account;
     next();
   } catch (error) {
-    next(new UnauthorizedException("Unauthorized", errorCode.UNAUTHORIZED));
+    console.error("Auth error:", error);
+
+    if (error instanceof jwt.TokenExpiredError) {
+      return next(
+        new UnauthorizedException("Token đã hết hạn", errorCode.UNAUTHORIZED)
+      );
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      return next(
+        new UnauthorizedException("Token không hợp lệ", errorCode.UNAUTHORIZED)
+      );
+    }
+    next(new UnauthorizedException("Lỗi xác thực", errorCode.UNAUTHORIZED));
   }
 };
 

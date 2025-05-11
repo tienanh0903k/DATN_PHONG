@@ -3,6 +3,7 @@ import * as AuthService from "../../services/AuthenServices";
 
 const signUp = async (req: Request, res: Response) => {
   const data = req.body;
+  console.log(data);
   try {
     const result = await AuthService.SignUp(data);
     res.status(201).json(result);
@@ -61,6 +62,19 @@ const SignIn = async (req: Request, res: Response) => {
     res.status(400).json(error);
   }
 };
+const Login = async (req: Request, res: Response) => {
+  const data = req.body;
+
+  try {
+    const response = await AuthService.login(data);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+};
+const getCustomer = async (req: Request, res: Response) => {
+  res.json(req.customer);
+};
 export {
   signUp,
   loginGoogleController,
@@ -68,4 +82,6 @@ export {
   sendOtpEmail,
   verifyOtpEmail,
   SignIn,
+  Login,
+  getCustomer,
 };

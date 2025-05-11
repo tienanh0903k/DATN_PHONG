@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
 			'frontend.tikicdn.com',
 			'salt.tikicdn.com',
 			'images.remotePatterns',
+			'i0.wp.com',
 		],
 	},
 };

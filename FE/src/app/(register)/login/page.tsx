@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import SignIn from '@/components/app/Resgiter/signin';
 import VerifyPhone from '@/components/app/Resgiter/verifyPhone';

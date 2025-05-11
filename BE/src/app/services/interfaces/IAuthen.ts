@@ -10,3 +10,7 @@ export interface IAuthen {
   address: null | string;
   gender: null | string;
 }
+export interface ISignUp {
+  userName: string;
+  password: string;
+}

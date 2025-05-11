@@ -29,7 +29,7 @@ const Chatbot = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [inputMessage, setInputMessage] = useState('');
-	const [selectedSupport, setSelectedSupport] = useState<'ai' | 'human' | null>(null);
+	const [selectedSupport, setSelectedSupport] = useState<'ai' | 'human' | 'shop' | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const aiServices = new AiServices(URL_SERVICE, () => {});
@@ -124,15 +124,12 @@ const Chatbot = () => {
 				</button>
 			) : (
 				<div className="bg-white rounded-lg shadow-lg w-[700px] h-[900px] flex flex-col">
-					{/* Header */}
 					<div className="p-4 border-b flex justify-between items-center">
 						<h3 className="font-medium">Trợ lý AI</h3>
 						<button className="cursor-pointer" onClick={() => setIsOpen(false)}>
 							<IoClose size={24} />
 						</button>
 					</div>
-
-					{/* Support Selection */}
 					{!selectedSupport && (
 						<div className="p-4">
 							<p className="text-center mb-4">Chọn trợ lý bạn muốn trò chuyện</p>
@@ -149,6 +146,15 @@ const Chatbot = () => {
 										/>
 									</div>
 									<span>Hỏi Trợ lý AI</span>
+								</button>
+								<button
+									onClick={() => setSelectedSupport('shop')}
+									className="flex flex-col items-center p-4 border rounded-lg hover:border-blue-500 cursor-pointer"
+								>
+									<div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+										<img src="/img/shop-avatar.png" alt="Shop" className="w-10 h-10" />
+									</div>
+									<span>Chat với Shop</span>
 								</button>
 								<button
 									onClick={() => setSelectedSupport('human')}
@@ -175,7 +181,9 @@ const Chatbot = () => {
 													src={
 														selectedSupport === 'ai'
 															? 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/a2b2c31ea7b0ad4b2e7d0e6ef817241b.png'
-															: '/img/human-avatar.png'
+															: selectedSupport === 'shop'
+																? '/img/shop-avatar.png'
+																: '/img/human-avatar.png'
 													}
 													alt="Avatar"
 													className="w-full h-full"
@@ -198,7 +206,9 @@ const Chatbot = () => {
 												src={
 													selectedSupport === 'ai'
 														? 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/a2b2c31ea7b0ad4b2e7d0e6ef817241b.png'
-														: '/img/human-avatar.png'
+														: selectedSupport === 'shop'
+															? '/img/shop-avatar.png'
+															: '/img/human-avatar.png'
 												}
 												alt="Avatar"
 												className="w-full h-full"

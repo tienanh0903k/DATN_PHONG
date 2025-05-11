@@ -15,7 +15,7 @@ interface ProductsProps {
 
 const Products = ({ products, itemsPerRow = 5 }: ProductsProps) => {
 	const [loading, setLoading] = useState(true);
-	console.log(products);
+
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setLoading(false);
