@@ -25,7 +25,6 @@ const CartList = () => {
 	const dispatch = useDispatch();
 	const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 	const cart = useSelector((state: RootState) => state.cart.cart);
-
 	const isAllSelected = cart.length > 0 && selectedItems.length === cart.length;
 	const router = useRouter();
 

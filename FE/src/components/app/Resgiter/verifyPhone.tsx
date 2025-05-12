@@ -53,7 +53,6 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 		try {
 			const datauser: any = await registerServices.getCustomer(token);
 			dispatch(setUserInfo(datauser));
-			console.log(datauser);
 		} catch (error) {
 			console.error('Error fetching customer data:', error);
 		}

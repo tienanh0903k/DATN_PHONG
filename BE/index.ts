@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import rootRouter from "./src/routers";
 import dotenv from "dotenv";
 import cors from "cors";
-import { supabase } from "./src/config/supabase";
+
 // import errorMiddleware from './middlewares/errorMiddleware';
 
 const app: Application = express();
@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3002;
 dotenv.config();
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://datn-beryl.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "csrf", "Accept"],
     credentials: true,

@@ -28,7 +28,7 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 	const [quantity, setQuantity] = useState<number>(quantities);
 	const [totalPrice, setTotalPrice] = useState<number>(price * quantities);
 	const [isSelected, setIsSelected] = useState<boolean>(false);
-	console.log('quantities', quantities);
+
 	const onChange: CheckboxProps['onChange'] = (e) => {
 		setIsSelected(e.target.checked);
 		if (onSelect) {

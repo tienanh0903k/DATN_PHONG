@@ -88,6 +88,10 @@ const HeaderCpn = ({}: Props) => {
 				try {
 					const response: any = await registerServices.getCustomer(token);
 					dispatch(setUserInfo(response));
+					const shop: any = await shopServices.getShop(response.customerId);
+					dispatch(setShopInfo(shop?.shop));
+					const data = await cartServices.getCartByCustomerId(response.customerId);
+					dispatch(addtoCart(data));
 				} catch (error) {
 					console.log(error);
 				}

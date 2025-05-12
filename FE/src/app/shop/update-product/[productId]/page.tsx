@@ -93,7 +93,7 @@ const UpdateProduct = () => {
 		try {
 			setLoading(true);
 			const product: any = await productServices.getProductById(Number(productId));
-			console.log(product);
+
 			if (product) {
 				setValue('productName', product.data.productName);
 				setValue('categoryId', product.data.categoryId);
