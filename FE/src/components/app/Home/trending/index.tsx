@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import trending from '../../../../mocks/trending.json';
 import Image from 'next/image';

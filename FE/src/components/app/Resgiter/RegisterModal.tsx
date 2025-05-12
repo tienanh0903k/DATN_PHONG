@@ -20,9 +20,9 @@ const LoginModal = ({ open, onClose }: Props) => {
 			<div className="flex h-full">
 				<div className="w-[500px] px-10 pb-6 pt-[45px]">
 					{component === 'signin' ? (
-						<SignIn handleLogin={handleComponent} />
-					) : (
 						<VerifyPhone handleRegister={handleComponent} />
+					) : (
+						<SignIn handleLogin={handleComponent} />
 					)}
 				</div>
 				<div className="w-[300px] bg-[#deebff]">

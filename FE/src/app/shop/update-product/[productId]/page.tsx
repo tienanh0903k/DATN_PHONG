@@ -10,7 +10,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import { supabase } from '@/config/supabase.config';
 import Tiptap from '@/components/app/shop/Textedit';
 import VariantService from '@/services/variant/variantService';
-import ProductServices from '@/services/prouduct/productServices';
+import ProductServices from '@/services/products/productServices';
 import CategoryServices from '@/services/categoryServices/categoryServices';
 import { URL_SERVICE } from '@/constant/constant';
 import { useParams, useRouter } from 'next/navigation';

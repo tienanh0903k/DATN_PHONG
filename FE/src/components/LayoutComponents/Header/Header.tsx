@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { TiHome } from 'react-icons/ti';
 import { CiFaceSmile } from 'react-icons/ci';
 import { BiCartAlt } from 'react-icons/bi';
-import { useTranslation } from 'react-i18next';
+
 import historySearch from '../../../mocks/historySearch.json';
 import { IoLocationOutline, IoSearchOutline } from 'react-icons/io5';
 import { Modal, ConfigProvider, Dropdown, MenuProps } from 'antd';
@@ -30,7 +30,6 @@ import HistoryHeader from './historyHeader';
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
-	const { t } = useTranslation();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -183,7 +182,7 @@ const HeaderCpn = ({}: Props) => {
 						alt=""
 						className="w-full h-[40px] object-contain justify-center"
 					/>
-					<span className="text-[14px] text-[#003ea1] font-[600] mt-2 ml-2">{t('Tốt & Nhanh')}</span>
+					<span className="text-[14px] text-[#003ea1] font-[600] mt-2 ml-2">Tốt & Nhanh</span>
 				</div>
 				<div className="w-full block relative">
 					<div className="flex w-full mb-2">
@@ -204,7 +203,7 @@ const HeaderCpn = ({}: Props) => {
 								type="submit"
 								className="bg-[#fff] h-full text-[14px] w-[92px] rounded-md max-h-9 text-center text-[#0a68ff] relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd] hover:bg-[#0a68ff33] active:bg-[#0a68ff66]"
 							>
-								{t('Tìm kiếm')}
+								Tìm kiếm
 							</button>
 						</form>
 
@@ -212,7 +211,7 @@ const HeaderCpn = ({}: Props) => {
 							<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer">
 								<TiHome className="text-[20px] text-[--primary-color] mr-1" />
 								<Link href="/" className="text-[--primary-color]">
-									{t('Trang chủ')}
+									Trang chủ
 								</Link>
 							</div>
 							{isLogin ? (
@@ -229,14 +228,14 @@ const HeaderCpn = ({}: Props) => {
 									<Dropdown menu={{ items }} placement="bottomRight">
 										<div className="flex items-center px-2 p-4 hover:bg-[#27272a1f] h-10 rounded-[10px] cursor-pointer">
 											<CiFaceSmile className="text-[20px] mr-1" />
-											<span className="">{t('Tài khoản')}</span>
+											<span className="">Tài khoản</span>
 										</div>
 									</Dropdown>
 								</ConfigProvider>
 							) : (
 								<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd]">
 									<span className="" onClick={showModalLogin}>
-										{t('Đăng nhập')}
+										Đăng nhập
 									</span>
 									<RegisterModal open={isModalVisible} onClose={handleCloseLogin} />
 								</div>

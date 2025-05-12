@@ -130,6 +130,7 @@ const Categories = () => {
 				columns={columns}
 				dataSource={categories}
 				rowKey="categoryId"
+				className="shadow-[0px_0px_22px_8px_rgba(0,_0,_0,_0.1)]"
 				pagination={{
 					pageSize: 10,
 					showSizeChanger: true,
