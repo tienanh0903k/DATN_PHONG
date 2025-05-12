@@ -42,10 +42,6 @@ const Chatbot = () => {
 		scrollToBottom();
 	}, [messages]);
 
-	useEffect(() => {
-		console.log('Messages updated:', messages);
-	}, [messages]);
-
 	const formatMessage = (text: string) => {
 		return text.split('\n').map((line, index) => (
 			<span key={index}>

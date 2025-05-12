@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { Checkbox, CheckboxProps } from 'antd';
@@ -89,19 +90,34 @@ const CartList = () => {
 					</button>
 				</header>
 				<div className="">
-					{cart?.map((item: any, index: number) => (
-						<CartItem
-							key={index}
-							id={item.id}
-							img={item.image}
-							name={item.productName}
-							quantities={item.quantity}
-							price={item.price}
-							variantValue={item.typeValue}
-							onSelect={handleSelect}
-							isSelected={selectedItems.some((selected) => selected.id === item.id)}
-						/>
-					))}
+					{cart.length > 0 ? (
+						cart?.map((item: any, index: number) => (
+							<CartItem
+								key={index}
+								id={item.id}
+								img={item.image}
+								name={item.productName}
+								quantities={item.quantity}
+								price={item.price}
+								variantValue={item.typeValue}
+								onSelect={handleSelect}
+								isSelected={selectedItems.some((selected) => selected.id === item.id)}
+							/>
+						))
+					) : (
+						<div>
+							<div className="flex flex-col items-center bg-white w-full p-[35px]">
+								<img
+									src="https://frontend.tikicdn.com/_desktop-next/static/img/account/empty-order.png"
+									alt="Empty Order"
+									className="w-[200px] h-[200px]"
+								/>
+								<p className="mt-[15px] text-[#38383d] text-base font-normal">
+									Chưa có sản phẩm trong giỏ hàng
+								</p>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 			<div className="w-[340px] bg-white p-4 rounded-sm">

@@ -14,19 +14,18 @@ declare global {
 
 const Middleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!authHeader) {
     return next(
       new UnauthorizedException("Token không hợp lệ", errorCode.UNAUTHORIZED)
     );
   }
-  const token = authHeader.split(" ")[1];
+
   try {
     if (!process.env.KEY_JWT) {
       throw new Error("KEY_JWT is not defined");
     }
 
-    const payload = jwt.verify(token, process.env.KEY_JWT) as {
+    const payload = jwt.verify(authHeader, process.env.KEY_JWT) as {
       customerId: number;
     };
     const account = await Prismaclient.customer.findFirst({

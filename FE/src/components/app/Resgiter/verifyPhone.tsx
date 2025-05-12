@@ -7,6 +7,7 @@ import { URL_AUTH } from '@/constant/constant';
 import AuthenEmail from './authenEmail';
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '@/reducers/slice/authSlice';
+import { Spin } from 'antd';
 
 type Props = {
 	handleRegister: () => void;
@@ -24,10 +25,13 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 	const [status, setStatus] = useState<any>('');
 	const [message, setMessage] = useState<string>('');
 	const registerServices = new RegisterServices(URL_AUTH, () => {});
+	const [loading, setLoading] = useState(false);
 
 	const onSubmit = async (data: any) => {
+		setLoading(true);
 		try {
 			const response: any = await registerServices.login(data);
+			await new Promise((resolve) => setTimeout(resolve, 1500));
 
 			if (response?.status === 'success') {
 				setStatus('success');
@@ -46,6 +50,9 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 			console.error('Login error:', error);
 			setStatus('error');
 			setMessage('Đăng nhập thất bại!');
+			setLoading(false);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -64,7 +71,7 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 	};
 
 	return (
-		<div className="">
+		<Spin spinning={loading} tip="Đang đăng nhập ...">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div>
 					<div className="mb-5">
@@ -151,7 +158,7 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 				<a href="https://hotro.tiki.vn/s/article/dieu-khoan-su-dung">điều khoản sử dụng</a> và{' '}
 				<a href="https://tiki.vn/bao-mat-thong-tin-ca-nhan">Chính sách bảo mật thông tin cá nhân</a> của Tiki
 			</p>
-		</div>
+		</Spin>
 	);
 };
 
