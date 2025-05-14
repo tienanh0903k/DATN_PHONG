@@ -97,7 +97,7 @@ const CartList = () => {
 								img={item.image}
 								name={item.productName}
 								quantities={item.quantity}
-								price={item.price}
+								price={item.ProductVariant.price}
 								variantValue={item.typeValue}
 								onSelect={handleSelect}
 								isSelected={selectedItems.some((selected) => selected.id === item.id)}

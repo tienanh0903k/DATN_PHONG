@@ -52,7 +52,6 @@ const ShopServicer = {
     }
   },
   getOrderListByShopId: async (id: number) => {
-    console.log(id);
     try {
       const bills = await Prismaclient.bill.findMany({
         where: {
@@ -71,7 +70,11 @@ const ShopServicer = {
             include: {
               ProductVariant: {
                 include: {
-                  Products: true,
+                  Products: {
+                    include: {
+                      Shop: true,
+                    },
+                  },
                   VariantValue: true,
                 },
               },
@@ -81,13 +84,25 @@ const ShopServicer = {
           StatusBill: true,
         },
       });
-      return bills;
+      const bill = bills.map((bill) => {
+        return {
+          ...bill,
+          ...bill.BillDetail[0].ProductVariant.Products.Shop,
+          productName: bill.BillDetail[0].ProductVariant.Products.productName,
+          quantityBill: bill.BillDetail[0].quantity,
+          ...bill.StatusBill,
+          ...bill.Customer,
+          ...bill.BillDetail[0],
+          ...bill.BillDetail[0].ProductVariant,
+          ...bill.BillDetail[0].ProductVariant.VariantValue,
+        };
+      });
+      return bill;
     } catch (error) {
       console.log(error);
     }
   },
   getOrderListByStatus: async (data: any) => {
-    console.log(data);
     try {
       const bills = await Prismaclient.bill.findMany({
         where: {
@@ -107,7 +122,11 @@ const ShopServicer = {
             include: {
               ProductVariant: {
                 include: {
-                  Products: true,
+                  Products: {
+                    include: {
+                      Shop: true,
+                    },
+                  },
                   VariantValue: true,
                 },
               },
@@ -117,7 +136,18 @@ const ShopServicer = {
           StatusBill: true,
         },
       });
-      return bills;
+      const bill = bills.map((bill) => {
+        return {
+          ...bill,
+          ...bill.BillDetail[0].ProductVariant.Products.Shop,
+          ...bill.BillDetail[0].ProductVariant.Products,
+          ...bill.StatusBill,
+          ...bill.Customer,
+          ...bill.BillDetail[0].ProductVariant,
+          ...bill.BillDetail[0].ProductVariant.VariantValue,
+        };
+      });
+      return bill;
     } catch (error) {
       console.log(error);
     }

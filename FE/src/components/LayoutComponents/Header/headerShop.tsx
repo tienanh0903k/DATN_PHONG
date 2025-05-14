@@ -23,14 +23,15 @@ import { URL_AUTH, URL_SERVICE } from '@/constant/constant';
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '@/reducers/slice/authSlice';
 import { setShopInfo } from '@/reducers/slice/shopSlice';
-
+import { addtoCart } from '@/reducers/slice/cartSlice';
+import CartServices from '@/services/CartServices/CartServices';
 const HeaderShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const registerServices = new RegisterServices(URL_AUTH || '', () => {});
 	const dispatch = useDispatch();
 	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
-
+	const cartServices = new CartServices(URL_SERVICE || '', () => {});
 	useEffect(() => {
 		const token = localStorage.getItem('accessToken');
 		if (token) {
@@ -43,6 +44,25 @@ const HeaderShop = () => {
 				}
 			};
 			handleCallback();
+		}
+	}, []);
+
+	useEffect(() => {
+		const token = localStorage.getItem('tokenlogin');
+		if (token) {
+			const handleLogin = async () => {
+				try {
+					const response: any = await registerServices.getCustomer(token);
+					dispatch(setUserInfo(response));
+					const shop: any = await shopServices.getShop(response.customerId);
+					dispatch(setShopInfo(shop?.shop));
+					const data = await cartServices.getCartByCustomerId(response.customerId);
+					dispatch(addtoCart(data));
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			handleLogin();
 		}
 	}, []);
 	const handleLogin = async (email: string) => {

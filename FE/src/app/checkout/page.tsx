@@ -12,30 +12,49 @@ import { URL_SERVICE } from '@/constant/constant';
 
 const CheckOut = () => {
 	const [deliveryMethod, setDeliveryMethod] = useState('standard');
-	const [paymentMethod, setPaymentMethod] = useState('cod');
+	const [paymentMethod, setPaymentMethod] = useState('0');
 	const [isLoading, setIsLoading] = useState(false);
+	const [messageApi, contextHolder] = message.useMessage();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
+
 	const selectedItems = useSelector((state: RootState) => state.checkout.selectedItems);
+	console.log(selectedItems);
 
 	const totalPrice = selectedItems.reduce((acc: number, item: any) => acc + item.totalPrice, 0);
 
 	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
 
 	const handlePayment = async () => {
+		if (!user?.address) {
+			messageApi.open({
+				type: 'warning',
+				content: 'Vui lòng cập nhật địa chỉ giao hàng trước khi đặt hàng.',
+			});
+		}
 		const data = {
 			customerId: user?.customerId,
 			numberPhone: user?.numberPhone,
 			address: user?.address,
 			cartItems: selectedItems,
 		};
-
+		if (paymentMethod === '0') {
+			messageApi.open({
+				type: 'warning',
+				content: 'Vui lòng chọn hình thức thanh toán.',
+			});
+			return;
+		}
 		setIsLoading(true);
 		try {
 			if (paymentMethod === '1') {
 				const response = await paymentServices.createOrderPaylate(data);
+
 				if (response) {
-					message.success('Đặt hàng thành công! Đơn hàng sẽ được giao trong thời gian sớm nhất.');
+					messageApi.open({
+						type: 'success',
+						content: 'Đặt hàng thành công! Đơn hàng sẽ được giao trong thời gian sớm nhất.',
+					});
 					router.push('/customer/order');
 				}
 			} else if (paymentMethod != '1') {
@@ -54,6 +73,7 @@ const CheckOut = () => {
 	};
 	return (
 		<div className=" py-4">
+			{contextHolder}
 			<div className="flex gap-8">
 				<div className="flex-1">
 					<div className="bg-white p-4 rounded mb-4">

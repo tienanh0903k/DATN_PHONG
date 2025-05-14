@@ -5,10 +5,11 @@ import { formatPrice } from '@/utils/formatprice';
 import { Truck, Package } from 'lucide-react';
 import ShopServicer from '@/services/shopServicer/shopServicer';
 import { URL_SERVICE } from '@/constant/constant';
-import { Button, Tag } from 'antd';
+import { Button, Tag, Modal } from 'antd';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-
+import PrintBill from '@/components/app/bills/PrintBill';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 type OrderListProps = {
 	orderList: any[];
 	onStatusChange: (newStatusId: number) => void;
@@ -24,8 +25,19 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const shopServices = new ShopServicer(URL_SERVICE, () => {});
 	const [activeStatusId, setActiveStatusId] = useState(null);
-	console.log(orderList);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const showModal = (data: any) => {
+		console.log(data);
+		setIsModalOpen(true);
+	};
 
+	const handleOk = () => {
+		setIsModalOpen(false);
+	};
+
+	const handleCancel = () => {
+		setIsModalOpen(false);
+	};
 	useEffect(() => {
 		if (Array.isArray(orderList)) {
 			const total = orderList.reduce((total: number, order: any) => {
@@ -172,17 +184,25 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 							</div>
 						))}
 
-						{/* {order.statusId === 5 && order.cancellationReason && (
-							<p className="text-sm text-gray-500 mb-3">Lý do hủy: {order.cancellationReason}</p>
-						)} */}
-
-						{/* Order Footer */}
 						<div className="flex justify-between items-center border-t pt-3 mt-3">
 							<div className="flex gap-2">
-								<Button type="primary" size="small">
-									Xem chi tiết
+								<Button>
+									<PDFDownloadLink document={<PrintBill dataBill={order} />} fileName="invoice.pdf">
+										{({ loading }) => (loading ? 'Đang tạo PDF...' : 'Tải hóa đơn PDF')}
+									</PDFDownloadLink>
 								</Button>
-								<Button size="small">In đơn hàng</Button>
+								<Button onClick={() => showModal(order)}>Xem hóa đơn</Button>
+								<Modal
+									width={600}
+									height={900}
+									closable={{ 'aria-label': 'Custom Close Button' }}
+									open={isModalOpen}
+									onOk={handleOk}
+									onCancel={handleCancel}
+									footer={null}
+								>
+									<PrintBill data={order} />
+								</Modal>
 							</div>
 							<div className="text-right">
 								Tổng tiền:{' '}

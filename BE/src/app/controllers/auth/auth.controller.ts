@@ -3,7 +3,7 @@ import * as AuthService from "../../services/AuthenServices";
 
 const signUp = async (req: Request, res: Response) => {
   const data = req.body;
-  console.log(data);
+
   try {
     const result = await AuthService.SignUp(data);
     res.status(201).json(result);
@@ -44,7 +44,7 @@ const callbackGoogleController = async (req: Request, res: Response) => {
 };
 const sendOtpEmail = async (req: Request, res: Response) => {
   const { email } = req.body;
-  console.log(email);
+
   const result = await AuthService.sendOtp(email);
   res.status(200).json(result);
 };
