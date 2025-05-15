@@ -67,7 +67,6 @@ const Account = () => {
 
 	const uploadImage = async (file: File) => {
 		try {
-			// Tạo tên file duy nhất
 			const fileName = `avatar/${user.customerId}-${Date.now()}-${file.name}`;
 			console.log(fileName);
 

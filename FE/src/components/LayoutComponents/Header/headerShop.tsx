@@ -13,6 +13,7 @@ import {
 	StarOutlined,
 	UserOutlined,
 	HomeOutlined,
+	MessageOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -161,9 +162,9 @@ const HeaderShop = () => {
 							Tổng quan
 						</Button>
 					</Link>
-					<Link href="/shop/create-product">
-						<Button type="text" icon={<ShoppingOutlined />}>
-							Sản phẩm
+					<Link href="/shop/chat">
+						<Button type="text" icon={<MessageOutlined />}>
+							Tin nhắn
 						</Button>
 					</Link>
 					<Link href="/shop/orders">

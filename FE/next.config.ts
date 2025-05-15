@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
 			'salt.tikicdn.com',
 			'images.remotePatterns',
 			'i0.wp.com',
+			'lh3.googleusercontent.com',
 		],
 	},
 };

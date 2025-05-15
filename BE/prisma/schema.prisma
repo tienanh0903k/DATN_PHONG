@@ -41,6 +41,7 @@ model Customer {
   Rating           Rating[]
   Shop            Shop?
   Cart             Cart[]
+  Message          Message[]
 }
 
 
@@ -154,6 +155,26 @@ model Shop {
   Customer         Customer @relation(fields: [customerId], references: [customerId])
   Products         Products[]
   Follower         Follower[]
+  Message          Message[]
+}
+model Message {
+  messageId     Int       @id @default(autoincrement())
+  senderId      Int                    
+  senderType    SenderType             
+  customerId    Int?                      
+  shopId        Int?                     
+  content       String
+  isRead        Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+
+  Customer      Customer? @relation(fields: [customerId], references: [customerId])
+  Shop          Shop?     @relation(fields: [shopId], references: [shopId])
+}
+
+enum SenderType {
+  CUSTOMER
+  SHOP
 }
 model Bill {
   billId           Int      @id @default(autoincrement())

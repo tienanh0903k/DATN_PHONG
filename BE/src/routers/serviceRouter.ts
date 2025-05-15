@@ -57,6 +57,15 @@ import {
   createOrderPaylate,
 } from "../app/controllers/payment/payment.controller";
 
+import {
+  createChat,
+  getShopMessages,
+  getShopsChattedWithCustomer,
+  searchShop,
+  getCustomerChattedWithShop,
+  searchCustomer,
+} from "../app/controllers/chat/chat.controller";
+
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
   "/change-number-phone/:customerId",
@@ -125,4 +134,19 @@ serviceRouter.put("/update-bill", updateBill);
 
 //search
 serviceRouter.post("/search-product", searchProduct);
+
+//chat
+serviceRouter.post("/create-chat", createChat);
+serviceRouter.get("/get-shop-messages/:customerId/:shopId", getShopMessages);
+serviceRouter.post("/search-shop", searchShop);
+serviceRouter.get(
+  "/get-shops-chatted-with-customer/:customerId",
+  getShopsChattedWithCustomer
+);
+serviceRouter.get(
+  "/get-customer-chatted-with-shop/:shopId",
+  getCustomerChattedWithShop
+);
+serviceRouter.post("/search-customer", searchCustomer);
+
 export default serviceRouter;

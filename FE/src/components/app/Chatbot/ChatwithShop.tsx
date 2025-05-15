@@ -1,39 +1,103 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BsCardImage } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
+import ServicesChat from '@/services/chat/servicesChat';
+import { URL_SERVICE } from '@/constant/constant';
+import useDebounce from '@/utils/useDebounce';
+import { Ishop, Ichat } from '@/models/chat/Ichat';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
 type Props = {
 	handleClose: () => void;
 };
-const shops = [
-	{
-		id: 1,
-		name: 'Dacotours',
-		avatar: 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/a2b2c31ea7b0ad4b2e7d0e6ef817241b.png',
-	},
-	{
-		id: 2,
-		name: 'Vinatour',
-		avatar: 'https://cdn-icons-png.flaticon.com/512/1995/1995526.png',
-	},
-];
 
 const ChatwithShop = ({ handleClose }: Props) => {
-	const [selectedShop, setSelectedShop] = useState(shops[0]);
-	// const [message, setMessage] = useState('');
+	const [shops, setShops] = useState<Ishop[]>([]);
+	const [selectedShop, setSelectedShop] = useState<Ishop>(shops[0]);
+	const [chats, setChats] = useState<Ichat[]>([]);
+	const [loading, setLoading] = useState(false);
+	const servicesChat = new ServicesChat(URL_SERVICE || '', () => {});
+	const [searchTerm, setSearchTerm] = useState('');
+	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
+	const [file, setFile] = useState<File | null>(null);
+	const customer = useSelector((state: RootState) => state.auth.userInfo);
+	useEffect(() => {
+		const fetchData = async () => {
+			if (debouncedSearchTerm.trim()) {
+				setLoading(true);
 
+				const delayTimer = setTimeout(async () => {
+					try {
+						const response: any = await servicesChat.searchShop(debouncedSearchTerm);
+						// console.log(response);
+						setShops(response.data);
+					} catch (error) {
+						console.log(error);
+					} finally {
+						setLoading(false);
+					}
+				}, 500);
+
+				return () => clearTimeout(delayTimer);
+			}
+		};
+
+		fetchData();
+	}, [debouncedSearchTerm]);
+	useEffect(() => {
+		const fetchData = async () => {
+			const response: any = await servicesChat.getShopsChattedWithCustomer(customer.customerId);
+			setShops(response.data);
+		};
+		fetchData();
+	}, []);
+	const handleSelectShop = (shop: Ishop) => {
+		if (customer.customerId && shop.shopId) {
+			setSelectedShop(shop);
+			const fetchChats = async () => {
+				try {
+					const response = await servicesChat.getShopMessages(customer.customerId, shop.shopId);
+					console.log(response);
+					setChats(response.data);
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			fetchChats();
+		}
+	};
 	const { register, handleSubmit, reset } = useForm<any>();
 
-	const onSubmit = (data: any) => {
+	const onSubmit = async (data: any) => {
 		if (!data.message.trim()) return;
+		if (customer.customerId && selectedShop.shopId) {
+			const datasend = {
+				customerId: customer.customerId,
+				shopId: selectedShop.shopId,
+				content: data.message,
+				senderId: customer.customerId,
+				senderType: 'CUSTOMER',
+			};
 
-		console.log(`Gửi đến ${selectedShop.name}:`, data.message);
-
-		// Reset input field sau khi gửi
+			try {
+				const response = await servicesChat.createChat(datasend);
+				console.log(response);
+			} catch (error) {
+				console.log(error);
+			}
+		}
 		reset();
+	};
+
+	const handlefile = () => {
+		document.getElementById('file')?.click();
 	};
 	return (
 		<div className="flex h-[500px] w-[700px] border rounded shadow bg-white overflow-hidden">
@@ -41,57 +105,104 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			<div className="w-1/3 border-r">
 				<div className="p-3 border-b">
 					<input
+						onChange={(e) => setSearchTerm(e.target.value)}
 						type="text"
 						placeholder="Tìm theo người dùng..."
 						className="w-full px-3 py-2 border rounded text-sm"
 					/>
 				</div>
 				<div className="overflow-y-auto">
-					{shops.map((shop) => (
-						<div
-							key={shop.id}
-							onClick={() => setSelectedShop(shop)}
-							className={`flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100 ${
-								selectedShop.id === shop.id ? 'bg-gray-100' : ''
-							}`}
-						>
-							<img src={shop.avatar} alt={shop.name} className="w-8 h-8 rounded-full" />
-							<span className="text-sm">{shop.name}</span>
+					{loading ? (
+						<div className="p-3 text-sm text-gray-500">Đang tìm kiếm...</div>
+					) : shops.length === 0 ? (
+						<div className="p-3 text-sm text-gray-500">Không tìm thấy kết quả</div>
+					) : (
+						shops.map((shop) => (
+							<div
+								key={shop.shopId}
+								onClick={() => handleSelectShop(shop)}
+								className={`flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100 ${
+									selectedShop?.shopId === shop.shopId ? 'bg-gray-100' : ''
+								}`}
+							>
+								<img src={shop.shopAvatar} alt={shop.shopName} className="w-8 h-8 rounded-full" />
+								<span className="text-sm">{shop.shopName}</span>
+							</div>
+						))
+					)}
+				</div>
+			</div>
+
+			{selectedShop ? (
+				<div className="flex-1 flex flex-col">
+					<div className="flex items-center justify-between px-4 py-3 border-b">
+						<div className="flex items-center gap-2">
+							<img src={selectedShop.shopAvatar} alt="Shop" className="w-8 h-8 rounded-full" />
+							<span className="font-semibold text-sm">{selectedShop.shopName}</span>
 						</div>
-					))}
-				</div>
-			</div>
-
-			<div className="flex-1 flex flex-col">
-				<div className="flex items-center justify-between px-4 py-3 border-b">
-					<div className="flex items-center gap-2">
-						<img src={selectedShop.avatar} alt="Shop" className="w-8 h-8 rounded-full" />
-						<span className="font-semibold text-sm">{selectedShop.name}</span>
+						<button onClick={handleClose} className="text-gray-500 text-xl cursor-pointer">
+							<IoMdClose />
+						</button>
 					</div>
-					<button onClick={handleClose} className="text-gray-500 text-xl cursor-pointer">
-						<IoMdClose />
-					</button>
-				</div>
 
+					<div className="flex-1 overflow-y-auto p-4 space-y-2">
+						{chats.length === 0 ? (
+							<p className="text-center text-gray-400">Chưa có tin nhắn với {selectedShop.shopName}</p>
+						) : (
+							chats.map((msg) => (
+								<div
+									key={msg.messageId}
+									className={`flex ${
+										msg.senderType === 'CUSTOMER' ? 'justify-end' : 'justify-start'
+									}`}
+								>
+									<div
+										className={`max-w-[70%] px-3 py-2 rounded-lg text-sm ${
+											msg.senderType === 'CUSTOMER'
+												? 'bg-blue-500 text-white'
+												: 'bg-gray-200 text-gray-900'
+										}`}
+									>
+										{msg.content}
+										<p
+											className={`text-[8px] leading-[8px] ${msg.senderType === 'CUSTOMER' ? 'text-white' : 'text-[#333]'} mt-1`}
+										>
+											{formatDistanceToNow(new Date(msg.createdAt), {
+												addSuffix: true,
+												locale: vi,
+											})}
+										</p>
+									</div>
+								</div>
+							))
+						)}
+					</div>
+
+					<form onSubmit={handleSubmit(onSubmit)} className="flex items-center px-3 py-2 border-t">
+						<button
+							onClick={handlefile}
+							type="button"
+							className="text-xl text-gray-500 hover:text-blue-500 cursor-pointer"
+						>
+							<BsCardImage />
+						</button>
+						<input type="file" id="file" onChange={(e) => setFile(e.target.files?.[0] || null)} hidden />
+						<input
+							{...register('message')}
+							type="text"
+							placeholder="Nhập nội dung chat..."
+							className="flex-1 mx-2 px-3 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-blue-500"
+						/>
+						<button type="submit" className="text-xl text-blue-500 hover:text-blue-600 cursor-pointer">
+							<IoMdSend />
+						</button>
+					</form>
+				</div>
+			) : (
 				<div className="flex-1 overflow-y-auto p-4 text-center text-gray-400">
-					<p>Chưa có tin nhắn với {selectedShop.name}</p>
+					<p>Chưa có tin nhắn với </p>
 				</div>
-
-				<form onSubmit={handleSubmit(onSubmit)} className="flex items-center px-3 py-2 border-t">
-					<button type="button" className="text-xl text-gray-500 hover:text-blue-500">
-						<BsCardImage />
-					</button>
-					<input
-						{...register('message')}
-						type="text"
-						placeholder="Nhập nội dung chat..."
-						className="flex-1 mx-2 px-3 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-blue-500"
-					/>
-					<button type="submit" className="text-xl text-blue-500 hover:text-blue-600">
-						<IoMdSend />
-					</button>
-				</form>
-			</div>
+			)}
 		</div>
 	);
 };

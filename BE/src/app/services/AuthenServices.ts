@@ -198,8 +198,8 @@ const handleGoogleCallback = async (access_token: string) => {
         data: {
           accountId: newAccount.accountId,
           email: user?.email || "",
-          customerName: user?.user_metadata?.full_name || "",
-          avatar: user?.user_metadata?.avatar_url || "",
+          customerName: user?.user_metadata?.full_name,
+          avatar: user?.user_metadata?.avatar_url,
           status: "active",
           numberPhone: "",
           birthday: new Date(),

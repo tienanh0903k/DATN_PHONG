@@ -6,6 +6,7 @@ import Header from '@/components/LayoutComponents/Header/Header';
 // import LoadingBar from '@/components/base/loading/LoadingBar';
 import Footer from '@/components/LayoutComponents/footer';
 import Sidebar from '@/components/LayoutComponents/Sidebar/Sidebar';
+import Chatbot from '@/components/app/Chatbot';
 const geistSans = Geist({
 	variable: '--font-geist-sans',
 	subsets: ['latin'],
@@ -32,6 +33,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<main className="w-[calc(100%-254px)] overflow-hidden">{children}</main>
 				</div>
 			</div>
+			<Chatbot />
+
 			<Footer />
 		</div>
 	);
