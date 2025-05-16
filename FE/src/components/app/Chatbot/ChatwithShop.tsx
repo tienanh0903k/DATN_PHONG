@@ -1,19 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IoMdSend } from 'react-icons/io';
 import { BsCardImage } from 'react-icons/bs';
 import { IoMdClose } from 'react-icons/io';
 import { useForm } from 'react-hook-form';
 import ServicesChat from '@/services/chat/servicesChat';
-import { URL_SERVICE } from '@/constant/constant';
+import { URL_SERVICE, URL_SOCKET } from '@/constant/constant';
 import useDebounce from '@/utils/useDebounce';
 import { Ishop, Ichat } from '@/models/chat/Ichat';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
+import io from 'socket.io-client';
+
 type Props = {
 	handleClose: () => void;
 };
@@ -26,7 +28,8 @@ const ChatwithShop = ({ handleClose }: Props) => {
 	const servicesChat = new ServicesChat(URL_SERVICE || '', () => {});
 	const [searchTerm, setSearchTerm] = useState('');
 	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
-	const [file, setFile] = useState<File | null>(null);
+	const socket = io(URL_SOCKET);
+	const containerRef = useRef<HTMLDivElement>(null);
 	const customer = useSelector((state: RootState) => state.auth.userInfo);
 	useEffect(() => {
 		const fetchData = async () => {
@@ -36,7 +39,6 @@ const ChatwithShop = ({ handleClose }: Props) => {
 				const delayTimer = setTimeout(async () => {
 					try {
 						const response: any = await servicesChat.searchShop(debouncedSearchTerm);
-						// console.log(response);
 						setShops(response.data);
 					} catch (error) {
 						console.log(error);
@@ -58,6 +60,13 @@ const ChatwithShop = ({ handleClose }: Props) => {
 		};
 		fetchData();
 	}, []);
+	const scrollToBottom = () => {
+		if (containerRef.current) {
+			containerRef.current.scrollTop = containerRef.current.scrollHeight;
+		} else {
+			console.log('Container ref is null');
+		}
+	};
 	const handleSelectShop = (shop: Ishop) => {
 		if (customer.customerId && shop.shopId) {
 			setSelectedShop(shop);
@@ -89,16 +98,24 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			try {
 				const response = await servicesChat.createChat(datasend);
 				console.log(response);
+				socket.emit('sendMessage', {
+					content: data.message,
+					senderType: 'CUSTOMER',
+					createdAt: response.data.createdAt,
+				});
 			} catch (error) {
 				console.log(error);
 			}
 		}
 		reset();
 	};
+	useEffect(() => {
+		socket.on('receiveMessage', (data: any) => {
+			setChats((prev) => [...prev, data]);
+			scrollToBottom();
+		});
+	}, []);
 
-	const handlefile = () => {
-		document.getElementById('file')?.click();
-	};
 	return (
 		<div className="flex h-[500px] w-[700px] border rounded shadow bg-white overflow-hidden">
 			{/* Sidebar - Danh sách shop */}
@@ -145,7 +162,7 @@ const ChatwithShop = ({ handleClose }: Props) => {
 						</button>
 					</div>
 
-					<div className="flex-1 overflow-y-auto p-4 space-y-2">
+					<div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-2">
 						{chats.length === 0 ? (
 							<p className="text-center text-gray-400">Chưa có tin nhắn với {selectedShop.shopName}</p>
 						) : (
@@ -179,14 +196,10 @@ const ChatwithShop = ({ handleClose }: Props) => {
 					</div>
 
 					<form onSubmit={handleSubmit(onSubmit)} className="flex items-center px-3 py-2 border-t">
-						<button
-							onClick={handlefile}
-							type="button"
-							className="text-xl text-gray-500 hover:text-blue-500 cursor-pointer"
-						>
+						<button type="button" className="text-xl text-gray-500 hover:text-blue-500 cursor-pointer">
 							<BsCardImage />
 						</button>
-						<input type="file" id="file" onChange={(e) => setFile(e.target.files?.[0] || null)} hidden />
+
 						<input
 							{...register('message')}
 							type="text"

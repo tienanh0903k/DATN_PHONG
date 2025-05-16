@@ -15,7 +15,7 @@ import HeaderTop from './HeaderTop';
 import HeaderBottom from './HeaderBottom';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { URL_AUTH, URL_SERVICE } from '@/constant/constant';
+import { URL_AUTH, URL_SERVICE, URL_SOCKET } from '@/constant/constant';
 import RegisterServices from '@/services/register/registerServices';
 import ShopServicer from '@/services/shopServicer/shopServicer';
 import { setUserInfo, logout } from '@/reducers/slice/authSlice';
@@ -27,6 +27,9 @@ import { RootState } from '@/redux/store';
 import CartServices from '@/services/CartServices/CartServices';
 import { useForm } from 'react-hook-form';
 import HistoryHeader from './historyHeader';
+
+import io from 'socket.io-client';
+const socket = io(URL_SOCKET);
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
@@ -125,7 +128,9 @@ const HeaderCpn = ({}: Props) => {
 
 	const handleLogin = async (email: string) => {
 		const response: any = await registerServices.signIn(email);
+
 		const shop: any = await shopServices.getShop(response.customerId);
+		socket.emit('registerUser', response.customerId);
 		dispatch(setUserInfo(response));
 		dispatch(setShopInfo(shop?.shop));
 		const data = await cartServices.getCartByCustomerId(response.customerId);

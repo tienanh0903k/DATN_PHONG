@@ -9,20 +9,23 @@ import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ServicesChat from '@/services/chat/servicesChat';
-import { URL_SERVICE } from '@/constant/constant';
+import { URL_SERVICE, URL_SOCKET } from '@/constant/constant';
 import useDebounce from '@/utils/useDebounce';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
-
+import io from 'socket.io-client';
+import { Ichat } from '@/models/chat/Ichat';
 export default function ChatPage() {
 	const { register, handleSubmit, reset } = useForm<any>();
-	const [newMessage, setNewMessage] = useState('');
+	// const [newMessage, setNewMessage] = useState('');
 	const [customers, setCustomers] = useState<any>([]);
-
+	const [loading, setLoading] = useState(false);
+	const socket = io(URL_SOCKET);
 	const [selectedCustomer, setSelectedCustomer] = useState<any>(customers[0]);
+	const [activeCustomer, setActiveCustomer] = useState<string>('');
 
-	const [chats, setChats] = useState<any>([]);
+	const [chats, setChats] = useState<Ichat[]>([]);
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
@@ -38,7 +41,32 @@ export default function ChatPage() {
 			console.error('Error fetching customers:', error);
 		}
 	};
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (debouncedSearchTerm.trim()) {
+				setLoading(true);
+
+				const delayTimer = setTimeout(async () => {
+					try {
+						const response: any = await servicesChat.searchCustomer(debouncedSearchTerm);
+
+						setCustomers(response.data);
+					} catch (error) {
+						console.log(error);
+					} finally {
+						setLoading(false);
+					}
+				}, 500);
+
+				return () => clearTimeout(delayTimer);
+			}
+		};
+
+		fetchData();
+	}, [debouncedSearchTerm]);
 	const handleChat = (customer: any) => {
+		setActiveCustomer(customer.customerId);
 		if (customer.customerId && shop.shopId) {
 			setSelectedCustomer(customer);
 			const fetchChats = async () => {
@@ -70,33 +98,55 @@ export default function ChatPage() {
 			try {
 				const response = await servicesChat.createChat(datasend);
 				console.log(response);
+				socket.emit('sendMessage', {
+					content: data.message,
+					senderType: 'SHOP',
+					createdAt: response.data.createdAt,
+				});
 			} catch (error) {
 				console.log(error);
 			}
 		}
 		reset();
 	};
+	useEffect(() => {
+		socket.on('receiveMessage', (data: any) => {
+			setChats((prev) => [...prev, data]);
+		});
+	}, []);
 	return (
 		<div className="flex h-[85vh] container-base mt-10 bg-gray-50">
 			{/* Sidebar */}
 			<aside className="w-1/4 border-r bg-white p-4">
 				<h2 className="text-xl font-semibold mb-4">Chats</h2>
-				<Input placeholder="Search..." className="mb-4" />
+				<Input onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search..." className="mb-4" />
 				<ul className="space-y-3 overflow-auto h-[85%] pr-2">
-					{customers.map((c: any, i: number) => (
-						<li
-							onClick={() => handleChat(c)}
-							key={i}
-							className="flex items-center space-x-3 hover:bg-gray-100 p-2 rounded-lg cursor-pointer"
-						>
-							<img src={c.avatar} alt={c.customerName} className="w-10 h-10 rounded-full object-cover" />
-							<div>
-								<p className="font-medium text-sm">{c.customerName}</p>
-								{/* <p className="text-xs text-gray-500">{c.title}</p> */}
-							</div>
-							{/* <span className="ml-auto text-xs text-gray-400">{c.time}</span> */}
-						</li>
-					))}
+					{loading ? (
+						<div className="p-3 text-sm text-gray-500">Đang tìm kiếm...</div>
+					) : customers.length === 0 ? (
+						<div className="p-3 text-sm text-gray-500">Không tìm thấy kết quả</div>
+					) : (
+						customers.map((c: any, i: number) => (
+							<li
+								onClick={() => handleChat(c)}
+								key={i}
+								className={`flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100 ${
+									activeCustomer === c.customerId ? 'bg-gray-200' : ''
+								}`}
+							>
+								<img
+									src={c.avatar}
+									alt={c.customerName}
+									className="w-10 h-10 rounded-full object-cover"
+								/>
+								<div>
+									<p className="font-medium text-sm">{c.customerName}</p>
+									{/* <p className="text-xs text-gray-500">{c.title}</p> */}
+								</div>
+								{/* <span className="ml-auto text-xs text-gray-400">{c.time}</span> */}
+							</li>
+						))
+					)}
 				</ul>
 			</aside>
 

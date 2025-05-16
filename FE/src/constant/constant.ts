@@ -12,3 +12,4 @@ export const APP_WHOLE_NUMBER_FORMAT = '0,0';
 export const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 export const URL_AUTH = 'http://localhost:3002/api/auth';
 export const URL_SERVICE = 'http://localhost:3002/api/service';
+export const URL_SOCKET = 'http://localhost:8000';

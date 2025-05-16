@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import RegisterServices from '@/services/register/registerServices';
-import { URL_AUTH } from '@/constant/constant';
+import { URL_AUTH, URL_SOCKET } from '@/constant/constant';
 import AuthenEmail from './authenEmail';
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '@/reducers/slice/authSlice';
-
+import io from 'socket.io-client';
+const socket = io(URL_SOCKET);
 type Props = {
 	handleRegister: () => void;
 	onLoginSuccess?: () => void;
@@ -52,6 +53,7 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 	const fetchDataCustomer = async (token: string) => {
 		try {
 			const datauser: any = await registerServices.getCustomer(token);
+			socket.emit('registerUser', datauser.customerId);
 			dispatch(setUserInfo(datauser));
 		} catch (error) {
 			console.error('Error fetching customer data:', error);

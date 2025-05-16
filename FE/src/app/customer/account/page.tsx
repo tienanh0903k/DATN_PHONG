@@ -35,7 +35,6 @@ type FormValues = {
 };
 const Account = () => {
 	const user = useSelector((state: RootState) => state.auth.userInfo);
-	console.log(user);
 	const dispatch = useDispatch();
 	const { register, handleSubmit, control } = useForm<FormValues>({
 		defaultValues: {
@@ -68,7 +67,6 @@ const Account = () => {
 	const uploadImage = async (file: File) => {
 		try {
 			const fileName = `avatar/${user.customerId}-${Date.now()}-${file.name}`;
-			console.log(fileName);
 
 			const { error } = await supabase.storage.from('tikistogare').upload(fileName, file);
 
@@ -98,7 +96,9 @@ const Account = () => {
 				avatar: imgUrl,
 				birthday: birthday,
 			};
+			console.log(formatData);
 			const response: any = await customerServices.changeInfo(formatData);
+			console.log(response);
 			dispatch(setUserInfo(response));
 		} catch (error) {
 			console.error('Error updating info:', error);
