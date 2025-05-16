@@ -15,6 +15,7 @@ import { RootState } from '@/redux/store';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import io from 'socket.io-client';
+const socket = io(URL_SOCKET);
 
 type Props = {
 	handleClose: () => void;
@@ -28,8 +29,7 @@ const ChatwithShop = ({ handleClose }: Props) => {
 	const servicesChat = new ServicesChat(URL_SERVICE || '', () => {});
 	const [searchTerm, setSearchTerm] = useState('');
 	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
-	const socket = io(URL_SOCKET);
-	const containerRef = useRef<HTMLDivElement>(null);
+	const containerRef = useRef<any>(null);
 	const customer = useSelector((state: RootState) => state.auth.userInfo);
 	useEffect(() => {
 		const fetchData = async () => {
@@ -61,6 +61,7 @@ const ChatwithShop = ({ handleClose }: Props) => {
 		fetchData();
 	}, []);
 	const scrollToBottom = () => {
+		console.log(containerRef.current);
 		if (containerRef.current) {
 			containerRef.current.scrollTop = containerRef.current.scrollHeight;
 		} else {
@@ -114,7 +115,11 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			setChats((prev) => [...prev, data]);
 			scrollToBottom();
 		});
-	}, []);
+
+		return () => {
+			socket.off('receiveMessage');
+		};
+	}, [socket]);
 
 	return (
 		<div className="flex h-[500px] w-[700px] border rounded shadow bg-white overflow-hidden">

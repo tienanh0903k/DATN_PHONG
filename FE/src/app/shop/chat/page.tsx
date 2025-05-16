@@ -16,12 +16,12 @@ import { vi } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
 import io from 'socket.io-client';
 import { Ichat } from '@/models/chat/Ichat';
+const socket = io(URL_SOCKET);
 export default function ChatPage() {
 	const { register, handleSubmit, reset } = useForm<any>();
-	// const [newMessage, setNewMessage] = useState('');
+
 	const [customers, setCustomers] = useState<any>([]);
 	const [loading, setLoading] = useState(false);
-	const socket = io(URL_SOCKET);
 	const [selectedCustomer, setSelectedCustomer] = useState<any>(customers[0]);
 	const [activeCustomer, setActiveCustomer] = useState<string>('');
 
@@ -31,16 +31,6 @@ export default function ChatPage() {
 	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
 	const servicesChat = new ServicesChat(URL_SERVICE || '', () => {});
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
-
-	const fetchDataCustomer = async () => {
-		try {
-			const response = await servicesChat.getCustomerChattedWithShop(shop?.shopId);
-			console.log(response);
-			setCustomers(response.data);
-		} catch (error) {
-			console.error('Error fetching customers:', error);
-		}
-	};
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -65,6 +55,51 @@ export default function ChatPage() {
 
 		fetchData();
 	}, [debouncedSearchTerm]);
+
+	useEffect(() => {
+		const fetchDataCustomer = async () => {
+			try {
+				const response = await servicesChat.getCustomerChattedWithShop(shop?.shopId);
+				console.log(response);
+				setCustomers(response.data);
+			} catch (error) {
+				console.error('Error fetching customers:', error);
+			}
+		};
+		fetchDataCustomer();
+	}, []);
+	const onSubmit = async (data: any) => {
+		if (!data.message.trim()) return;
+		if (selectedCustomer.customerId && shop.shopId) {
+			const datasend = {
+				customerId: selectedCustomer.customerId,
+				shopId: shop.shopId,
+				content: data.message,
+				senderId: shop.shopId,
+				senderType: 'SHOP',
+			};
+
+			try {
+				const response = await servicesChat.createChat(datasend);
+				socket.emit('sendMessage', {
+					content: data.message,
+					senderType: 'SHOP',
+					createdAt: response.data.createdAt,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+		reset();
+	};
+	useEffect(() => {
+		socket.on('receiveMessage', (data: any) => {
+			setChats((prev) => [...prev, data]);
+		});
+		return () => {
+			socket.off('receiveMessage');
+		};
+	}, [socket]);
 	const handleChat = (customer: any) => {
 		setActiveCustomer(customer.customerId);
 		if (customer.customerId && shop.shopId) {
@@ -81,39 +116,6 @@ export default function ChatPage() {
 			fetchChats();
 		}
 	};
-	useEffect(() => {
-		fetchDataCustomer();
-	}, []);
-	const onSubmit = async (data: any) => {
-		if (!data.message.trim()) return;
-		if (selectedCustomer.customerId && shop.shopId) {
-			const datasend = {
-				customerId: selectedCustomer.customerId,
-				shopId: shop.shopId,
-				content: data.message,
-				senderId: shop.shopId,
-				senderType: 'SHOP',
-			};
-
-			try {
-				const response = await servicesChat.createChat(datasend);
-				console.log(response);
-				socket.emit('sendMessage', {
-					content: data.message,
-					senderType: 'SHOP',
-					createdAt: response.data.createdAt,
-				});
-			} catch (error) {
-				console.log(error);
-			}
-		}
-		reset();
-	};
-	useEffect(() => {
-		socket.on('receiveMessage', (data: any) => {
-			setChats((prev) => [...prev, data]);
-		});
-	}, []);
 	return (
 		<div className="flex h-[85vh] container-base mt-10 bg-gray-50">
 			{/* Sidebar */}
@@ -178,9 +180,9 @@ export default function ChatPage() {
 							{/* Chưa có tin nhắn với {selectedCustomer.customerName} */}
 						</p>
 					) : (
-						chats.map((msg: any) => (
+						chats.map((msg: any, i: number) => (
 							<div
-								key={msg.messageId}
+								key={i}
 								className={`flex ${msg.senderType === 'SHOP' ? 'justify-end' : 'justify-start'}`}
 							>
 								<div
