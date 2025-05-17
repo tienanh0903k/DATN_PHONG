@@ -12,7 +12,6 @@ type SuggestSearchType = {
 	thumbnail?: string;
 };
 
-// Import images (giả sử các hình ảnh được lưu trong thư mục public/images)
 const images = {
 	search2: '/images/search2.png',
 	noImage: '/images/no-image.png',
@@ -56,23 +55,12 @@ const TrendingSearch: SuggestSearchType[] = [
 	{ id: 5, to: '/', thumbnail: images.trend6, name: 'bao laptop 14 inch' },
 ];
 
-const Categories: SuggestSearchType[] = [
-	{ id: 0, to: '/', thumbnail: images.category1, name: 'Đồ Chơi - Mẹ & Bé' },
-	{ id: 1, to: '/', thumbnail: images.category2, name: 'Túi chống sốc' },
-	{ id: 2, to: '/', thumbnail: images.category3, name: 'Điện thoại Smartphone' },
-	{ id: 3, to: '/', thumbnail: images.category4, name: 'Sữa cho bé trên 24 tháng' },
-	{ id: 4, to: '/', thumbnail: images.category5, name: 'Balo, cặp, túi chống sốc laptop' },
-	{ id: 5, to: '/', thumbnail: images.category6, name: 'Balo và Vali' },
-	{ id: 6, to: '/', thumbnail: images.category7, name: 'Đũa, muỗng, nĩa' },
-	{ id: 7, to: '/', thumbnail: images.category8, name: 'Điện Thoại - Máy Tính Bảng' },
-];
-
 const HistoryHeader = ({ data }: { data: any[] }) => {
 	const [isShowMore, setIsShowMore] = useState(true);
 	const [numberItemShow, setNumberItemShow] = useState(3);
 	const [searchSuggestList, setSearchSuggestList] = useState<SuggestSearchType[]>([]);
 	const [trendSuggestList, setTrendSuggestList] = useState<SuggestSearchType[]>([]);
-	const [categoryList, setCategoryList] = useState<SuggestSearchType[]>([]);
+	// const [categoryList, setCategoryList] = useState<SuggestSearchType[]>([]);
 
 	const handleShowMore = () => {
 		setIsShowMore(false);
@@ -86,7 +74,7 @@ const HistoryHeader = ({ data }: { data: any[] }) => {
 		//fake api
 		setSearchSuggestList(SEARCH_SUGGEST);
 		setTrendSuggestList(TrendingSearch);
-		setCategoryList(Categories);
+		// setCategoryList(Categories);
 	}, []);
 	useEffect(() => {
 		if (data && data.length > 0) {
@@ -165,34 +153,6 @@ const HistoryHeader = ({ data }: { data: any[] }) => {
 									className="w-[38px] h-[38px] mr-2 object-contain"
 								/>
 								<span className="text-xs leading-[1.67] flex bg-[#fafafa] text-[#242424]">
-									{item.name}
-								</span>
-							</Link>
-						))}
-					</div>
-				</div>
-
-				{/* Category List */}
-				<div className="bg-white p-[8px_12px_12px] border-t border-[#f2f2f2]">
-					<div className="flex items-center text-[15px] leading-6 pb-2">Danh Mục Nổi Bật</div>
-					<div className="grid grid-cols-4 grid-rows-1 gap-x-2 gap-y-3">
-						{categoryList.map((item) => (
-							<Link
-								key={item.id}
-								href={item.to}
-								className="text-xs leading-[1.67] flex flex-col text-[#242424] hover:shadow-[0_0_20px_rgba(0,0,0,0.1)]"
-							>
-								<div className="px-10">
-									<div className="w-full pt-[100%] rounded-[36%] relative overflow-hidden bg-[#fafafa]">
-										<Image
-											src={item.thumbnail || images.noImage}
-											alt={item.name}
-											fill
-											className="absolute top-0 left-0 w-full h-full object-contain"
-										/>
-									</div>
-								</div>
-								<span className="text-xs leading-4 pt-[6px] text-center overflow-hidden line-clamp-2">
 									{item.name}
 								</span>
 							</Link>

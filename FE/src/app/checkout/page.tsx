@@ -19,7 +19,6 @@ const CheckOut = () => {
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 
 	const selectedItems = useSelector((state: RootState) => state.checkout.selectedItems);
-	console.log(selectedItems);
 
 	const totalPrice = selectedItems.reduce((acc: number, item: any) => acc + item.totalPrice, 0);
 

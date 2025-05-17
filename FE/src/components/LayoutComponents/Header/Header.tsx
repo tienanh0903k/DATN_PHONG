@@ -299,7 +299,7 @@ const HeaderCpn = ({}: Props) => {
 								maskClosable={true}
 								width={'600px'}
 							>
-								<ModalAddress />
+								<ModalAddress onClose={handleCancel} />
 							</Modal>
 						</ConfigProvider>
 					</div>

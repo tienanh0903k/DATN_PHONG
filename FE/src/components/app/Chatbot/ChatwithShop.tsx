@@ -61,7 +61,6 @@ const ChatwithShop = ({ handleClose }: Props) => {
 		fetchData();
 	}, []);
 	const scrollToBottom = () => {
-		console.log(containerRef.current);
 		if (containerRef.current) {
 			containerRef.current.scrollTop = containerRef.current.scrollHeight;
 		} else {
@@ -83,6 +82,9 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			fetchChats();
 		}
 	};
+	useEffect(() => {
+		scrollToBottom();
+	}, [chats]);
 	const { register, handleSubmit, reset } = useForm<any>();
 
 	const onSubmit = async (data: any) => {
@@ -123,7 +125,6 @@ const ChatwithShop = ({ handleClose }: Props) => {
 
 	return (
 		<div className="flex h-[500px] w-[700px] border rounded shadow bg-white overflow-hidden">
-			{/* Sidebar - Danh sách shop */}
 			<div className="w-1/3 border-r">
 				<div className="p-3 border-b">
 					<input
@@ -155,18 +156,23 @@ const ChatwithShop = ({ handleClose }: Props) => {
 				</div>
 			</div>
 
-			{selectedShop ? (
-				<div className="flex-1 flex flex-col">
-					<div className="flex items-center justify-between px-4 py-3 border-b">
-						<div className="flex items-center gap-2">
-							<img src={selectedShop.shopAvatar} alt="Shop" className="w-8 h-8 rounded-full" />
-							<span className="font-semibold text-sm">{selectedShop.shopName}</span>
-						</div>
-						<button onClick={handleClose} className="text-gray-500 text-xl cursor-pointer">
-							<IoMdClose />
-						</button>
+			<div className="flex-1 flex flex-col">
+				<div className="flex items-center justify-between px-4 py-3 border-b">
+					<div className="flex items-center gap-2">
+						{selectedShop ? (
+							<>
+								<img src={selectedShop?.shopAvatar} alt="" className="w-8 h-8 rounded-full" />
+								<span className="font-semibold text-sm">{selectedShop?.shopName}</span>
+							</>
+						) : (
+							<p className="w-8 h-9"> </p>
+						)}
 					</div>
-
+					<button onClick={handleClose} className="text-gray-500 text-xl cursor-pointer">
+						<IoMdClose />
+					</button>
+				</div>
+				{selectedShop ? (
 					<div ref={containerRef} className="flex-1 overflow-y-auto p-4 space-y-2">
 						{chats.length === 0 ? (
 							<p className="text-center text-gray-400">Chưa có tin nhắn với {selectedShop.shopName}</p>
@@ -199,28 +205,27 @@ const ChatwithShop = ({ handleClose }: Props) => {
 							))
 						)}
 					</div>
+				) : (
+					<div className="flex-1 overflow-y-auto p-4 text-center text-gray-400">
+						<p>Chưa có tin nhắn với </p>
+					</div>
+				)}
+				<form onSubmit={handleSubmit(onSubmit)} className="flex items-center px-3 py-2 border-t">
+					<button type="button" className="text-xl text-gray-500 hover:text-blue-500 cursor-pointer">
+						<BsCardImage />
+					</button>
 
-					<form onSubmit={handleSubmit(onSubmit)} className="flex items-center px-3 py-2 border-t">
-						<button type="button" className="text-xl text-gray-500 hover:text-blue-500 cursor-pointer">
-							<BsCardImage />
-						</button>
-
-						<input
-							{...register('message')}
-							type="text"
-							placeholder="Nhập nội dung chat..."
-							className="flex-1 mx-2 px-3 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-blue-500"
-						/>
-						<button type="submit" className="text-xl text-blue-500 hover:text-blue-600 cursor-pointer">
-							<IoMdSend />
-						</button>
-					</form>
-				</div>
-			) : (
-				<div className="flex-1 overflow-y-auto p-4 text-center text-gray-400">
-					<p>Chưa có tin nhắn với </p>
-				</div>
-			)}
+					<input
+						{...register('message')}
+						type="text"
+						placeholder="Nhập nội dung chat..."
+						className="flex-1 mx-2 px-3 py-2 border border-gray-300 rounded-full text-sm outline-none focus:border-blue-500"
+					/>
+					<button type="submit" className="text-xl text-blue-500 hover:text-blue-600 cursor-pointer">
+						<IoMdSend />
+					</button>
+				</form>
+			</div>
 		</div>
 	);
 };

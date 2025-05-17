@@ -4,7 +4,7 @@
 'use client';
 
 import { formatPrice } from '@/utils/formatprice';
-import { ConfigProvider, Modal, Rate } from 'antd';
+import { ConfigProvider, Modal, Rate, message } from 'antd';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -18,6 +18,7 @@ import ModalAddress from '@/components/LayoutComponents/Header/modalAddress';
 import { useRouter } from 'next/navigation';
 import { updateCart } from '@/reducers/slice/cartSlice';
 import Link from 'next/link';
+import { SelectedItems } from '@/reducers/slice/checkout';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
@@ -29,13 +30,14 @@ export default function DetailProduct() {
 	const { productId } = useParams();
 	const [itemProduct, setItemProduct] = useState<any>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [messageApi, contextHolder] = message.useMessage();
 
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
 
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
-			console.log('response', response);
+			console.log(response.data);
 			setData(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
@@ -48,7 +50,10 @@ export default function DetailProduct() {
 		if (user != null) {
 			setIsModalOpen(true);
 		} else {
-			alert('đăng nhập để thêm địa chỉ giao hàng');
+			messageApi.open({
+				type: 'error',
+				content: 'Đăng nhập để thêm địa chỉ giao hàng',
+			});
 			router.push('/login');
 		}
 	};
@@ -97,12 +102,32 @@ export default function DetailProduct() {
 			console.log(err);
 		}
 	};
+	const handleBuy = () => {
+		if (itemProduct) {
+			const allSelected = {
+				id: itemProduct.id,
+				name: data.productName,
+				quantity: quantity,
+				price: itemProduct.price,
+				img: itemProduct.img,
+				variantValue: itemProduct.VariantValue?.typeValue,
+				totalPrice: quantity * itemProduct.price,
+			};
+			dispatch(SelectedItems([allSelected]));
+			router.push('/checkout');
+		} else {
+			messageApi.open({
+				type: 'error',
+				content: 'Vui lòng chọn sản phẩm',
+			});
+		}
+	};
 	return (
 		<div className="">
+			{contextHolder}
 			<div className="grid grid-cols-[1fr_360px] gap-6 pt-4">
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="grid grid-cols-[400px_1fr] gap-6 rounder-[8px] items-start">
-						{/* product image */}
 						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[480px] w-[400px]">
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex flex-col gap-1">
@@ -235,7 +260,7 @@ export default function DetailProduct() {
 												maskClosable={true}
 												width={'600px'}
 											>
-												<ModalAddress />
+												<ModalAddress onClose={handleCancel} />
 											</Modal>
 										</ConfigProvider>
 									</div>
@@ -354,7 +379,7 @@ export default function DetailProduct() {
 									</div>
 								</div>
 								<div className="grid grid-cols-1 gap-2">
-									<Button color="danger" variant="solid">
+									<Button onClick={handleBuy} color="danger" variant="solid">
 										Mua ngay
 									</Button>
 									<Button onClick={handleAddToCart} color="primary" variant="outlined">

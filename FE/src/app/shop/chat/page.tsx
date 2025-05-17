@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FiSend, FiMoreVertical } from 'react-icons/fi';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -24,7 +24,7 @@ export default function ChatPage() {
 	const [loading, setLoading] = useState(false);
 	const [selectedCustomer, setSelectedCustomer] = useState<any>(customers[0]);
 	const [activeCustomer, setActiveCustomer] = useState<string>('');
-
+	const containerRef = useRef<HTMLDivElement>(null);
 	const [chats, setChats] = useState<Ichat[]>([]);
 
 	const [searchTerm, setSearchTerm] = useState('');
@@ -68,6 +68,13 @@ export default function ChatPage() {
 		};
 		fetchDataCustomer();
 	}, []);
+	const scrollToBottom = () => {
+		if (containerRef.current) {
+			containerRef.current.scrollTop = containerRef.current.scrollHeight;
+		} else {
+			console.log('Container ref is null');
+		}
+	};
 	const onSubmit = async (data: any) => {
 		if (!data.message.trim()) return;
 		if (selectedCustomer.customerId && shop.shopId) {
@@ -116,6 +123,10 @@ export default function ChatPage() {
 			fetchChats();
 		}
 	};
+
+	useEffect(() => {
+		scrollToBottom();
+	}, [chats]);
 	return (
 		<div className="flex h-[85vh] container-base mt-10 bg-gray-50">
 			{/* Sidebar */}
@@ -155,7 +166,7 @@ export default function ChatPage() {
 			{/* Chat Window */}
 			<main className="flex-1 flex flex-col">
 				{selectedCustomer && (
-					<div className="flex items-center justify-between border-b px-6 py-4 bg-white">
+					<div ref={containerRef} className="flex items-center justify-between border-b px-6 py-4 bg-white">
 						<div className="flex items-center space-x-3">
 							<img
 								src={selectedCustomer.avatar}

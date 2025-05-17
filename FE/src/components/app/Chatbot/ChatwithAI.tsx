@@ -100,7 +100,7 @@ const ChatwithAI = ({ handleClose }: Props) => {
 		}
 	};
 	return (
-		<div className="bg-white rounded-lg shadow-lg w-[700px] h-[900px] flex flex-col">
+		<div className="bg-white rounded-lg shadow-lg w-[700px] h-[700px] flex flex-col">
 			<div className="p-4 border-b flex justify-between items-center">
 				<h3 className="font-medium">Trợ lý AI</h3>
 				<button className="cursor-pointer" onClick={handleClose}>
