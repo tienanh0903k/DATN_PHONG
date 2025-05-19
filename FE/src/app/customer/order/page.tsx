@@ -1,15 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { CiSearch } from 'react-icons/ci';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Breadcrumb } from 'antd';
 import { HomeOutlined } from '@ant-design/icons';
 import OderList from '@/components/app/oderlist';
-import payment from '@/mocks/payment.json';
+
+import CustomerServices from '@/services/CustomerServices/customerServices';
+import { URL_SERVICE } from '@/constant/constant';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 export default function OrderHistory() {
+	const customerServices = new CustomerServices(URL_SERVICE, () => {});
+	const customer = useSelector((state: RootState) => state.auth.userInfo);
+	const [bill, setBill] = useState([]);
+	const getBillByCustomerId = async () => {
+		const response: any = await customerServices.getBillByCustomerId(customer.customerId);
+		console.log(response);
+		setBill(response);
+	};
+	useEffect(() => {
+		getBillByCustomerId();
+	}, []);
 	const [tabs, setTabs] = useState([
 		{ id: 0, title: 'Tất cả đơn', status: true },
 		{ id: 1, title: 'Chờ thanh toán', status: false },
@@ -72,7 +88,7 @@ export default function OrderHistory() {
 					</div>
 				))}
 			</div>
-			{/* Search Section */}
+
 			<div className=" relative my-3">
 				<CiSearch className="text-[#808089] absolute left-[10px] top-1/2 -translate-y-1/2 w-6 h-6" />
 				<input
@@ -88,9 +104,9 @@ export default function OrderHistory() {
 					Tìm đơn hàng
 				</div>
 			</div>
-			{payment.length > 0 ? (
+			{bill.length > 0 ? (
 				<div className="w-full h-full overflow-y-auto">
-					<OderList orderList={payment as any} />
+					<OderList orderList={bill} />
 				</div>
 			) : (
 				<div>

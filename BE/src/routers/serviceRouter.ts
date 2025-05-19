@@ -4,6 +4,7 @@ import {
   updateEmailController,
   updateAddressController,
   updateCustomerController,
+  getBillByCustomerIdController,
 } from "../app/controllers/customer/customer.controller";
 import {
   createShop,
@@ -148,5 +149,11 @@ serviceRouter.get(
   getCustomerChattedWithShop
 );
 serviceRouter.post("/search-customer", searchCustomer);
+
+//customer
+serviceRouter.get(
+  "/get-bill-by-customer-id/:customerId",
+  getBillByCustomerIdController
+);
 
 export default serviceRouter;

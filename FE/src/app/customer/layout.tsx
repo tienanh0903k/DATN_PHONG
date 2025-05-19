@@ -1,20 +1,10 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+
 import '../globals.css';
 import Header from '@/components/LayoutComponents/Header/Header';
 
-// import LoadingBar from '@/components/base/loading/LoadingBar';
 import SidebarCustomer from '@/components/LayoutComponents/Sidebar/SidebarCustomer';
 import Footer from '@/components/LayoutComponents/footer';
-const geistSans = Geist({
-	variable: '--font-geist-sans',
-	subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -23,20 +13,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				{/* <LoadingBar /> */}
-				<Header />
-				<div className=" min-h-[81vh] bg-[#f6f5fa]">
-					<div className=" container-customer flex gap-4 pt-4">
-						<SidebarCustomer />
-						<div className="w-[calc(100%-254px)] overflow-hidden">
-							<main className="max-h-full overflow-y-auto">{children}</main>
-						</div>
+		<div>
+			{/* <LoadingBar /> */}
+			<Header />
+			<div className=" min-h-[81vh] bg-[#f6f5fa]">
+				<div className=" container-customer flex gap-4 pt-4">
+					<SidebarCustomer />
+					<div className="w-[calc(100%-254px)] overflow-hidden">
+						<main className="max-h-full overflow-y-auto">{children}</main>
 					</div>
 				</div>
-				<Footer />
-			</body>
-		</html>
+			</div>
+			<Footer />
+		</div>
 	);
 }

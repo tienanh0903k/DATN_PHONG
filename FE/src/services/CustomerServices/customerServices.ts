@@ -35,6 +35,9 @@ class CustomerServices extends ServicesBase {
 	changeAddress(data: IChangeAddress) {
 		return this.service.put(`/change-address/${data.customerId}`, data);
 	}
+	getBillByCustomerId(customerId: number) {
+		return this.service.get(`/get-bill-by-customer-id/${customerId}`);
+	}
 }
 
 export default CustomerServices;

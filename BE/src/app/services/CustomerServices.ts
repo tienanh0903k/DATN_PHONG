@@ -42,6 +42,37 @@ const customerServices = {
     });
     return customer;
   },
+  getBillByCustomerId: async (customerId: number) => {
+    const bill = await Prismaclient.bill.findMany({
+      where: { customerId },
+      include: {
+        BillDetail: {
+          include: {
+            ProductVariant: {
+              include: {
+                VariantValue: true,
+                Products: {
+                  include: {
+                    Shop: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        StatusBill: true,
+      },
+    });
+    const billWithStatus = bill.map((item, index) => ({
+      ...item,
+      statusbill: item.StatusBill.statusName,
+      ...item.BillDetail,
+      shopName: item.BillDetail[index].ProductVariant.Products.Shop.shopName,
+      shopId: item.BillDetail[index].ProductVariant.Products.Shop.shopId,
+      productId: item.BillDetail[index].ProductVariant.Products.productId,
+    }));
+    return billWithStatus;
+  },
 };
 
 export { customerServices };
