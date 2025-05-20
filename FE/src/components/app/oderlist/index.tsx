@@ -11,7 +11,7 @@ const OderList = ({ orderList }: any) => {
 		router.push(`/shop-infor/${shopId}`);
 	};
 	const handleProduct = (productId: number) => {
-		router.push(`/product-detail/${productId}`);
+		router.push(`/productdetail/${productId}`);
 	};
 
 	return (

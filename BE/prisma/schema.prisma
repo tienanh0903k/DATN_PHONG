@@ -207,7 +207,8 @@ model Rating {
   customerId       Int
   ratingValue      Int
   comment          String
-  status           String
+  status           Boolean   @default(true)
+  createdAt        DateTime  @default(now())
   BillDetail       BillDetail @relation(fields: [billDetailId], references: [billDetailId])
   Customer         Customer @relation(fields: [customerId], references: [customerId])
 }

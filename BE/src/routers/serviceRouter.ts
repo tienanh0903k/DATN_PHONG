@@ -66,7 +66,13 @@ import {
   getCustomerChattedWithShop,
   searchCustomer,
 } from "../app/controllers/chat/chat.controller";
-
+import {
+  createRating,
+  getRatingByProductId,
+  getAvgProductRating,
+  getAvgRatingByShopId,
+  checkRating,
+} from "../app/controllers/rating/rating.controller";
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
   "/change-number-phone/:customerId",
@@ -155,5 +161,10 @@ serviceRouter.get(
   "/get-bill-by-customer-id/:customerId",
   getBillByCustomerIdController
 );
-
+//rating
+serviceRouter.get("/check-rating/:customerId/:productId", checkRating);
+serviceRouter.post("/create-rating", createRating);
+serviceRouter.get("/get-rating-by-product-id/:productId", getRatingByProductId);
+serviceRouter.get("/get-avg-product-rating/:productId", getAvgProductRating);
+serviceRouter.get("/get-avg-rating-by-shop-id/:shopId", getAvgRatingByShopId);
 export default serviceRouter;

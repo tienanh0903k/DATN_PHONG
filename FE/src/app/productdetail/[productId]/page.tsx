@@ -19,12 +19,18 @@ import { useRouter } from 'next/navigation';
 import { updateCart } from '@/reducers/slice/cartSlice';
 import Link from 'next/link';
 import { SelectedItems } from '@/reducers/slice/checkout';
+import RatingForm from '@/components/app/rating/ratingform';
+import RatingList from '@/components/app/rating/ratingList';
+import RatingServices from '@/services/rating/ratingServices';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
 	const [data, setData] = useState<any>([]);
+	const [isRated, setIsRated] = useState<any>([]);
+	const [dataRating, setDataRating] = useState<any>([]);
 	const productServices = new ProductServices(URL_SERVICE || '', () => {});
+	const ratingServices = new RatingServices(URL_SERVICE || '', () => {});
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const router = useRouter();
 	const { productId } = useParams();
@@ -37,12 +43,37 @@ export default function DetailProduct() {
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
-			console.log(response.data);
+
 			setData(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		}
 	};
+	const checkRating = async () => {
+		try {
+			const response: any = await ratingServices.checkRating(user.customerId, Number(productId));
+			setIsRated(response.result);
+		} catch (error) {
+			console.error('Error checking rating:', error);
+		}
+	};
+	const fetchDataRating = async () => {
+		try {
+			const response: any = await ratingServices.getRatingByProductId(Number(productId));
+			console.log(response);
+			setDataRating(response.data);
+		} catch (error) {
+			console.error('Error fetching rating:', error);
+		}
+	};
+	useEffect(() => {
+		fetchDataRating();
+	}, []);
+	useEffect(() => {
+		if (user.customerId) {
+			checkRating();
+		}
+	}, []);
 	useEffect(() => {
 		fetchDataProduct();
 	}, [productId]);
@@ -57,7 +88,10 @@ export default function DetailProduct() {
 			router.push('/login');
 		}
 	};
-
+	const onSuccess = () => {
+		checkRating();
+		fetchDataRating();
+	};
 	const handleOk = () => {
 		setIsModalOpen(false);
 	};
@@ -318,6 +352,27 @@ export default function DetailProduct() {
 					<div id="product-comparison-widget-id"></div>
 					<div className="">
 						<div className="flex flex-col bg-white rounded-[8px] gap-1 w-full h-[500px]"></div>
+						<div className="products-more mt-4">
+							<div className="flex flex-col bg-white rounded-lg min-h-[300px] p-4 gap-4">
+								<div className="flex flex-col gap-4">
+									<h2 className="text-base font-semibold leading-[150%] text-[#27272a]">
+										Đánh giá sản phẩm
+									</h2>
+									<div className="flex gap-4">
+										{isRated.hasPurchased == true && isRated.hasRated == false && (
+											<RatingForm
+												customerId={user.customerId}
+												billDetailId={isRated.billDetailId}
+												onSuccess={onSuccess}
+											/>
+										)}
+										<div className="flex-1">
+											<RatingList dataRating={dataRating} />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 				{/* pricing */}
@@ -388,13 +443,6 @@ export default function DetailProduct() {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div className="products-more mt-4">
-				<div className="flex flex-col bg-white rounded-lg h-[300px] p-4 gap-4">
-					<div className="flex flex-col gap-4">
-						<div className="flex flex-col gap-4"></div>
 					</div>
 				</div>
 			</div>
