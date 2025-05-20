@@ -66,6 +66,8 @@ export default function DetailProduct() {
 			console.error('Error fetching rating:', error);
 		}
 	};
+	const ratingAverage = dataRating.reduce((acc: number, curr: any) => acc + curr.ratingValue, 0) / dataRating.length;
+
 	useEffect(() => {
 		fetchDataRating();
 	}, []);
@@ -118,6 +120,17 @@ export default function DetailProduct() {
 			return {
 				...prev,
 				img: item.img,
+			};
+		});
+	};
+	const handleClickVariant = (item: any) => {
+		// console.log(item);
+		setItemProduct(item);
+		setData((prev: any) => {
+			return {
+				...prev,
+				img: item.img,
+				price: item.price,
 			};
 		});
 	};
@@ -207,11 +220,15 @@ export default function DetailProduct() {
 								<div className="flex">
 									<div className="flex items-center justify-between">
 										<div className="flex">
-											<div className="mr-1 text-[14px] leading-[150%] font-medium">5.0</div>
-											<div className="flex items-center">
-												<Rate defaultValue={4} />
+											<div className="mr-1 text-[14px] leading-[150%] font-medium">
+												{ratingAverage}
 											</div>
-											<p className="ml-2 text-[#787878] text-[14px] leading-6">(513)</p>
+											<div className="flex items-center">
+												<Rate allowHalf disabled defaultValue={ratingAverage} />
+											</div>
+											<p className="ml-2 text-[#787878] text-[14px] leading-6">
+												({dataRating.length})
+											</p>
 											<div className="w-[1px] h-3 bg-[#c7c7c7] mx-2 translate-y-1/2"></div>
 										</div>
 									</div>
@@ -248,7 +265,7 @@ export default function DetailProduct() {
 														.map((item: any, idx: number) => (
 															<button
 																key={idx}
-																onClick={() => setItemProduct(item)}
+																onClick={() => handleClickVariant(item)}
 																className={`border px-4 py-2 rounded-lg ${
 																	itemProduct === item
 																		? 'border-blue-500 bg-blue-100'
