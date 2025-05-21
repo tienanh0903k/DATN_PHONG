@@ -54,7 +54,14 @@ const ProductService = {
           },
         },
       });
-      return products;
+      const productData = products.map((product) => ({
+        ...product,
+        categoryName: product.Categories.categoryName,
+        shopName: product.Shop.shopName,
+        shopEmail: product.Shop.emailShop,
+        imgShop: product.Shop.shopAvatar,
+      }));
+      return productData;
     } catch (error) {
       console.error("Error fetching products:", error);
       throw new Error("Failed to fetch products");
@@ -186,6 +193,19 @@ const ProductService = {
     } catch (error) {
       console.error("Error searching product:", error);
       throw new Error("Failed to search product");
+    }
+  },
+  updateStatusProduct: async (productId: number, status: string) => {
+    try {
+      const updatedProduct: any = await Prismaclient.products.update({
+        where: { productId },
+        data: { status },
+      });
+
+      return updatedProduct;
+    } catch (error) {
+      console.error("Error updating product status:", error);
+      throw new Error("Failed to update product status");
     }
   },
 };

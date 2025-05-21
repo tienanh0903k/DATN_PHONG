@@ -31,6 +31,7 @@ import {
   getProductByCateoryID,
   updateProduct,
   searchProduct,
+  updateStatusProduct,
 } from "../app/controllers/products/products.controller";
 import {
   createVariantType,
@@ -107,7 +108,7 @@ serviceRouter.get("/get-product-by-id/:id", getProductByID);
 serviceRouter.get("/get-product-by-category-id/:id", getProductByCateoryID);
 serviceRouter.get("/get-product-by-shop-id/:id", getProductByShopId);
 serviceRouter.put("/update-product/:id", updateProduct);
-
+serviceRouter.put("/update-status-product/:id", updateStatusProduct);
 //product variant
 serviceRouter.post("/create-variant-type", createVariantType);
 serviceRouter.post("/create-variant-value", createVariantValue);

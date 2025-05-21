@@ -115,6 +115,26 @@ const searchProduct = async (req: Request, res: Response) => {
     });
   }
 };
+const updateStatusProduct = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const response = await ProductService.updateStatusProduct(
+      parseInt(id),
+      status
+    );
+    res.status(200).json({
+      message: "Update status product successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Update status product failed",
+      error: error,
+    });
+  }
+};
+
 export {
   createProduct,
   getAllProducts,
@@ -123,4 +143,5 @@ export {
   getProductByCateoryID,
   updateProduct,
   searchProduct,
+  updateStatusProduct,
 };
