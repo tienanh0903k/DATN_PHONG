@@ -101,6 +101,7 @@ const updateProduct = async (req: Request, res: Response) => {
 };
 const searchProduct = async (req: Request, res: Response) => {
   const { search } = req.body;
+  console.log("search", search);
 
   try {
     const response = await ProductService.searchProduct(search);

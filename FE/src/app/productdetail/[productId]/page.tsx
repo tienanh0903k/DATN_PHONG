@@ -22,6 +22,8 @@ import { SelectedItems } from '@/reducers/slice/checkout';
 import RatingForm from '@/components/app/rating/ratingform';
 import RatingList from '@/components/app/rating/ratingList';
 import RatingServices from '@/services/rating/ratingServices';
+import CategoryServices from '@/services/categoryServices/categoryServices';
+import Breadcrumb from '@/components/app/Breadcrumb';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
@@ -39,7 +41,21 @@ export default function DetailProduct() {
 	const [messageApi, contextHolder] = message.useMessage();
 
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
+	const categoryServices = new CategoryServices(URL_SERVICE || '', () => {});
+	const [categories, setCategories] = useState<any>([]);
 
+	const fetchDataCategory = async () => {
+		try {
+			const response: any = await categoryServices.getAllCategories();
+
+			setCategories(response);
+		} catch (error) {
+			console.error('Error fetching categories:', error);
+		}
+	};
+	useEffect(() => {
+		fetchDataCategory();
+	}, []);
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
@@ -124,7 +140,6 @@ export default function DetailProduct() {
 		});
 	};
 	const handleClickVariant = (item: any) => {
-		// console.log(item);
 		setItemProduct(item);
 		setData((prev: any) => {
 			return {
@@ -172,6 +187,7 @@ export default function DetailProduct() {
 	return (
 		<div className="">
 			{contextHolder}
+			<Breadcrumb categories={categories} categoryId={data.categoryId} />
 			<div className="grid grid-cols-[1fr_360px] gap-6 pt-4">
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="grid grid-cols-[400px_1fr] gap-6 rounder-[8px] items-start">

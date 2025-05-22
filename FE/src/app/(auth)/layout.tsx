@@ -1,8 +1,8 @@
 import '../globals.css';
 import SidebarAdmin from '@/components/LayoutComponents/Sidebar/sidebarAdmin';
 export const metadata = {
-	title: 'Tiki Login',
-	description: 'Tiki Login',
+	title: 'Tiki Admin',
+	description: 'Tiki Admin',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

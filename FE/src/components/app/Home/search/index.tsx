@@ -8,12 +8,6 @@ import ProductServices from '@/services/products/productServices';
 import { URL_SERVICE } from '@/constant/constant';
 import Products from '@/components/app/Home/Products';
 
-const filters = [
-	{ label: 'Thương hiệu', options: ['VONESA', 'GOKING', 'Aligro', 'Novelty'] },
-	{ label: 'Chất liệu', options: ['Cotton', 'Polyester (PE)', 'Lụa', 'Bamboo'] },
-	{ label: 'Họa tiết', options: ['Trơn', 'Hình họa'] },
-];
-
 export default function SearchComponent() {
 	const searchParams = useSearchParams();
 	const q = searchParams.get('q');
@@ -71,23 +65,6 @@ export default function SearchComponent() {
 
 	return (
 		<div className="flex flex-col min-h-screen bg-gray-50">
-			{/* Bộ lọc */}
-			<div className="bg-white p-4 rounded shadow mb-4">
-				<div className="flex flex-wrap gap-4">
-					{filters.map((filter) => (
-						<div key={filter.label} className="flex items-center gap-2">
-							<span className="font-semibold">{filter.label}:</span>
-							{filter.options.map((opt) => (
-								<button key={opt} className="px-3 py-1 bg-gray-100 rounded hover:bg-blue-100 text-sm">
-									{opt}
-								</button>
-							))}
-						</div>
-					))}
-				</div>
-			</div>
-
-			{/* Thanh sắp xếp */}
 			<div className="flex items-center justify-between px-4 mb-2">
 				<div className="font-semibold">Sắp xếp</div>
 				<select className="border rounded px-2 py-1" value={sortType} onChange={handleSortChange}>

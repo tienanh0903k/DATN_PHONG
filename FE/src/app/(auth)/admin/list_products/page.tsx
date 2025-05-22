@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { useEffect, useState } from 'react';
-import { Table, Button, Image, message } from 'antd';
+import { Table, Button, Image, message, Select } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 // import Link from 'next/link';
 // import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -13,6 +13,8 @@ import { URL_SERVICE } from '@/constant/constant';
 const ListProducts = () => {
 	const [products, setProducts] = useState([]);
 	const [messageApi, messageContextHolder] = message.useMessage();
+	const [statusFilter, setStatusFilter] = useState<string>('all');
+
 	const productServices = new ProductServices(URL_SERVICE, () => {});
 	const fetchProducts = async () => {
 		const response = await productServices.getAllProducts();
@@ -22,7 +24,10 @@ const ListProducts = () => {
 	useEffect(() => {
 		fetchProducts();
 	}, []);
-
+	const filteredProducts = products.filter((product: any) => {
+		if (statusFilter === 'all') return true;
+		return product.status === statusFilter;
+	});
 	const handleApprove = async (productId: number) => {
 		console.log(productId);
 		try {
@@ -154,10 +159,24 @@ const ListProducts = () => {
 		<div className="">
 			{messageContextHolder}
 			<h1 className="text-2xl font-bold mb-4">Danh sách sản phẩm</h1>
+			<div className="mb-4 flex items-center gap-2">
+				<span className="font-medium">Lọc theo trạng thái:</span>
+				<Select
+					value={statusFilter}
+					style={{ width: 200 }}
+					onChange={(value: string) => setStatusFilter(value)}
+					options={[
+						{ label: 'Tất cả', value: 'all' },
+						{ label: 'Chờ duyệt', value: 'pending' },
+						{ label: 'Đang hiển thị', value: 'active' },
+						{ label: 'Đã ẩn', value: 'hidden' },
+					]}
+				/>
+			</div>
 			<Table
 				columns={columns}
 				rowKey="productId"
-				dataSource={products}
+				dataSource={filteredProducts}
 				expandable={{
 					expandedRowRender: (record) => (
 						<div className="p-4">

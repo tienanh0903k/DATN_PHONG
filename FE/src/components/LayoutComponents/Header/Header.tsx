@@ -7,7 +7,7 @@ import { CiFaceSmile } from 'react-icons/ci';
 import { BiCartAlt } from 'react-icons/bi';
 
 import historySearch from '../../../mocks/historySearch.json';
-import { IoLocationOutline, IoSearchOutline } from 'react-icons/io5';
+import { IoLocationOutline } from 'react-icons/io5';
 import { Modal, ConfigProvider, Dropdown, MenuProps } from 'antd';
 import ModalAddress from './modalAddress';
 import RegisterModal from '../../app/Resgiter/RegisterModal';
@@ -25,20 +25,22 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { RootState } from '@/redux/store';
 import CartServices from '@/services/CartServices/CartServices';
-import { useForm } from 'react-hook-form';
+import useDebounce from '@/utils/useDebounce';
+import ProductServices from '@/services/products/productServices';
+
 import HistoryHeader from './historyHeader';
 
 import io from 'socket.io-client';
+import HeaderSearch from './HeaderSearch';
 const socket = io(URL_SOCKET);
 type Props = object;
 
 const HeaderCpn = ({}: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isSearchFocused, setIsSearchFocused] = useState(false);
-	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
-	const { register, handleSubmit } = useForm();
-	const cart = useSelector((state: RootState) => state.cart.cart);
 
+	const isLogin = useSelector((state: RootState) => state.auth.isAuthenticated);
+	const cart = useSelector((state: RootState) => state.cart.cart);
+	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const dispatch = useDispatch();
 	const router = useRouter();
 	const user = useSelector((state: RootState) => state.auth.userInfo);
@@ -46,7 +48,21 @@ const HeaderCpn = ({}: Props) => {
 	const shopServices = new ShopServicer(URL_SERVICE || '', () => {});
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
 	const [isModalVisible, setIsModalVisible] = useState(false);
-
+	const productServices = new ProductServices(URL_SERVICE || '', () => {});
+	const [products, setProducts] = useState([]);
+	const [searchValue, setSearchValue] = useState('');
+	const debouncedSearchValue = useDebounce(searchValue, 500);
+	const fetchDataProduct = async () => {
+		try {
+			const response = await productServices.searchProduct(debouncedSearchValue);
+			setProducts(response.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	useEffect(() => {
+		fetchDataProduct();
+	}, [debouncedSearchValue]);
 	const showModalLogin = () => {
 		setIsModalVisible(true);
 	};
@@ -64,10 +80,6 @@ const HeaderCpn = ({}: Props) => {
 
 	const handleCancel = () => {
 		setIsModalOpen(false);
-	};
-	const onSubmit = async (data: any) => {
-		console.log(data.contentSearch);
-		router.push(`/search?q=${data.contentSearch}`);
 	};
 
 	useEffect(() => {
@@ -195,26 +207,10 @@ const HeaderCpn = ({}: Props) => {
 				</div>
 				<div className="w-full block relative">
 					<div className="flex w-full mb-2">
-						<form
-							onSubmit={handleSubmit(onSubmit)}
-							className="header-search flex border border-[#ccc] rounded-[8px] h-[40px] flex-1 items-center "
-						>
-							<IoSearchOutline className="text-[#828181] text-[20px] ml-[18px]" />
-							<input
-								placeholder="Tìm kiếm sản phẩm"
-								{...register('contentSearch')}
-								type="text"
-								className="w-full outline-none text-[#333] mx-2"
-								onFocus={() => setIsSearchFocused(true)}
-								onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-							/>
-							<button
-								type="submit"
-								className="bg-[#fff] h-full text-[14px] w-[92px] rounded-md max-h-9 text-center text-[#0a68ff] relative before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-[1px] before:h-5 before:bg-[#ddd] hover:bg-[#0a68ff33] active:bg-[#0a68ff66]"
-							>
-								Tìm kiếm
-							</button>
-						</form>
+						<HeaderSearch
+							setIsSearchFocused={setIsSearchFocused}
+							onSearchChange={(value) => setSearchValue(value)}
+						/>
 
 						<div className="ml-[48px] flex items-center ">
 							<div className="flex items-center px-2 p-4 hover:bg-[#0060ff1f] h-10 rounded-[10px] cursor-pointer">
@@ -260,7 +256,7 @@ const HeaderCpn = ({}: Props) => {
 							</Link>
 						</div>
 					</div>
-					{isSearchFocused && <HistoryHeader data={historySearch} />}
+					{isSearchFocused && <HistoryHeader products={products} searchValue={searchValue} />}
 					<div className="flex justify-between">
 						<ul className="history flex gap-[12px] w-[820px] overflow-hidden h-6 ">
 							{historySearch?.map((item: { name: string }, index: number) => (
