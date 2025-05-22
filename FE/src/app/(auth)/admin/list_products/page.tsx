@@ -5,8 +5,7 @@
 import { useEffect, useState } from 'react';
 import { Table, Button, Image, message, Select } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-// import Link from 'next/link';
-// import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+
 import ProductServices from '@/services/products/productServices';
 import { URL_SERVICE } from '@/constant/constant';
 
@@ -18,7 +17,7 @@ const ListProducts = () => {
 	const productServices = new ProductServices(URL_SERVICE, () => {});
 	const fetchProducts = async () => {
 		const response = await productServices.getAllProducts();
-		console.log(response);
+
 		setProducts(response.data);
 	};
 	useEffect(() => {
@@ -29,7 +28,6 @@ const ListProducts = () => {
 		return product.status === statusFilter;
 	});
 	const handleApprove = async (productId: number) => {
-		console.log(productId);
 		try {
 			await productServices.updateStatusProduct(productId, 'active');
 			setProducts((prevProducts: any) =>

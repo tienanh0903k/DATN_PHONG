@@ -13,16 +13,16 @@ import { useAuth } from '@/components/base/context/AuthContext';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const { role } = useAuth();
-	const roled = localStorage.getItem('role');
+	const storedRole = typeof window !== 'undefined' ? localStorage.getItem('role') : null;
 	const router = useRouter();
 
 	useEffect(() => {
-		if (role !== 'Admin' && roled !== 'Admin') {
+		if (role !== 'Admin' && storedRole !== 'Admin') {
 			router.replace('/unauthorized');
 		}
-	}, [role, roled]);
+	}, [role, storedRole]);
 
-	if (role !== 'Admin' && roled !== 'Admin') return null;
+	if (role !== 'Admin' && storedRole !== 'Admin') return null;
 
 	return (
 		<div className="flex h-screen">
