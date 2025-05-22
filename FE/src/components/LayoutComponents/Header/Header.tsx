@@ -153,6 +153,7 @@ const HeaderCpn = ({}: Props) => {
 		dispatch(clearCart());
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('tokenlogin');
+		localStorage.removeItem('role');
 
 		router.push('/');
 	};

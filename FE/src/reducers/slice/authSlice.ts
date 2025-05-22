@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AUTHORITIES } from '@/constant/constant';
+
 import { defaultAuth, IAuthe } from '@/models/reducers/IAuthe.model';
 
 const initialState: IAuthe = defaultAuth;
@@ -11,7 +11,7 @@ const AuthSlice = createSlice({
 		setUserInfo: (state, action: PayloadAction<IAuthe>) => {
 			state.userInfo = action.payload;
 			state.isAuthenticated = true;
-			state.userInfo.authenticated = [AUTHORITIES.USER];
+			// state.userInfo.authenticated = [AUTHORITIES.USER];
 		},
 		updateUserInfo: (state, action: PayloadAction<IAuthe>) => {
 			state.userInfo = {

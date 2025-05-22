@@ -35,6 +35,13 @@ const Middleware = async (req: Request, res: Response, next: NextFunction) => {
           status: "active",
         },
       },
+      include: {
+        Account: {
+          include: {
+            AccountType: true,
+          },
+        },
+      },
     });
     if (!account) {
       return next(
@@ -44,8 +51,11 @@ const Middleware = async (req: Request, res: Response, next: NextFunction) => {
         )
       );
     }
-
-    req.customer = account;
+    const dataCustomer = {
+      ...account,
+      accountType: account.Account?.AccountType?.accountTypeName,
+    };
+    req.customer = dataCustomer;
     next();
   } catch (error) {
     console.error("Auth error:", error);

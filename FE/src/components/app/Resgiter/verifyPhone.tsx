@@ -8,6 +8,8 @@ import AuthenEmail from './authenEmail';
 import { useDispatch } from 'react-redux';
 import { setUserInfo } from '@/reducers/slice/authSlice';
 import io from 'socket.io-client';
+import { useAuth } from '@/components/base/context/AuthContext';
+import { useRouter } from 'next/navigation';
 const socket = io(URL_SOCKET);
 type Props = {
 	handleRegister: () => void;
@@ -20,7 +22,9 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 		handleSubmit,
 		formState: { errors },
 	} = useForm();
+	const { setRole } = useAuth();
 	const dispatch = useDispatch();
+	const router = useRouter();
 	const [showPassword, setShowPassword] = useState(false);
 	const [status, setStatus] = useState<any>('');
 	const [message, setMessage] = useState<string>('');
@@ -53,6 +57,10 @@ const VerifyPhone: React.FC<Props> = ({ handleRegister, onLoginSuccess }) => {
 	const fetchDataCustomer = async (token: string) => {
 		try {
 			const datauser: any = await registerServices.getCustomer(token);
+			setRole(datauser.accountType);
+			if (datauser.accountType === 'Admin') {
+				router.push('/admin/dashboards');
+			}
 			socket.emit('registerUser', datauser.customerId);
 			dispatch(setUserInfo(datauser));
 		} catch (error) {
