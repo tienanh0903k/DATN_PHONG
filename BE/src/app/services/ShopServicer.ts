@@ -28,6 +28,20 @@ const ShopServicer = {
           status: "active",
         },
       });
+      if (shop) {
+        await Prismaclient.account.update({
+          where: {
+            accountId: (
+              await Prismaclient.customer.findUnique({
+                where: { customerId: Number(data.customerId) },
+              })
+            )?.accountId,
+          },
+          data: {
+            accountTypeId: 2,
+          },
+        });
+      }
       return shop;
     } catch (error) {
       console.log(error);

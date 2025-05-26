@@ -9,7 +9,6 @@ type Props = {
 
 const Breadcrumb = ({ categories, categoryId }: Props) => {
 	const [trail, setTrail] = useState<any>([]);
-	console.log(categories, categoryId);
 
 	useEffect(() => {
 		getBreadcrumbTrail(categories, categoryId);

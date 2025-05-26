@@ -24,11 +24,13 @@ import RatingList from '@/components/app/rating/ratingList';
 import RatingServices from '@/services/rating/ratingServices';
 import CategoryServices from '@/services/categoryServices/categoryServices';
 import Breadcrumb from '@/components/app/Breadcrumb';
+import Products from '@/components/app/Home/Products';
 
 export default function DetailProduct() {
 	const [quantity, setQuantity] = useState(1);
 	const dispatch = useDispatch();
 	const [data, setData] = useState<any>([]);
+	const [dataRelated, setDataRelated] = useState<any>([]);
 	const [isRated, setIsRated] = useState<any>([]);
 	const [dataRating, setDataRating] = useState<any>([]);
 	const productServices = new ProductServices(URL_SERVICE || '', () => {});
@@ -39,7 +41,6 @@ export default function DetailProduct() {
 	const [itemProduct, setItemProduct] = useState<any>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [messageApi, contextHolder] = message.useMessage();
-
 	const cartServices = new CartServices(URL_SERVICE || '', () => {});
 	const categoryServices = new CategoryServices(URL_SERVICE || '', () => {});
 	const [categories, setCategories] = useState<any>([]);
@@ -59,8 +60,18 @@ export default function DetailProduct() {
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
-
+			console.log(response.data);
+			fetchDataProductRelated(response.data.categoryId);
 			setData(response.data);
+		} catch (error) {
+			console.error('Error fetching products:', error);
+		}
+	};
+	const fetchDataProductRelated = async (categoryId: number) => {
+		try {
+			const response: any = await productServices.getProductByCategoryID(categoryId);
+			console.log(response.data);
+			setDataRelated(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
 		}
@@ -132,6 +143,7 @@ export default function DetailProduct() {
 		});
 	};
 	const handleProduct = (item: any) => {
+		setItemProduct(item);
 		setData((prev: any) => {
 			return {
 				...prev,
@@ -212,7 +224,7 @@ export default function DetailProduct() {
 												onClick={() => {
 													handleProduct(item);
 												}}
-												className="border-[1px] border-solid border-[#e5e5e5] rounded-lg p-2"
+												className="border-[1px] border-solid border-[#e5e5e5] rounded-lg p-2 cursor-pointer"
 											>
 												<div className="w-[42px] h-[42px]">
 													<img
@@ -282,7 +294,7 @@ export default function DetailProduct() {
 															<button
 																key={idx}
 																onClick={() => handleClickVariant(item)}
-																className={`border px-4 py-2 rounded-lg ${
+																className={`border px-4 py-2 rounded-lg cursor-pointer ${
 																	itemProduct === item
 																		? 'border-blue-500 bg-blue-100'
 																		: 'border-gray-300'
@@ -384,7 +396,9 @@ export default function DetailProduct() {
 					</div>
 					<div id="product-comparison-widget-id"></div>
 					<div className="">
-						<div className="flex flex-col bg-white rounded-[8px] gap-1 w-full h-[500px]"></div>
+						<div className="flex flex-col bg-white rounded-[8px] gap-1 w-full h-[500px] p-8">
+							<div dangerouslySetInnerHTML={{ __html: data.productDes }} />
+						</div>
 						<div className="products-more mt-4">
 							<div className="flex flex-col bg-white rounded-lg min-h-[300px] p-4 gap-4">
 								<div className="flex flex-col gap-4">
@@ -400,7 +414,15 @@ export default function DetailProduct() {
 											/>
 										)}
 										<div className="flex-1">
-											<RatingList dataRating={dataRating} />
+											{dataRating.length > 0 ? (
+												<RatingList dataRating={dataRating} />
+											) : (
+												<div className="flex flex-col gap-4">
+													<p className="text-sm font-semibold leading-[150%] m-0">
+														Chưa có đánh giá nào
+													</p>
+												</div>
+											)}
 										</div>
 									</div>
 								</div>
@@ -478,6 +500,10 @@ export default function DetailProduct() {
 						</div>
 					</div>
 				</div>
+			</div>
+			<div className="w-full h-fit bg-[#fff] mt-5 p-6">
+				<h2 className="text-2xl font-semibold leading-[150%] text-[#27272a]">Sản phẩm liên quan</h2>
+				<Products products={dataRelated} />
 			</div>
 		</div>
 	);

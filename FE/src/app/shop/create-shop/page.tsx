@@ -19,7 +19,6 @@ import { RootState } from '@/redux/store';
 export default function CreateShopForm() {
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
-	console.log('shop', shop);
 	const { control, handleSubmit, reset, watch } = useForm<ICreateShopForm>();
 	const [avatarFile, setAvatarFile] = useState<UploadFile[]>([]);
 	const [bannerFile, setBannerFile] = useState<UploadFile[]>([]);
@@ -28,6 +27,7 @@ export default function CreateShopForm() {
 	const [avatar, setAvatar] = useState<string | null>(shop?.shopAvatar);
 	const [banner, setBanner] = useState<string | null>(shop?.shopBanner);
 	const [loading, setLoading] = useState(false);
+	const [messageApi, contextHolder] = message.useMessage();
 
 	const shopservices = new ShopServicer(URL_SERVICE, () => {});
 	const dispatch = useDispatch();
@@ -71,9 +71,9 @@ export default function CreateShopForm() {
 			const res: any = await shopservices.createShop(formatData);
 			dispatch(setShopInfo(res.shop));
 			console.log('data:', res);
-			message.success('Tạo cửa hàng thành công!');
+			messageApi.success('Tạo cửa hàng thành công!');
 		} catch (error: any) {
-			message.error('Có lỗi xảy ra khi tạo cửa hàng!', error);
+			messageApi.error('Có lỗi xảy ra khi tạo cửa hàng!', error);
 		} finally {
 			setLoading(false);
 		}
@@ -81,6 +81,7 @@ export default function CreateShopForm() {
 
 	return (
 		<div className="max-w-6xl mx-auto p-6">
+			{contextHolder}
 			<Spin spinning={loading}>
 				<div className="grid grid-cols-2 gap-8">
 					<div className="bg-white rounded-lg shadow p-6">

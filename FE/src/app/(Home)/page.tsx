@@ -16,7 +16,7 @@ export default function Home() {
 	const productService = new ProductServices(URL_SERVICE, () => {});
 	const fetchDataProduct = async () => {
 		try {
-			const response = await productService.getProductByShopId(1);
+			const response = await productService.getAllProducts();
 
 			setProducts(response.data);
 		} catch (error) {

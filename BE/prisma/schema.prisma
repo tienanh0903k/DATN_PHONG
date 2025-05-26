@@ -93,7 +93,7 @@ model Products {
   productId        Int      @id @default(autoincrement())
   productName      String
   categoryId       Int
-  productDes       String
+  productDes       String   @db.Text
   shopId           Int
   img              String
   price            Float

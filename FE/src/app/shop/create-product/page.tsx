@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useForm } from 'react-hook-form';
-import { Button, Upload, Spin, notification } from 'antd';
+import { Button, Upload, Spin, message } from 'antd';
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useEffect, useState } from 'react';
 import type { UploadFile } from 'antd/es/upload/interface';
@@ -28,6 +28,7 @@ const CreateProduct = () => {
 	const [categoryId, setCategoryID] = useState<number>(0);
 	const [variantId, setVariantID] = useState(0);
 	const [valueVariant, setValueVariant] = useState([]);
+	const [messageApi, contextHolder] = message.useMessage();
 
 	const variantServices = new VariantService(URL_SERVICE, () => {});
 	const categoryServices = new CategoryServices(URL_SERVICE, () => {});
@@ -39,7 +40,7 @@ const CreateProduct = () => {
 		reset,
 		formState: { errors },
 	} = useForm();
-	const [variantImages, setVariantImages] = useState<UploadFile[][]>([]); // Quản lý file upload cho từng biến thể
+	const [variantImages, setVariantImages] = useState<UploadFile[][]>([]);
 
 	const handleVariantImageChange = (index: number, fileList: UploadFile[]) => {
 		setVariantImages((prev) => {
@@ -50,7 +51,6 @@ const CreateProduct = () => {
 	};
 	const uploadImage = async (file: File) => {
 		try {
-			// Tạo tên file duy nhất
 			const fileName = `img/${Date.now()}-${file.name}`;
 
 			const { error } = await supabase.storage.from('tikistogare').upload(fileName, file);
@@ -103,7 +103,7 @@ const CreateProduct = () => {
 	}, []);
 
 	const onSubmit = async (data: any) => {
-		setLoading(true); // Bắt đầu loading
+		setLoading(true);
 		try {
 			const img = await uploadImage(fileList[0]?.originFileObj);
 
@@ -131,11 +131,7 @@ const CreateProduct = () => {
 			console.log(response);
 			console.log(formatdata);
 
-			notification.success({
-				message: 'Thành công',
-				description: 'Sản phẩm đã được tạo thành công!',
-				placement: 'topRight',
-			});
+			messageApi.success('Sản phẩm đã được tạo thành công!');
 
 			reset();
 			setFileList(null);
@@ -145,11 +141,7 @@ const CreateProduct = () => {
 		} catch (error: any) {
 			console.error('Error:', error);
 
-			notification.error({
-				message: 'Thất bại',
-				description: 'Không thể tạo sản phẩm. Vui lòng thử lại!',
-				placement: 'topRight',
-			});
+			messageApi.error('Thất bại', error);
 		} finally {
 			setLoading(false);
 		}
@@ -157,6 +149,7 @@ const CreateProduct = () => {
 
 	return (
 		<div className="container-base p-6">
+			{contextHolder}
 			<div className=" mx-auto bg-white rounded-lg shadow-md p-6">
 				<h1 className="text-2xl font-bold mb-6">Thêm sản phẩm mới</h1>
 				<Spin spinning={loading}>
@@ -282,7 +275,6 @@ const CreateProduct = () => {
 												}}
 											>
 												<option value="">Loại biến thể</option>
-												<option value={0}>chọn loại biến thể</option>
 												{dataVariant?.map((variant: any) => (
 													<option key={variant.typeId} value={variant.typeId}>
 														{variant.typeName}
