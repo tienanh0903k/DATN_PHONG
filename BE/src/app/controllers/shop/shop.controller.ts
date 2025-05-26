@@ -100,12 +100,54 @@ const getShopById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const getCountProductByShopId = async (req: Request, res: Response) => {
+  const { shopId } = req.params;
+  try {
+    const response = await ShopServicer.getCountProductByShopId(
+      parseInt(shopId)
+    );
+    res.status(200).json({
+      message: "Get count product by shop ID successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getTotalSalesAmount = async (req: Request, res: Response) => {
+  const { shopId } = req.params;
+  try {
+    const response = await ShopServicer.getTotalSalesAmount(parseInt(shopId));
+    res.status(200).json({
+      message: "Get total sales amount successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getAverageRating = async (req: Request, res: Response) => {
+  const { shopId } = req.params;
+  try {
+    const response = await ShopServicer.getAverageRating(parseInt(shopId));
+    res.status(200).json({
+      message: "Get average rating successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 export {
   createShop,
   getShop,
   getOrderListByShopId,
   getOrderListByStatus,
-  getStatusOder,
   updateShop,
   getShopById,
+  getCountProductByShopId,
+  getTotalSalesAmount,
+  getAverageRating,
 };

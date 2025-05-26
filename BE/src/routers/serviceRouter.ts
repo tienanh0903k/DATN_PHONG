@@ -11,9 +11,11 @@ import {
   getShop,
   getOrderListByShopId,
   getOrderListByStatus,
-  getStatusOder,
   updateShop,
   getShopById,
+  getCountProductByShopId,
+  getTotalSalesAmount,
+  getAverageRating,
 } from "../app/controllers/shop/shop.controller";
 import {
   getAllCategories,
@@ -98,8 +100,13 @@ serviceRouter.get(
   "/get-order-list-by-status/:status/:shopId",
   getOrderListByStatus
 );
-serviceRouter.get("/getstatus-order", getStatusOder);
 serviceRouter.get("/get-shop-by-id/:shopId", getShopById);
+serviceRouter.get(
+  "/get-count-product-by-shop-id/:shopId",
+  getCountProductByShopId
+);
+serviceRouter.get("/get-total-sales-amount/:shopId", getTotalSalesAmount);
+serviceRouter.get("/get-average-rating/:shopId", getAverageRating);
 
 //categories
 serviceRouter.get("/get-all-categories", getAllCategories);

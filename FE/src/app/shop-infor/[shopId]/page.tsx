@@ -111,7 +111,7 @@ export default function ShopInfoPage() {
 				</div>
 				<div className="flex gap-6 px-4">
 					{dataShop.productByShop && dataShop.productByShop.length > 0 ? (
-						<Products products={dataShop.productByShop} itemsPerRow={5} />
+						<Products products={dataShop.productByShop} itemsPerRow={5.2} />
 					) : (
 						<div className="text-center py-8">
 							<p className="text-[16px] text-gray-500">Không tìm thấy sản phẩm phù hợp</p>

@@ -27,5 +27,14 @@ class ShopServicer extends ServicesBase {
 	getShopById(shopId: number) {
 		return this.service.get(`/get-shop-by-id/${shopId}`);
 	}
+	getCountProductByShopId(shopId: number) {
+		return this.service.get(`/get-count-product-by-shop-id/${shopId}`);
+	}
+	getTotalSalesAmount(shopId: number) {
+		return this.service.get(`/get-total-sales-amount/${shopId}`);
+	}
+	getAverageRating(shopId: number) {
+		return this.service.get(`/get-average-rating/${shopId}`);
+	}
 }
 export default ShopServicer;

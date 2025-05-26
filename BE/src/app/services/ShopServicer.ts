@@ -221,6 +221,80 @@ const ShopServicer = {
       return null;
     }
   },
+  getCountProductByShopId: async (shopId: number) => {
+    try {
+      const count = await Prismaclient.products.count({
+        where: { shopId },
+      });
+      return count;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getTotalSalesAmount: async (shopId: number) => {
+    try {
+      const totalSales = await Prismaclient.billDetail.aggregate({
+        where: {
+          ProductVariant: {
+            Products: {
+              shopId: shopId,
+            },
+          },
+        },
+        _sum: {
+          totalPrice: true,
+        },
+      });
+
+      return totalSales._sum.totalPrice || 0;
+    } catch (err) {
+      console.log(err);
+      return 0;
+    }
+  },
+  getAverageRating: async (shopId: number) => {
+    console.log(shopId);
+    try {
+      const ratings = await Prismaclient.rating.findMany({
+        where: {
+          BillDetail: {
+            ProductVariant: {
+              Products: {
+                shopId: shopId,
+              },
+            },
+          },
+        },
+        select: {
+          ratingValue: true,
+        },
+      });
+
+      if (ratings.length === 0) {
+        return {
+          averageRating: 0,
+          totalRatings: 0,
+        };
+      }
+
+      const totalRating = ratings.reduce(
+        (sum, rating) => sum + rating.ratingValue,
+        0
+      );
+      const averageRating = totalRating / ratings.length;
+
+      return {
+        averageRating: Number(averageRating.toFixed(1)),
+        totalRatings: ratings.length,
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        averageRating: 0,
+        totalRatings: 0,
+      };
+    }
+  },
 };
 
 export default ShopServicer;

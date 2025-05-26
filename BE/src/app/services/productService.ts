@@ -44,6 +44,9 @@ const ProductService = {
   getAllProducts: async () => {
     try {
       const products = await Prismaclient.products.findMany({
+        where: {
+          status: "active",
+        },
         include: {
           Categories: true,
           Shop: true,

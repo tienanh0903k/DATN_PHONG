@@ -13,7 +13,7 @@ interface ProductsProps {
 	itemsPerRow?: number; // Số sản phẩm trên mỗi hàng
 }
 
-const Products = ({ products, itemsPerRow = 5 }: ProductsProps) => {
+const Products = ({ products, itemsPerRow = 5.2 }: ProductsProps) => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 'use client';
@@ -13,13 +14,18 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import ShopServicer from '@/services/shopServicer/shopServicer';
 
 const ProfileShop = () => {
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
 
 	const router = useRouter();
 	const [products, setProducts] = useState([]);
+	const [countProduct, setCountProduct] = useState(0);
+	const [totalSales, setTotalSales] = useState(0);
+	const [averageRating, setAverageRating] = useState<any>(0);
 	const productService = new ProductServices(URL_SERVICE, () => {});
+	const shopServicer = new ShopServicer(URL_SERVICE, () => {});
 
 	const fetchDataProduct = async () => {
 		try {
@@ -32,6 +38,44 @@ const ProfileShop = () => {
 
 	useEffect(() => {
 		fetchDataProduct();
+	}, [shop?.shopId]);
+
+	useEffect(() => {
+		const fetchCountProduct = async () => {
+			try {
+				const response = await shopServicer.getCountProductByShopId(shop?.shopId);
+				console.log(response);
+				setCountProduct(response.data);
+			} catch (error) {
+				console.error('Error fetching count product:', error);
+			}
+		};
+		fetchCountProduct();
+	}, [shop?.shopId]);
+
+	useEffect(() => {
+		const fetchTotalSales = async () => {
+			try {
+				const response = await shopServicer.getTotalSalesAmount(shop?.shopId);
+				setTotalSales(response.data);
+			} catch (error) {
+				console.error('Error fetching total sales:', error);
+			}
+		};
+		fetchTotalSales();
+	}, [shop?.shopId]);
+
+	useEffect(() => {
+		const fetchAverageRating = async () => {
+			try {
+				const response = await shopServicer.getAverageRating(shop?.shopId);
+				console.log(response);
+				setAverageRating(response.data);
+			} catch (error) {
+				console.error('Error fetching average rating:', error);
+			}
+		};
+		fetchAverageRating();
 	}, [shop?.shopId]);
 
 	return (
@@ -68,17 +112,17 @@ const ProfileShop = () => {
 				{/* Statistics */}
 				<Row gutter={16} className="mt-6">
 					<Col span={8}>
+						<Statistic title="Tổng sản phẩm" value={countProduct || 0} prefix={<ShoppingOutlined />} />
+					</Col>
+					<Col span={8}>
+						<Statistic title="Tổng doanh số" value={totalSales || 0} prefix="₫" />
+					</Col>
+					<Col span={8}>
 						<Statistic
-							title="Tổng sản phẩm"
-							value={shop?.totalProduct || 0}
-							prefix={<ShoppingOutlined />}
+							title="Đánh giá"
+							value={averageRating.averageRating || 0}
+							prefix={<StarOutlined />}
 						/>
-					</Col>
-					<Col span={8}>
-						<Statistic title="Tổng doanh số" value={shop?.totalSales || 0} prefix="₫" />
-					</Col>
-					<Col span={8}>
-						<Statistic title="Đánh giá" value={4.5} prefix={<StarOutlined />} />
 					</Col>
 				</Row>
 			</Card>
