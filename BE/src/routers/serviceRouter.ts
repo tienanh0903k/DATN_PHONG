@@ -74,6 +74,13 @@ import {
   getAvgRatingByShopId,
   checkRating,
 } from "../app/controllers/rating/rating.controller";
+import {
+  getTotalCustomer,
+  getTotalProduct,
+  getTotalOrder,
+  getTopCustomers,
+  getRecentOrders,
+} from "../app/controllers/admin/admin.controller";
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
   "/change-number-phone/:customerId",
@@ -168,4 +175,11 @@ serviceRouter.post("/create-rating", createRating);
 serviceRouter.get("/get-rating-by-product-id/:productId", getRatingByProductId);
 serviceRouter.get("/get-avg-product-rating/:productId", getAvgProductRating);
 serviceRouter.get("/get-avg-rating-by-shop-id/:shopId", getAvgRatingByShopId);
+
+//admin
+serviceRouter.get("/get-total-customer", getTotalCustomer);
+serviceRouter.get("/get-total-product", getTotalProduct);
+serviceRouter.get("/get-total-order", getTotalOrder);
+serviceRouter.get("/get-top-customers", getTopCustomers);
+serviceRouter.get("/get-recent-orders", getRecentOrders);
 export default serviceRouter;

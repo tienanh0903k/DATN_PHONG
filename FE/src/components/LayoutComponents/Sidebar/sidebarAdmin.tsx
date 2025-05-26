@@ -112,7 +112,7 @@ const SidebarAdmin = () => {
 					label: <Link href="/admin/coupons">Mã giảm giá</Link>,
 				},
 				{
-					key: 'promotions',
+					key: 'promotion',
 					label: <Link href="/admin/promotions">Chương trình khuyến mãi</Link>,
 				},
 			],

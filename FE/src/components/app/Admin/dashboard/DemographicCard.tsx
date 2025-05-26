@@ -1,13 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoMdMore } from 'react-icons/io';
 import { Dropdown } from '@/components/ui/dropdown/Dropdown';
 import { DropdownItem } from '@/components/ui/dropdown/DropdownItem';
+import AdminService from '@/services/admin/adminServices';
+import { URL_SERVICE } from '@/constant/constant';
+import { formatPrice } from '@/utils/formatprice';
 
 export default function TopUserCard() {
 	const [isOpen, setIsOpen] = useState(false);
-
+	const [topCustomers, setTopCustomers] = useState<any[]>([]);
+	const adminService = new AdminService(URL_SERVICE, () => {});
+	useEffect(() => {
+		const fetchTopCustomers = async () => {
+			try {
+				const res: any = await adminService.getTopCustomers();
+				setTopCustomers(res);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		fetchTopCustomers();
+	}, []);
 	function toggleDropdown() {
 		setIsOpen(!isOpen);
 	}
@@ -48,32 +65,7 @@ export default function TopUserCard() {
 			</div>
 
 			<div className="space-y-5 mt-6">
-				{[
-					{
-						name: 'Nguyễn Văn A',
-						orders: 122,
-						percentage: 56,
-						avatar: 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/-1743475242759-31323fe7b907c09d296a2e74fb42cf59.jpg',
-					},
-					{
-						name: 'Trần Thị B',
-						orders: 95,
-						percentage: 44,
-						avatar: 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/-1743475242759-31323fe7b907c09d296a2e74fb42cf59.jpg',
-					},
-					{
-						name: 'Nguyễn Văn C',
-						orders: 88,
-						percentage: 33,
-						avatar: 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/-1743475242759-31323fe7b907c09d296a2e74fb42cf59.jpg',
-					},
-					{
-						name: 'Nguyễn Văn D',
-						orders: 77,
-						percentage: 22,
-						avatar: 'https://jpesrdrgrcqjeqavqxrj.supabase.co/storage/v1/object/public/tikistogare/img/-1743475242759-31323fe7b907c09d296a2e74fb42cf59.jpg',
-					},
-				].map((user, index) => (
+				{topCustomers.map((user, index) => (
 					<div key={index} className="flex items-center justify-between">
 						<div className="flex items-center gap-3">
 							<div className="items-center w-full rounded-full max-w-8 overflow-hidden">
@@ -87,23 +79,17 @@ export default function TopUserCard() {
 							</div>
 							<div>
 								<p className="font-semibold text-gray-800 text-theme-sm dark:text-white/90">
-									{user.name}
+									{user.customerName}
 								</p>
 								<span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-									{user.orders} đơn hàng
+									{user.totalOrders} đơn hàng
 								</span>
 							</div>
 						</div>
 
-						<div className="flex w-full max-w-[140px] items-center gap-3">
-							<div className="relative block h-2 w-full max-w-[100px] rounded-sm bg-gray-200 dark:bg-gray-800">
-								<div
-									className="absolute left-0 top-0 h-full rounded-sm bg-brand-500"
-									style={{ width: `${user.percentage}%` }}
-								></div>
-							</div>
+						<div className="flex w-full max-w-[180px] items-center gap-3">
 							<p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
-								{user.percentage}%
+								Tổng tiền: {formatPrice(user.totalAmount)}
 							</p>
 						</div>
 					</div>
