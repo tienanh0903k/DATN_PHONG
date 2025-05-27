@@ -19,8 +19,7 @@ const HistoryHeader = ({ products, searchValue }: Props) => {
 	const [numberItemShow, setNumberItemShow] = useState(3);
 
 	const filteredProducts = products?.filter(
-		(product) =>
-			searchValue?.length >= 3 && product?.productName?.toLowerCase().includes(searchValue?.toLowerCase()),
+		(product) => searchValue?.length >= 3 && product?.productName.toLowerCase().includes(searchValue.toLowerCase()),
 	);
 
 	const handleShowMore = () => {
@@ -41,22 +40,22 @@ const HistoryHeader = ({ products, searchValue }: Props) => {
 		<>
 			<div className="fixed top-[var(--height-header)] left-0 bottom-0 right-0 bg-black/53 z-[1] animate-fadeIn" />
 
-			<div className="absolute top-[calc(100%-1px)] left-0 list-none bg-white rounded-b-[3px] border-t border-[#e1e1e1] shadow-[0_6px_12px_0_rgba(0,0,0,0.28)] w-full z-[999] animate-fadeIn">
+			<div className="absolute min-h-[300px] top-[calc(100%-1px)] left-0 list-none bg-white rounded-b-[3px] border-t border-[#e1e1e1] shadow-[0_6px_12px_0_rgba(0,0,0,0.28)] w-full z-[999] animate-fadeIn">
 				<div>
 					{filteredProducts.slice(0, numberItemShow).map((item, index: number) => (
 						<Link
 							href={`/productdetail/${item.productId}`}
 							key={index}
-							className="text-[#27272a] text-[14px] leading-[150%] h-9 font-medium flex items-center px-4 hover:bg-[#27272a]/12"
+							className="text-[#27272a] text-[14px] leading-[150%] h-fit font-medium py-2 flex items-center px-4 hover:bg-[#27272a]/12"
 						>
 							<Image
 								src={item.img}
 								alt={item.productName}
-								width={35}
-								height={35}
-								className="w-[35px] h-[35px]"
+								width={60}
+								height={60}
+								className="w-[60px] h-[60px]"
 							/>
-							<div className="text-[#242424] text-[13px] leading-5 font-medium ml-2">
+							<div className="text-[#242424] text-[15px] leading-5 font-medium ml-2">
 								{item.productName}
 							</div>
 						</Link>

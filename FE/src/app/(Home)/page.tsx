@@ -6,7 +6,7 @@ import SwiperComponents from '@/components/app/Home/swiper';
 import Trending from '@/components/app/Home/trending';
 import ProductServices from '@/services/products/productServices';
 import { URL_SERVICE } from '@/constant/constant';
-
+import { Pagination } from 'antd';
 const Products = dynamic(() => import('@/components/app/Home/Products'), {
 	ssr: true,
 });
@@ -32,6 +32,9 @@ export default function Home() {
 			<Trending />
 			<div className="flex gap-6">
 				<Products products={products} />
+			</div>
+			<div className="mt-4">
+				<Pagination align="center" defaultCurrent={1} total={products.length} />
 			</div>
 		</div>
 	);

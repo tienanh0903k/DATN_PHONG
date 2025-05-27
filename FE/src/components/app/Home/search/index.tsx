@@ -19,6 +19,7 @@ export default function SearchComponent() {
 		if (q !== null) {
 			try {
 				const response: any = await productServices.searchProduct(q);
+				console.log(response);
 				setProducts(response.data);
 			} catch (error) {
 				console.log(error);
@@ -76,7 +77,7 @@ export default function SearchComponent() {
 
 			<div className="flex gap-6 px-4">
 				{sortedProducts && sortedProducts.length > 0 ? (
-					<Products products={sortedProducts} itemsPerRow={5} />
+					<Products products={sortedProducts} itemsPerRow={5.2} />
 				) : (
 					<div className="text-center py-8">
 						<p className="text-[16px] text-gray-500">Không tìm thấy sản phẩm phù hợp</p>

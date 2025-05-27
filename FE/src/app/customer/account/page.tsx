@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 'use client';
-import { Breadcrumb, Spin } from 'antd';
+import { Breadcrumb, Spin, message } from 'antd';
 import Link from 'next/link';
 import { HomeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm, Controller } from 'react-hook-form';
@@ -36,6 +36,7 @@ type FormValues = {
 const Account = () => {
 	const user = useSelector((state: RootState) => state.auth.userInfo);
 	const dispatch = useDispatch();
+	const [messageApi, messageContextHolder] = message.useMessage();
 	const { register, handleSubmit, control } = useForm<FormValues>({
 		defaultValues: {
 			avatar: user?.avatar || '',
@@ -88,7 +89,13 @@ const Account = () => {
 				const imageUrl = await uploadImage(img);
 				imgUrl = imageUrl;
 			}
-			const birthday = formatDate(data.birthday || user.birthday);
+			let birthday = '';
+
+			if (data.birthday !== user.birthday) {
+				birthday = formatDate(data.birthday);
+			} else {
+				birthday = user.birthday;
+			}
 
 			const formatData = {
 				customerId: user.customerId,
@@ -99,9 +106,11 @@ const Account = () => {
 			console.log(formatData);
 			const response: any = await customerServices.changeInfo(formatData);
 			console.log(response);
+			messageApi.success('Cập nhật thông tin thành công');
 			dispatch(setUserInfo(response));
 		} catch (error) {
 			console.error('Error updating info:', error);
+			messageApi.error('Cập nhật thông tin thất bại');
 		} finally {
 			setLoading(false);
 		}
@@ -112,6 +121,7 @@ const Account = () => {
 	};
 	return (
 		<Spin spinning={loading} tip="Đang cập nhật...">
+			{messageContextHolder}
 			<div className="">
 				{/* Breadcrumb */}
 				<div className="py-4">

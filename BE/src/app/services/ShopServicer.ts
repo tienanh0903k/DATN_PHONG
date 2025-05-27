@@ -253,7 +253,6 @@ const ShopServicer = {
     }
   },
   getAverageRating: async (shopId: number) => {
-    console.log(shopId);
     try {
       const ratings = await Prismaclient.rating.findMany({
         where: {
@@ -283,12 +282,20 @@ const ShopServicer = {
       );
       const averageRating = totalRating / ratings.length;
 
+      console.log(
+        "Calculated average rating:",
+        averageRating,
+        "from",
+        ratings.length,
+        "ratings"
+      );
+
       return {
         averageRating: Number(averageRating.toFixed(1)),
         totalRatings: ratings.length,
       };
     } catch (err) {
-      console.log(err);
+      console.log("Error calculating average rating:", err);
       return {
         averageRating: 0,
         totalRatings: 0,

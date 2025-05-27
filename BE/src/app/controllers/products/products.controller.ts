@@ -101,14 +101,20 @@ const updateProduct = async (req: Request, res: Response) => {
 };
 const searchProduct = async (req: Request, res: Response) => {
   const { search } = req.body;
-  console.log("search", search);
 
   try {
     const response = await ProductService.searchProduct(search);
-    res.status(200).json({
-      message: "Search product successfully",
-      data: response,
-    });
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "No product found",
+        data: [],
+      });
+    } else {
+      res.status(200).json({
+        message: "Search product successfully",
+        data: response,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: "Search product failed",

@@ -162,7 +162,7 @@ const HeaderCpn = ({}: Props) => {
 			key: '1',
 			label: (
 				<div className="pr-8 py-[5px] leading-[150%] font-[400]">
-					<Link className="text-[#27272a]" href="/customer/account">
+					<Link className="text-[--primary-color]" href="/customer/account">
 						Thông tin tài khoản
 					</Link>
 				</div>
@@ -172,7 +172,7 @@ const HeaderCpn = ({}: Props) => {
 			key: '2',
 			label: (
 				<div className="pr-8 py-[5px] leading-[150%] font-[400] ">
-					<Link className="text-[#27272a]" href="/customer/order">
+					<Link className="text-[--primary-color]" href="/customer/order">
 						Đơn hàng của tôi
 					</Link>
 				</div>

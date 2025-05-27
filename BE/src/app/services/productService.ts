@@ -184,11 +184,21 @@ const ProductService = {
     }
   },
   searchProduct: async (search: string) => {
+    console.log(search);
     try {
       const product = await Prismaclient.products.findMany({
         where: {
           productName: {
-            contains: search.toLowerCase(),
+            contains: search,
+          },
+        },
+        include: {
+          Categories: true,
+          Shop: true,
+          ProductVariant: {
+            include: {
+              VariantValue: true,
+            },
           },
         },
       });

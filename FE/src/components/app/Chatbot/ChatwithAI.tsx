@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect } from 'react';
@@ -6,6 +7,8 @@ import { IoMdSend } from 'react-icons/io';
 import { FaRegFaceSmile } from 'react-icons/fa6';
 import AiServices from '@/services/AiServices/AiServices';
 import { URL_SERVICE } from '@/constant/constant';
+import ReactMarkdown from 'react-markdown';
+
 interface Message {
 	id: number;
 	text: string;
@@ -39,12 +42,22 @@ const ChatwithAI = ({ handleClose }: Props) => {
 	}, [messages]);
 
 	const formatMessage = (text: string) => {
-		return text.split('\n').map((line, index) => (
-			<span key={index}>
-				{line}
-				{index < text.split('\n').length - 1 && <br />}
-			</span>
-		));
+		return (
+			<ReactMarkdown
+				components={{
+					a: ({ node, ...props }) => (
+						<a
+							{...props}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-blue-500 underline hover:text-blue-700"
+						/>
+					),
+				}}
+			>
+				{text}
+			</ReactMarkdown>
+		);
 	};
 
 	const handleSendMessage = async () => {
