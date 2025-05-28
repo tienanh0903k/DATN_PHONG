@@ -24,6 +24,9 @@ class AdminServices extends ServicesBase {
 	getRecentOrders() {
 		return this.service.get('/get-recent-orders');
 	}
+	getAllUser() {
+		return this.service.get('/get-all-user');
+	}
 }
 
 export default AdminServices;

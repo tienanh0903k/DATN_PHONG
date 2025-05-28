@@ -60,7 +60,7 @@ export default function DetailProduct() {
 	const fetchDataProduct = async () => {
 		try {
 			const response: any = await productServices.getProductById(productId);
-			console.log(response.data);
+
 			fetchDataProductRelated(response.data.categoryId);
 			setData(response.data);
 		} catch (error) {
@@ -70,7 +70,7 @@ export default function DetailProduct() {
 	const fetchDataProductRelated = async (categoryId: number) => {
 		try {
 			const response: any = await productServices.getProductByCategoryID(categoryId);
-			console.log(response.data);
+
 			setDataRelated(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
@@ -170,7 +170,7 @@ export default function DetailProduct() {
 		};
 		try {
 			const response = await cartServices.addToCart(formatdata);
-			console.log(response);
+			messageApi.success('thêm vào giỏ hàng thành công');
 			dispatch(updateCart(response));
 		} catch (err) {
 			console.log(err);
@@ -252,7 +252,7 @@ export default function DetailProduct() {
 												{ratingAverage}
 											</div>
 											<div className="flex items-center">
-												<Rate allowHalf disabled defaultValue={ratingAverage} />
+												<Rate allowHalf disabled value={ratingAverage} />
 											</div>
 											<p className="ml-2 text-[#787878] text-[14px] leading-6">
 												({dataRating.length})
@@ -397,12 +397,13 @@ export default function DetailProduct() {
 					<div id="product-comparison-widget-id"></div>
 					<div className="">
 						<div className="flex flex-col bg-white rounded-[8px] gap-1 w-full h-[500px] p-8">
+							<h1 className="text-2xl mb-4 font-[700]">Mô tả sản phẩm</h1>
 							<div dangerouslySetInnerHTML={{ __html: data.productDes }} />
 						</div>
 						<div className="products-more mt-4">
 							<div className="flex flex-col bg-white rounded-lg min-h-[300px] p-4 gap-4">
 								<div className="flex flex-col gap-4">
-									<h2 className="text-base font-semibold leading-[150%] text-[#27272a]">
+									<h2 className="text-2xl mb-4 font-semibold leading-[150%] text-[#27272a]">
 										Đánh giá sản phẩm
 									</h2>
 									<div className="flex gap-4">
@@ -502,7 +503,7 @@ export default function DetailProduct() {
 				</div>
 			</div>
 			<div className="w-full h-fit bg-[#fff] mt-5 p-6">
-				<h2 className="text-2xl font-semibold leading-[150%] text-[#27272a]">Sản phẩm liên quan</h2>
+				<h2 className="text-2xl mb-4 font-semibold leading-[150%] text-[#27272a]">Sản phẩm liên quan</h2>
 				<Products products={dataRelated} />
 			</div>
 		</div>

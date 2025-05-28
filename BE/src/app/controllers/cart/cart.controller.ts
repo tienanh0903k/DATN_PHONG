@@ -21,6 +21,7 @@ const addToCart = async (req: Request, res: Response) => {
 };
 const deleteCart = async (req: Request, res: Response) => {
   const cartId = req.params.cartId;
+  console.log(cartId);
   try {
     await CartService.deleteCart(Number(cartId));
     res.status(200).json({ message: "Cart deleted successfully" });

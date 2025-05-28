@@ -5,7 +5,6 @@ import {
 	DashboardOutlined,
 	ShoppingOutlined,
 	FileTextOutlined,
-	TruckOutlined,
 	TagsOutlined,
 	DollarOutlined,
 	BarChartOutlined,
@@ -14,6 +13,7 @@ import {
 	SettingOutlined,
 	LogoutOutlined,
 } from '@ant-design/icons';
+import { FaUsersCog } from 'react-icons/fa';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
 import { logout } from '@/reducers/slice/authSlice';
@@ -89,16 +89,16 @@ const SidebarAdmin = () => {
 		},
 		{
 			key: 'shipping',
-			icon: <TruckOutlined />,
-			label: 'Quản lý Vận chuyển',
+			icon: <FaUsersCog />,
+			label: 'Quản lý tài khoản',
 			children: [
 				{
 					key: 'shipping-methods',
-					label: <Link href="/admin/shipping">Phương thức vận chuyển</Link>,
+					label: <Link href="/admin/list-user">Danh sách tài khoản</Link>,
 				},
 				{
 					key: 'shipping-rates',
-					label: <Link href="/admin/shipping-rates">Phí vận chuyển</Link>,
+					label: <Link href="/admin/list-user-black">Danh sách đen</Link>,
 				},
 			],
 		},

@@ -1,8 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState } from 'react';
-import { Checkbox, CheckboxProps } from 'antd';
+import { Checkbox, CheckboxProps, Popconfirm, message } from 'antd';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { formatPrice } from '@/utils/formatprice';
+import { deleteCart } from '@/reducers/slice/cartSlice';
+import { useDispatch } from 'react-redux';
+import CartServices from '@/services/CartServices/CartServices';
+import { URL_SERVICE } from '@/constant/constant';
 
 type Props = {
 	id: number;
@@ -11,6 +15,7 @@ type Props = {
 	quantities: number;
 	price: number;
 	variantValue: string;
+	cartId: number;
 	isSelected: boolean;
 	onSelect?: (item: {
 		id: number;
@@ -20,14 +25,19 @@ type Props = {
 		img: string;
 		variantValue: string;
 		totalPrice: number;
+		cartId: number;
 		isSelected: boolean;
 	}) => void;
 };
 
-const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: Props) => {
+const CartItem = ({ id, img, name, quantities, price, variantValue, cartId, onSelect }: Props) => {
 	const [quantity, setQuantity] = useState<number>(quantities);
 	const [totalPrice, setTotalPrice] = useState<number>(price * quantities);
 	const [isSelected, setIsSelected] = useState<boolean>(false);
+
+	const cartService = new CartServices(URL_SERVICE, () => {});
+	const [messageApi, ContextHolder] = message.useMessage();
+	const dispath = useDispatch();
 
 	const onChange: CheckboxProps['onChange'] = (e) => {
 		setIsSelected(e.target.checked);
@@ -38,6 +48,7 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 				quantity,
 				price,
 				img,
+				cartId,
 				variantValue,
 				totalPrice: price * quantities,
 				isSelected: e.target.checked,
@@ -45,8 +56,16 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 		}
 	};
 
-	const handleDelete = () => {
-		console.log('Delete selected items');
+	const handleDelete = async (id: number) => {
+		try {
+			await cartService.deleteCart(id);
+			messageApi.success('xóa thành công');
+		} catch (err) {
+			console.log(err);
+			messageApi.error('xóa không thành công');
+		} finally {
+			dispath(deleteCart(id));
+		}
 	};
 
 	const handlePrev = () => {
@@ -62,6 +81,7 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 					quantity: newQuantity,
 					price,
 					img,
+					cartId,
 					variantValue,
 					totalPrice: newTotalPrice,
 					isSelected,
@@ -82,6 +102,7 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 				quantity: newQuantity,
 				price,
 				img,
+				cartId,
 				variantValue,
 				totalPrice: newTotalPrice,
 				isSelected,
@@ -91,11 +112,12 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 
 	return (
 		<div className="bg-white grid items-center py-2 px-4 text-[#242424] gap-x-6 grid-cols-[auto_180px_120px_120px_20px] mb-2">
+			{ContextHolder}
 			<div className="flex items-center gap-x-2">
 				<Checkbox onChange={onChange}></Checkbox>
 				<div className="flex items-center gap-x-2 cursor-pointer">
-					<div className="cart-item__image w-[80px] h-[80px]">
-						<img src={img} alt="" className="w-full h-full object-cover" />
+					<div className=" w-[80px] h-[80px]">
+						<img src={img} alt="" className="w-full h-full object-contain" />
 					</div>
 					<div className="cart-item__details ">
 						<h3 className="text-[14px] leading-[150%] text-[#27272a] line-clamp-2 hover:text-[#0b74e5]">
@@ -139,9 +161,16 @@ const CartItem = ({ id, img, name, quantities, price, variantValue, onSelect }: 
 			<div className="cart-item__total-price">
 				<span className="cart-item__total-price-value">{formatPrice(totalPrice)}</span>
 			</div>
-			<button className="cursor-pointer" onClick={handleDelete}>
-				<FaRegTrashCan />
-			</button>
+			<Popconfirm
+				title="Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?"
+				onConfirm={() => handleDelete(cartId)}
+				okText="Xóa"
+				cancelText="Hủy"
+			>
+				<button className="cursor-pointer">
+					<FaRegTrashCan />
+				</button>
+			</Popconfirm>
 		</div>
 	);
 };

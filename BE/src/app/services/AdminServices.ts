@@ -139,6 +139,27 @@ const AdminServices = {
       throw error;
     }
   },
+  getAllUser: async () => {
+    try {
+      const res = await Prismaclient.customer.findMany({
+        where: {
+          Account: {
+            accountTypeId: 3,
+          },
+        },
+        include: {
+          Account: {
+            include: {
+              AccountType: true,
+            },
+          },
+        },
+      });
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 export default AdminServices;

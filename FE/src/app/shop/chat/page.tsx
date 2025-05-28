@@ -223,7 +223,7 @@ export default function ChatPage() {
 				{/* Message Input */}
 				<form onSubmit={handleSubmit(onSubmit)} className="p-4 border-t bg-white flex items-center gap-2">
 					<Input placeholder="Type a message" {...register('message')} className="flex-1" />
-					<Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">
+					<Button type="submit" className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white">
 						<FiSend className="w-5 h-5" />
 					</Button>
 				</form>

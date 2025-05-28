@@ -16,6 +16,7 @@ type CartItemType = {
 	quantity: number;
 	price: number;
 	img: string;
+	cartId: number;
 	variantValue: string;
 	totalPrice: number;
 	isSelected: boolean;
@@ -25,6 +26,8 @@ const CartList = () => {
 	const dispatch = useDispatch();
 	const [selectedItems, setSelectedItems] = useState<CartItemType[]>([]);
 	const cart = useSelector((state: RootState) => state.cart.cart);
+	console.log(cart);
+
 	const isAllSelected = cart.length > 0 && selectedItems.length === cart.length;
 	const router = useRouter();
 
@@ -35,6 +38,7 @@ const CartList = () => {
 				name: item.productName,
 				quantity: item.quantity,
 				price: item.price,
+				cartId: item.cartId,
 				img: item.image,
 				variantValue: item.typeValue,
 				totalPrice: item.quantity * item.price,
@@ -94,7 +98,8 @@ const CartList = () => {
 							<CartItem
 								key={index}
 								id={item.id}
-								img={item.image}
+								cartId={item.cartId}
+								img={item.ProductVariant.img}
 								name={item.productName}
 								quantities={item.quantity}
 								price={item.ProductVariant.price}

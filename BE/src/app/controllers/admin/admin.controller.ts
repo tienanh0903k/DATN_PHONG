@@ -45,10 +45,16 @@ const getRecentOrders = async (req: Request, res: Response) => {
     res.status(500).json({ error: "error get recent orders" });
   }
 };
+
+const getAllUser = async (req: Request, res: Response) => {
+  const response = await AdminServices.getAllUser();
+  res.status(200).json(response);
+};
 export {
   getTotalCustomer,
   getTotalProduct,
   getTotalOrder,
   getTopCustomers,
   getRecentOrders,
+  getAllUser,
 };
