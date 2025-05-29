@@ -88,6 +88,7 @@ const Account = () => {
 			if (img) {
 				const imageUrl = await uploadImage(img);
 				imgUrl = imageUrl;
+				console.log(imgUrl);
 			}
 			let birthday = '';
 
@@ -103,7 +104,7 @@ const Account = () => {
 				avatar: imgUrl,
 				birthday: birthday,
 			};
-			console.log(formatData);
+
 			const response: any = await customerServices.changeInfo(formatData);
 			console.log(response);
 			messageApi.success('Cập nhật thông tin thành công');

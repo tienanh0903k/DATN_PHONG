@@ -55,13 +55,15 @@ const updateAddressController = async (req: Request, res: Response) => {
 };
 const getBillByCustomerIdController = async (req: Request, res: Response) => {
   const { customerId } = req.params;
+  console.log(customerId);
   try {
     const response = await customerServices.getBillByCustomerId(
       parseInt(customerId)
     );
+    console.log(response);
     res.status(200).json(response);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    console.log(error);
   }
 };
 

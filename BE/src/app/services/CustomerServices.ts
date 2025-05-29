@@ -67,9 +67,6 @@ const customerServices = {
       ...item,
       statusbill: item.StatusBill.statusName,
       ...item.BillDetail,
-      shopName: item.BillDetail[index].ProductVariant.Products.Shop.shopName,
-      shopId: item.BillDetail[index].ProductVariant.Products.Shop.shopId,
-      productId: item.BillDetail[index].ProductVariant.Products.productId,
     }));
     return billWithStatus;
   },

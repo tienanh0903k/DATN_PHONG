@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
 			'tiki.vn',
 			'www.youtube.com',
 			'firebasestorage.googleapis.com',
+			'sgvkftuhdvhqhkxjxbon.supabase.co',
 			'jpesrdrgrcqjeqavqxrj.supabase.co',
 			'frontend.tikicdn.com',
 			'salt.tikicdn.com',

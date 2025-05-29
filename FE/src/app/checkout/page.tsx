@@ -30,7 +30,9 @@ const CheckOut = () => {
 				type: 'warning',
 				content: 'Vui lòng cập nhật địa chỉ giao hàng trước khi đặt hàng.',
 			});
+			return;
 		}
+
 		const data = {
 			customerId: user?.customerId,
 			numberPhone: user?.numberPhone,

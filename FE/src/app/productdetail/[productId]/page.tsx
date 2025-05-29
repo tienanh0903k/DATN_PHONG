@@ -16,7 +16,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ModalAddress from '@/components/LayoutComponents/Header/modalAddress';
 import { useRouter } from 'next/navigation';
-import { updateCart } from '@/reducers/slice/cartSlice';
+import { addtoCart } from '@/reducers/slice/cartSlice';
 import Link from 'next/link';
 import { SelectedItems } from '@/reducers/slice/checkout';
 import RatingForm from '@/components/app/rating/ratingform';
@@ -169,9 +169,10 @@ export default function DetailProduct() {
 			quantity: quantity,
 		};
 		try {
-			const response = await cartServices.addToCart(formatdata);
+			await cartServices.addToCart(formatdata);
 			messageApi.success('thêm vào giỏ hàng thành công');
-			dispatch(updateCart(response));
+			const cartData = await cartServices.getCartByCustomerId(user.customerId);
+			dispatch(addtoCart(cartData));
 		} catch (err) {
 			console.log(err);
 		}

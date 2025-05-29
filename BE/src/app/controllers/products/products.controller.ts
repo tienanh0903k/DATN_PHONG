@@ -30,6 +30,20 @@ const getAllProducts = async (req: Request, res: Response) => {
     });
   }
 };
+const getAllProductsAdmin = async (req: Request, res: Response) => {
+  try {
+    const response = await ProductService.getAllProductsAdmin();
+    res.status(200).json({
+      message: "Get all products successfully",
+      data: response,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Get all products failed",
+      error: error,
+    });
+  }
+};
 const getProductByID = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -145,6 +159,7 @@ const updateStatusProduct = async (req: Request, res: Response) => {
 export {
   createProduct,
   getAllProducts,
+  getAllProductsAdmin,
   getProductByID,
   getProductByShopId,
   getProductByCateoryID,

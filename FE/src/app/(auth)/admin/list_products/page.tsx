@@ -16,7 +16,7 @@ const ListProducts = () => {
 
 	const productServices = new ProductServices(URL_SERVICE, () => {});
 	const fetchProducts = async () => {
-		const response = await productServices.getAllProducts();
+		const response = await productServices.getAllProductsAdmin();
 
 		setProducts(response.data);
 	};
@@ -175,6 +175,7 @@ const ListProducts = () => {
 				columns={columns}
 				rowKey="productId"
 				dataSource={filteredProducts}
+				pagination={{ pageSize: 7 }}
 				expandable={{
 					expandedRowRender: (record) => (
 						<div className="p-4">

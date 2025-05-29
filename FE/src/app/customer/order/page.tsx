@@ -19,9 +19,13 @@ export default function OrderHistory() {
 	const customer = useSelector((state: RootState) => state.auth.userInfo);
 	const [bill, setBill] = useState([]);
 	const getBillByCustomerId = async () => {
-		const response: any = await customerServices.getBillByCustomerId(customer.customerId);
-		console.log(response);
-		setBill(response);
+		try {
+			const response: any = await customerServices.getBillByCustomerId(customer.customerId);
+			console.log(response);
+			setBill(response);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	useEffect(() => {
 		getBillByCustomerId();

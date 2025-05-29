@@ -28,6 +28,7 @@ import {
 import {
   createProduct,
   getAllProducts,
+  getAllProductsAdmin,
   getProductByID,
   getProductByShopId,
   getProductByCateoryID,
@@ -119,6 +120,8 @@ serviceRouter.get("/unused-categories", unusedCategories);
 //products
 serviceRouter.post("/create-product", createProduct);
 serviceRouter.get("/get-all-products", getAllProducts);
+serviceRouter.get("/get-all-products-admin", getAllProductsAdmin);
+
 serviceRouter.get("/get-product-by-id/:id", getProductByID);
 serviceRouter.get("/get-product-by-category-id/:id", getProductByCateoryID);
 serviceRouter.get("/get-product-by-shop-id/:id", getProductByShopId);

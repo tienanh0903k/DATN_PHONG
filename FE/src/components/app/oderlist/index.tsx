@@ -22,12 +22,14 @@ const OderList = ({ orderList }: any) => {
 					<div className="flex justify-between items-center border-b pb-3 mb-3">
 						<div className="flex items-center gap-3">
 							<Store className="h-5 w-5 text-gray-600" />
-							<span className="font-medium">{order.shopName}</span>
+							<span className="font-medium">
+								{order.BillDetail[0].ProductVariant.Products.Shop.shopName}
+							</span>
 							<button className="flex items-center gap-1 text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded hover:bg-orange-200">
 								<MessageSquare className="h-3 w-3" /> Chat
 							</button>
 							<button
-								onClick={() => viewShop(order.shopId)}
+								onClick={() => viewShop(order.BillDetail[0].ProductVariant.Products.Shop.shopId)}
 								className="flex items-center gap-1 text-xs cursor-pointer border border-gray-300 px-2 py-1 rounded hover:bg-gray-100"
 							>
 								<Store className="h-3 w-3" /> View Shop
@@ -71,12 +73,15 @@ const OderList = ({ orderList }: any) => {
 					{/* Order Footer */}
 					<div className="flex justify-end items-center gap-4 border-t pt-3 mt-3">
 						<div className="flex gap-2">
-							<button className="bg-orange-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-orange-600 text-sm font-medium">
+							<button
+								onClick={() => handleProduct(order.BillDetail[0].ProductVariant.Products.productId)}
+								className="bg-orange-500 cursor-pointer text-white px-4 py-2 rounded hover:bg-orange-600 text-sm font-medium"
+							>
 								Mua lại
 							</button>
 
 							<button
-								onClick={() => handleProduct(order.productId)}
+								onClick={() => handleProduct(order.BillDetail[0].ProductVariant.Products.productId)}
 								className="border border-gray-300 px-4 cursor-pointer py-2 rounded hover:bg-gray-100 text-sm"
 							>
 								Đánh giá

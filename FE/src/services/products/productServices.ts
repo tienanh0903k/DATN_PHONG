@@ -12,6 +12,9 @@ class ProductServices extends ServicesBase {
 	getAllProducts() {
 		return this.service.get('/get-all-products');
 	}
+	getAllProductsAdmin() {
+		return this.service.get('/get-all-products-admin');
+	}
 	getProductById(productId: any) {
 		return this.service.get(`/get-product-by-id/${productId}`);
 	}

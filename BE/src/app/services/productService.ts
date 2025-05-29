@@ -70,6 +70,32 @@ const ProductService = {
       throw new Error("Failed to fetch products");
     }
   },
+  getAllProductsAdmin: async () => {
+    try {
+      const products = await Prismaclient.products.findMany({
+        include: {
+          Categories: true,
+          Shop: true,
+          ProductVariant: {
+            include: {
+              VariantValue: true,
+            },
+          },
+        },
+      });
+      const productData = products.map((product) => ({
+        ...product,
+        categoryName: product.Categories.categoryName,
+        shopName: product.Shop.shopName,
+        shopEmail: product.Shop.emailShop,
+        imgShop: product.Shop.shopAvatar,
+      }));
+      return productData;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw new Error("Failed to fetch products");
+    }
+  },
   getProductById: async (productId: number) => {
     try {
       const product = await Prismaclient.products.findUnique({
