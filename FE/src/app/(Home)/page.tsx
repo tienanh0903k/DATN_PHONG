@@ -13,11 +13,12 @@ const Products = dynamic(() => import('@/components/app/Home/Products'), {
 
 export default function Home() {
 	const [products, setProducts] = useState([]);
+	const [currentPage, setCurrentPage] = useState(1);
+	const pageSize = 10;
 	const productService = new ProductServices(URL_SERVICE, () => {});
 	const fetchDataProduct = async () => {
 		try {
 			const response = await productService.getAllProducts();
-
 			setProducts(response.data);
 		} catch (error) {
 			console.error('Error fetching products:', error);
@@ -26,15 +27,30 @@ export default function Home() {
 	useEffect(() => {
 		fetchDataProduct();
 	}, []);
+
+	const startIndex = (currentPage - 1) * pageSize;
+	const endIndex = startIndex + pageSize;
+	const currentProducts = products.slice(startIndex, endIndex);
+
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
+	};
+
 	return (
 		<div className="">
 			<SwiperComponents />
 			<Trending />
-			<div className="flex gap-6">
-				<Products products={products} />
+			<div className="flex gap-6 h-[760px]">
+				<Products products={currentProducts} />
 			</div>
 			<div className="mt-4">
-				<Pagination align="center" defaultCurrent={1} total={products.length} />
+				<Pagination
+					align="center"
+					current={currentPage}
+					pageSize={pageSize}
+					total={products.length}
+					onChange={handlePageChange}
+				/>
 			</div>
 		</div>
 	);

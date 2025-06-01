@@ -17,5 +17,8 @@ class PaymentServices extends ServicesBase {
 	createOrderPaylate(data: any) {
 		return this.service.post('/create-order-paylate', data);
 	}
+	handlePaymentFailure(billId: number) {
+		return this.service.put('/handle-payment-failure', { billId });
+	}
 }
 export default PaymentServices;

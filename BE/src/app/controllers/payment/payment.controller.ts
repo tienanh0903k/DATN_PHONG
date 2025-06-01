@@ -43,4 +43,19 @@ const createOrderPaylate = async (req: Request, res: Response) => {
     res.status(500).json({ message: (error as Error).message });
   }
 };
-export { getProduct, createOrder, updateBill, createOrderPaylate };
+const handlePaymentFailure = async (req: Request, res: Response) => {
+  const { billId } = req.body;
+  try {
+    await PayMentServices.handlePaymentFailure(Number(billId));
+    res.status(200).json({ message: "Thanh toán thất bại" });
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+};
+export {
+  getProduct,
+  createOrder,
+  updateBill,
+  createOrderPaylate,
+  handlePaymentFailure,
+};

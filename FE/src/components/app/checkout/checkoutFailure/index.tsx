@@ -1,20 +1,31 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { XCircle } from 'lucide-react';
 import Link from 'next/link';
+import PaymentServices from '@/services/payment/paymentServices';
+import { URL_SERVICE } from '@/constant/constant';
 
 export default function CheckoutFailure() {
 	const searchParams = useSearchParams();
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
+	const billId = searchParams.get('billId');
+
+	const updateBill = async () => {
+		try {
+			const response = await paymentServices.handlePaymentFailure(Number(billId));
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useEffect(() => {
-		const message = searchParams.get('message');
-		if (message) {
-			setErrorMessage(message);
-		}
-	}, [searchParams]);
+		updateBill();
+	}, []);
 
 	return (
 		<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -27,7 +38,6 @@ export default function CheckoutFailure() {
 					<p className="mt-2 text-sm text-gray-600">
 						Rất tiếc, quá trình thanh toán của bạn đã không thành công.
 					</p>
-					{errorMessage && <p className="mt-2 text-sm text-red-600">Lý do: {errorMessage}</p>}
 				</div>
 				<div className="mt-8 space-y-4">
 					<Link

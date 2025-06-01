@@ -42,7 +42,7 @@ const Products = ({ products, itemsPerRow = 5.2 }: ProductsProps) => {
 				<Link
 					key={index}
 					href={`/productdetail/${item.productId}`}
-					className="flex gap-2"
+					className="flex gap-2 h-[360px]"
 					style={{ width: itemWidth }}
 				>
 					<div className="cursor-pointer flex-wrap mr-[-16px] mt-6 border-[1px] overflow-hidden border-solid border-[#ebebf0] bg-white rounded-[8px] w-full">
@@ -55,7 +55,7 @@ const Products = ({ products, itemsPerRow = 5.2 }: ProductsProps) => {
 						</div>
 						<div className="p-2">
 							<div className="h-[68px]">
-								<h3 className="text-[14px] font-[400] leading-[150%] overflow-hidden line-clamp-2 ">
+								<h3 className="text-[14px] font-[400] leading-[150%] h-[42px] overflow-hidden line-clamp-2 ">
 									{item.productName}
 								</h3>
 								<ConfigProvider

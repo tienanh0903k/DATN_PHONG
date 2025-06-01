@@ -207,7 +207,7 @@ export default function DetailProduct() {
 						<div className="flex flex-col bg-white rounded-lg py-4 gap-4 sticky top-3 max-h-[480px] w-[400px]">
 							<div className="flex flex-col gap-[6px]">
 								<div className="flex flex-col gap-1">
-									<div className="flex gap-2 items-center border-b border-[#ebebf0] pb-2">
+									<div className="flex gap-2 items-center border-b border-[#ebebf0] pb-2 mx-auto ">
 										<div className="w-[368px]">
 											<img
 												src={data.img}
@@ -218,7 +218,7 @@ export default function DetailProduct() {
 											/>
 										</div>
 									</div>
-									<div className="flex gap-2 items-center mt-2">
+									<div className="flex gap-2 items-center mt-2 mx-5">
 										{data.productVariant?.map((item: any, index: number) => (
 											<div
 												key={index}
@@ -248,9 +248,9 @@ export default function DetailProduct() {
 								</h1>
 								<div className="flex">
 									<div className="flex items-center justify-between">
-										<div className="flex">
+										<div className="flex items-center">
 											<div className="mr-1 text-[14px] leading-[150%] font-medium">
-												{ratingAverage}
+												{ratingAverage ? ratingAverage : 0}
 											</div>
 											<div className="flex items-center">
 												<Rate allowHalf disabled value={ratingAverage} />

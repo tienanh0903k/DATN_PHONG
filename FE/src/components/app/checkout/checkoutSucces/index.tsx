@@ -14,7 +14,8 @@ export default function CheckoutSuccess() {
 
 	const updateBill = async () => {
 		try {
-			await paymentServices.updateBill(Number(billId), 2);
+			const response = await paymentServices.updateBill(Number(billId), 2);
+			console.log(response);
 		} catch (error) {
 			console.log(error);
 		}

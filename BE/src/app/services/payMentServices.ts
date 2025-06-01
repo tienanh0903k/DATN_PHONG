@@ -37,6 +37,18 @@ const PayMentServices = {
           },
         },
       });
+
+      for (const item of data.cartItems) {
+        await Prismaclient.productVariant.update({
+          where: { id: item.id },
+          data: {
+            quantity: {
+              decrement: item.quantity,
+            },
+          },
+        });
+      }
+
       return bill;
     } catch (error) {
       throw new Error("Failed to create order paylater");
@@ -51,6 +63,35 @@ const PayMentServices = {
       return bill;
     } catch (error) {
       throw new Error("Failed to update bill");
+    }
+  },
+
+  handlePaymentFailure: async (billId: number) => {
+    try {
+      const billDetails = await Prismaclient.billDetail.findMany({
+        where: { billId: billId },
+        include: {
+          ProductVariant: true,
+        },
+      });
+
+      for (const detail of billDetails) {
+        await Prismaclient.productVariant.update({
+          where: { id: detail.id },
+          data: {
+            quantity: {
+              increment: detail.quantity,
+            },
+          },
+        });
+      }
+
+      await Prismaclient.bill.update({
+        where: { billId: billId },
+        data: { statusId: 5 },
+      });
+    } catch (error) {
+      throw new Error("Failed to handle payment failure");
     }
   },
 };

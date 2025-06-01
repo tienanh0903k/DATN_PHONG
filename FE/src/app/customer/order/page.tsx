@@ -14,29 +14,41 @@ import CustomerServices from '@/services/CustomerServices/customerServices';
 import { URL_SERVICE } from '@/constant/constant';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+
+interface Bill {
+	billId: number;
+	statusId: number;
+	// Thêm các trường khác nếu cần
+}
+
 export default function OrderHistory() {
 	const customerServices = new CustomerServices(URL_SERVICE, () => {});
 	const customer = useSelector((state: RootState) => state.auth.userInfo);
-	const [bill, setBill] = useState([]);
+	const [bill, setBill] = useState<Bill[]>([]);
+	const [filteredBills, setFilteredBills] = useState<Bill[]>([]);
+
 	const getBillByCustomerId = async () => {
 		try {
 			const response: any = await customerServices.getBillByCustomerId(customer.customerId);
-			console.log(response);
 			setBill(response);
+			setFilteredBills(response);
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
 	useEffect(() => {
 		getBillByCustomerId();
 	}, []);
+
 	const [tabs, setTabs] = useState([
 		{ id: 0, title: 'Tất cả đơn', status: true },
-		{ id: 1, title: 'Chờ thanh toán', status: false },
-		{ id: 2, title: 'Đang xử lý', status: false },
+		{ id: 1, title: 'Chưa thanh toán', status: false },
+		{ id: 2, title: 'Đã thanh toán', status: false },
 		{ id: 3, title: 'Đang vận chuyển', status: false },
 		{ id: 4, title: 'Đã giao', status: false },
 		{ id: 5, title: 'Đã huỷ', status: false },
+		{ id: 6, title: 'Thanh toán sau ', status: false },
 	]);
 
 	const handleChangeTab = (id: number) => {
@@ -50,6 +62,17 @@ export default function OrderHistory() {
 			});
 			return [...prev];
 		});
+
+		const filtered = bill.reduce((acc: Bill[], curr: Bill) => {
+			if (id === 0) {
+				acc.push(curr);
+			} else if (curr.statusId === id) {
+				acc.push(curr);
+			}
+			return acc;
+		}, []);
+
+		setFilteredBills(filtered);
 	};
 
 	return (
@@ -108,9 +131,9 @@ export default function OrderHistory() {
 					Tìm đơn hàng
 				</div>
 			</div>
-			{bill.length > 0 ? (
+			{filteredBills.length > 0 ? (
 				<div className="w-full h-full overflow-y-auto">
-					<OderList orderList={bill} />
+					<OderList orderList={filteredBills} />
 				</div>
 			) : (
 				<div>

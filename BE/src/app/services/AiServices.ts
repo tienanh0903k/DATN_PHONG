@@ -11,21 +11,17 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const AiServices = {
   chat: async (message: string) => {
     try {
-      // Clean and normalize message
       const cleanMessage = message.trim().toLowerCase();
       const keywords = cleanMessage.split(/\s+/).filter((kw) => kw.length > 1);
 
-      // Limit number of keywords to prevent large queries
       const limitedKeywords = keywords.slice(0, 5);
 
-      // Check cache first
       const cacheKey = limitedKeywords.join("_");
       const cachedResult = searchCache.get(cacheKey);
       if (cachedResult && Date.now() - cachedResult.timestamp < CACHE_TTL) {
         return { reply: cachedResult.reply };
       }
 
-      // Search products with more fields
       const products = await prisma.products.findMany({
         where: {
           AND: [
@@ -37,7 +33,7 @@ const AiServices = {
                 ],
               })),
             },
-            { status: "active" }, // Only show active products
+            { status: "active" },
           ],
         },
         include: {
@@ -68,7 +64,6 @@ const AiServices = {
 
       const reply = await chain.invoke({ input });
 
-      // Cache the result
       searchCache.set(cacheKey, {
         reply,
         timestamp: Date.now(),

@@ -182,6 +182,7 @@ model Bill {
   numberPhone      String
   address          String
   statusId         Int
+  createAt         DateTime @default(now())
   BillDetail       BillDetail[]
   Customer         Customer @relation(fields: [customerId], references: [customerId])
   StatusBill       StatusBill @relation(fields: [statusId], references: [statusId])

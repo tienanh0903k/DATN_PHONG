@@ -97,6 +97,9 @@ const ShopServicer = {
           Customer: true,
           StatusBill: true,
         },
+        orderBy: {
+          createAt: "desc",
+        },
       });
       const bill = bills.map((bill) => {
         return {
@@ -238,6 +241,11 @@ const ShopServicer = {
           ProductVariant: {
             Products: {
               shopId: shopId,
+            },
+          },
+          Bill: {
+            statusId: {
+              not: 5,
             },
           },
         },

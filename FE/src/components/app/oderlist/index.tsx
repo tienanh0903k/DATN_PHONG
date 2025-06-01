@@ -79,13 +79,14 @@ const OderList = ({ orderList }: any) => {
 							>
 								Mua lại
 							</button>
-
-							<button
-								onClick={() => handleProduct(order.BillDetail[0].ProductVariant.Products.productId)}
-								className="border border-gray-300 px-4 cursor-pointer py-2 rounded hover:bg-gray-100 text-sm"
-							>
-								Đánh giá
-							</button>
+							{order.statusId !== 5 && (
+								<button
+									onClick={() => handleProduct(order.BillDetail[0].ProductVariant.Products.productId)}
+									className="border border-gray-300 px-4 cursor-pointer py-2 rounded hover:bg-gray-100 text-sm"
+								>
+									Đánh giá
+								</button>
+							)}
 						</div>
 					</div>
 				</div>

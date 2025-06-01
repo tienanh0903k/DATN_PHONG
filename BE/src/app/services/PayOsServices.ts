@@ -10,7 +10,6 @@ const payOS = new PayOS(PAYOS_CLIENT_ID, PAYOS_API_KEY, PAYOS_CHECKSUM_KEY);
 export const PayOsServices = {
   createOrder: async (data: any) => {
     try {
-      // 1. Tạo hóa đơn trong database
       const bill = await PrismaClient.bill.create({
         data: {
           customerId: data.customerId,
@@ -26,14 +25,27 @@ export const PayOsServices = {
           },
         },
       });
+      for (const item of data.cartItems) {
+        await PrismaClient.productVariant.update({
+          where: { id: item.id },
+          data: {
+            quantity: {
+              decrement: item.quantity,
+            },
+          },
+        });
+      }
 
       const paymentLinkResponse = await payOS.createPaymentLink({
         orderCode: bill.billId,
         amount: 5000,
+        // amount: data.cartItems.reduce(
+        //   (acc: number, item: any) => acc + item.totalPrice,
+        //   0
+        // ),
         description: `Thanh toán hóa đơn #${bill.billId}`,
         returnUrl: `http://localhost:3000/checkout/success?billId=${bill.billId}`,
-        cancelUrl:
-          "http://localhost:3000/checkout/failure?message=Thanh toán không thành công",
+        cancelUrl: `http://localhost:3000/checkout/failure?billId=${bill.billId}`,
         items: data.cartItems.map((item: any) => ({
           name: item.name || `Sản phẩm #${item.id}`,
           quantity: item.quantity,

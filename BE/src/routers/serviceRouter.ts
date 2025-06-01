@@ -60,6 +60,7 @@ import {
   createOrder,
   updateBill,
   createOrderPaylate,
+  handlePaymentFailure,
 } from "../app/controllers/payment/payment.controller";
 
 import {
@@ -157,6 +158,7 @@ serviceRouter.get("/get-product/:id", getProduct);
 serviceRouter.post("/create-order", createOrder);
 serviceRouter.post("/create-order-paylate", createOrderPaylate);
 serviceRouter.put("/update-bill", updateBill);
+serviceRouter.put("/handle-payment-failure", handlePaymentFailure);
 
 //search
 serviceRouter.post("/search-product", searchProduct);
