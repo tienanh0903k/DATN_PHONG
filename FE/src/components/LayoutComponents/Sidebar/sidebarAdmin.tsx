@@ -71,7 +71,7 @@ const SidebarAdmin = () => {
 			children: [
 				{
 					key: 'order-list',
-					label: <Link href="/admin/orders">Tất cả đơn hàng</Link>,
+					label: <Link href="/admin/bills/all-bills">Tất cả đơn hàng</Link>,
 				},
 				{
 					key: 'order-pending',

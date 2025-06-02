@@ -85,6 +85,8 @@ import {
   getTopCustomers,
   getRecentOrders,
   getAllUser,
+  getAllBill,
+  updateBillStatus,
 } from "../app/controllers/admin/admin.controller";
 serviceRouter.put("/change-infor/:customerId", updateCustomerController);
 serviceRouter.put(
@@ -196,5 +198,6 @@ serviceRouter.get("/get-total-order", getTotalOrder);
 serviceRouter.get("/get-top-customers", getTopCustomers);
 serviceRouter.get("/get-recent-orders", getRecentOrders);
 serviceRouter.get("/get-all-user", getAllUser);
-
+serviceRouter.get("/get-all-bill", getAllBill);
+serviceRouter.put("/update-bill-status/:billId", updateBillStatus);
 export default serviceRouter;

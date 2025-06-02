@@ -160,6 +160,39 @@ const AdminServices = {
       console.log(err);
     }
   },
+  getAllBill: async () => {
+    try {
+      const res = await Prismaclient.bill.findMany({
+        include: {
+          Customer: true,
+          StatusBill: true,
+          BillDetail: {
+            include: {
+              ProductVariant: {
+                include: {
+                  Products: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  updateBillStatus: async (billId: number, newStatus: number) => {
+    try {
+      const res = await Prismaclient.bill.update({
+        where: { billId },
+        data: { statusId: newStatus },
+      });
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 export default AdminServices;

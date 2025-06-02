@@ -27,6 +27,12 @@ class AdminServices extends ServicesBase {
 	getAllUser() {
 		return this.service.get('/get-all-user');
 	}
+	getAllBill() {
+		return this.service.get('/get-all-bill');
+	}
+	updateBillStatus(billId: number, newStatus: number) {
+		return this.service.put(`/update-bill-status/${billId}`, { newStatus });
+	}
 }
 
 export default AdminServices;

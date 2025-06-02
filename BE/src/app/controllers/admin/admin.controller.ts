@@ -50,6 +50,19 @@ const getAllUser = async (req: Request, res: Response) => {
   const response = await AdminServices.getAllUser();
   res.status(200).json(response);
 };
+const getAllBill = async (req: Request, res: Response) => {
+  const response = await AdminServices.getAllBill();
+  res.status(200).json(response);
+};
+const updateBillStatus = async (req: Request, res: Response) => {
+  const { billId } = req.params;
+  const { newStatus } = req.body;
+  const response = await AdminServices.updateBillStatus(
+    Number(billId),
+    newStatus
+  );
+  res.status(200).json(response);
+};
 export {
   getTotalCustomer,
   getTotalProduct,
@@ -57,4 +70,6 @@ export {
   getTopCustomers,
   getRecentOrders,
   getAllUser,
+  getAllBill,
+  updateBillStatus,
 };
