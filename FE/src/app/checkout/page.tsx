@@ -25,7 +25,7 @@ const CheckOut = () => {
 	const paymentServices = new PaymentServices(URL_SERVICE, () => {});
 
 	const handlePayment = async () => {
-		if (!user?.address) {
+		if (!user?.address.trim()) {
 			messageApi.open({
 				type: 'warning',
 				content: 'Vui lòng cập nhật địa chỉ giao hàng trước khi đặt hàng.',

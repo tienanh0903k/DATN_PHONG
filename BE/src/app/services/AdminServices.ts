@@ -72,9 +72,9 @@ const AdminServices = {
   getRecentOrders: async () => {
     try {
       const recentOrders = await Prismaclient.bill.findMany({
-        take: 5,
+        take: 4,
         orderBy: {
-          billId: "desc",
+          createAt: "desc",
         },
         include: {
           Customer: {

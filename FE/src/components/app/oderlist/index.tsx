@@ -2,6 +2,8 @@
 import { formatPrice } from '@/utils/formatprice';
 import { MessageSquare, Store } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { formatDistanceToNow } from 'date-fns';
+import { vi } from 'date-fns/locale';
 import Image from 'next/image';
 
 const OderList = ({ orderList }: any) => {
@@ -16,8 +18,8 @@ const OderList = ({ orderList }: any) => {
 
 	return (
 		<div className="space-y-4">
-			{orderList.map((order: any) => (
-				<div key={order.id} className="bg-white p-4 rounded-lg shadow">
+			{orderList.map((order: any, index: number) => (
+				<div key={index} className="bg-white p-4 rounded-lg shadow">
 					{/* Order Header */}
 					<div className="flex justify-between items-center border-b pb-3 mb-3">
 						<div className="flex items-center gap-3">
@@ -35,10 +37,14 @@ const OderList = ({ orderList }: any) => {
 								<Store className="h-3 w-3" /> View Shop
 							</button>
 						</div>
+						<span className="text-sm text-gray-500">
+							Ngày đặt hàng :{' '}
+							{formatDistanceToNow(new Date(order.createAt), { addSuffix: true, locale: vi })}
+						</span>
 					</div>
 
-					{order.BillDetail.map((item: any) => (
-						<div key={item.productId} className="flex gap-4 mb-3">
+					{order.BillDetail.map((item: any, index: number) => (
+						<div key={index} className="flex gap-4 mb-3">
 							<Image
 								src={item.ProductVariant.img}
 								alt={item.ProductVariant.Products.productName}
@@ -67,7 +73,18 @@ const OderList = ({ orderList }: any) => {
 					))}
 
 					<p className="text-[16px] text-gray-500 mb-3">
-						Hình thức thanh toán :<span className="font-medium text-red-600">{order.statusbill}</span>
+						Hình thức thanh toán :{' '}
+						<span
+							className={`font-medium ${
+								order.statusId === 6
+									? 'text-blue-600'
+									: order.statusId === 2
+										? 'text-green-600'
+										: 'text-red-600'
+							}`}
+						>
+							{order.statusbill}
+						</span>
 					</p>
 
 					{/* Order Footer */}

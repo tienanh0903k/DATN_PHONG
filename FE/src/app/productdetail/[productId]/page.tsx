@@ -87,7 +87,6 @@ export default function DetailProduct() {
 	const fetchDataRating = async () => {
 		try {
 			const response: any = await ratingServices.getRatingByProductId(Number(productId));
-			console.log(response);
 			setDataRating(response.data);
 		} catch (error) {
 			console.error('Error fetching rating:', error);
@@ -143,6 +142,7 @@ export default function DetailProduct() {
 		});
 	};
 	const handleProduct = (item: any) => {
+		setQuantity(1);
 		setItemProduct(item);
 		setData((prev: any) => {
 			return {
@@ -153,6 +153,8 @@ export default function DetailProduct() {
 	};
 	const handleClickVariant = (item: any) => {
 		setItemProduct(item);
+		setQuantity(1);
+
 		setData((prev: any) => {
 			return {
 				...prev,
@@ -200,7 +202,7 @@ export default function DetailProduct() {
 	return (
 		<div className="">
 			{contextHolder}
-			<Breadcrumb categories={categories} categoryId={data.categoryId} />
+			<Breadcrumb categories={categories} categoryId={data.categoryId} productName={data.productName} />
 			<div className="grid grid-cols-[1fr_360px] gap-6 pt-4">
 				<div className="grid grid-cols-[100%] gap-4">
 					<div className="grid grid-cols-[400px_1fr] gap-6 rounder-[8px] items-start">
@@ -478,7 +480,10 @@ export default function DetailProduct() {
 										/>
 										<button
 											onClick={handleIncreaseQuantity}
-											className="cursor-pointer flex justify-center items-center w-8 bg-white border border-[#ececec] rounded min-h-8"
+											disabled={quantity >= itemProduct?.quantity}
+											className={`cursor-pointer flex justify-center items-center w-8 bg-white border border-[#ececec] rounded min-h-8 ${
+												quantity >= itemProduct?.quantity ? 'opacity-50 cursor-not-allowed' : ''
+											}`}
 										>
 											<span className="leading-5 text-2xl font-normal">+</span>
 										</button>

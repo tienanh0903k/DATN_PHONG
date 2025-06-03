@@ -5,9 +5,10 @@ import { useState, useEffect } from 'react';
 type Props = {
 	categories: any;
 	categoryId: any;
+	productName?: string;
 };
 
-const Breadcrumb = ({ categories, categoryId }: Props) => {
+const Breadcrumb = ({ categories, categoryId, productName }: Props) => {
 	const [trail, setTrail] = useState<any>([]);
 
 	useEffect(() => {
@@ -35,6 +36,12 @@ const Breadcrumb = ({ categories, categoryId }: Props) => {
 					<div className="hover:underline cursor-pointer text-[#808089]">{cat.categoryName}</div>
 				</span>
 			))}
+			{productName && (
+				<span className="flex items-center">
+					<span className="mx-1">›</span>
+					<div className="text-[#808089] truncate max-w-[300px]">{productName}</div>
+				</span>
+			)}
 		</nav>
 	);
 };

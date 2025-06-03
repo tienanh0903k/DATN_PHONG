@@ -72,7 +72,7 @@ export default function RecentOrders() {
 						bộ lọc
 					</button>
 					<button
-						onClick={() => router.push('/admin/orders')}
+						onClick={() => router.push('/admin/bills/all-bills')}
 						className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
 					>
 						xem tất cả
@@ -127,8 +127,8 @@ export default function RecentOrders() {
 												alt={product.items[0].productName}
 											/>
 										</div>
-										<div>
-											<p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
+										<div className="max-w-[400px]">
+											<p className="font-medium text-gray-800 text-theme-sm line-clamp-2">
 												{product.items[0].productName}
 											</p>
 											<span className="text-gray-500 text-theme-xs dark:text-gray-400">

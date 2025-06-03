@@ -22,7 +22,6 @@ interface StatusOrder {
 
 const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 	const [dataStatus, setDataStatus] = useState<StatusOrder[]>([]);
-	const [totalPrice, setTotalPrice] = useState<number>(0);
 	const shopServices = new ShopServicer(URL_SERVICE, () => {});
 	const [activeStatusId, setActiveStatusId] = useState(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,19 +37,8 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 	const handleCancel = () => {
 		setIsModalOpen(false);
 	};
-	useEffect(() => {
-		if (Array.isArray(orderList)) {
-			const total = orderList.reduce((total: number, order: any) => {
-				const orderTotal = Array.isArray(order.BillDetail)
-					? order.BillDetail.reduce((sum: number, item: any) => sum + (item.totalPrice || 0), 0)
-					: 0;
-				return total + orderTotal;
-			}, 0);
-			setTotalPrice(total);
-		} else {
-			setTotalPrice(0);
-		}
-	}, [orderList]);
+	console.log(orderList);
+
 	const fetchSTatusOrder = async () => {
 		try {
 			const response: any = await shopServices.getStatusOder();
@@ -206,7 +194,14 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 							</div>
 							<div className="text-right">
 								Tổng tiền:{' '}
-								<span className="text-lg font-medium text-red-600">{formatPrice(totalPrice)}</span>
+								<span className="text-lg font-medium text-red-600">
+									{formatPrice(
+										order.BillDetail.reduce(
+											(sum: number, item: any) => sum + (item.totalPrice || 0),
+											0,
+										),
+									)}
+								</span>
 							</div>
 						</div>
 					</div>
