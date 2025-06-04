@@ -193,6 +193,67 @@ const AdminServices = {
       console.log(err);
     }
   },
+  getAllShop: async () => {
+    try {
+      const shops = await Prismaclient.shop.findMany({
+        include: {
+          Products: {
+            include: {
+              ProductVariant: {
+                include: {
+                  BillDetail: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const shopsWithStats = shops.map((shop) => {
+        const totalProducts = shop.Products.length;
+        const totalRevenue = shop.Products.reduce((total, product) => {
+          const productRevenue = product.ProductVariant.reduce(
+            (variantTotal, variant) => {
+              const billDetailsRevenue = variant.BillDetail.reduce(
+                (detailTotal, detail) => {
+                  return detailTotal + (detail.totalPrice || 0);
+                },
+                0
+              );
+              return variantTotal + billDetailsRevenue;
+            },
+            0
+          );
+          return total + productRevenue;
+        }, 0);
+
+        return {
+          ...shop,
+          totalProducts,
+          totalRevenue,
+        };
+      });
+
+      return shopsWithStats;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  updateStatusShop: async (shopId: number, status: string) => {
+    try {
+      const response = await Prismaclient.shop.update({
+        where: {
+          shopId: shopId,
+        },
+        data: {
+          status: status,
+        },
+      });
+      return response;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };
 
 export default AdminServices;

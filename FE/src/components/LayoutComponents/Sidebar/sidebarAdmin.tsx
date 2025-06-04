@@ -94,11 +94,11 @@ const SidebarAdmin = () => {
 			children: [
 				{
 					key: 'shipping-methods',
-					label: <Link href="/admin/list-user">Danh sách tài khoản</Link>,
+					label: <Link href="/admin/list-user">Quản lý người dùng</Link>,
 				},
 				{
 					key: 'shipping-rates',
-					label: <Link href="/admin/list-user-black">Danh sách đen</Link>,
+					label: <Link href="/admin/list-shop">Quản lý shop</Link>,
 				},
 			],
 		},

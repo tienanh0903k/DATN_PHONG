@@ -63,6 +63,16 @@ const updateBillStatus = async (req: Request, res: Response) => {
   );
   res.status(200).json(response);
 };
+const getAllShop = async (req: Request, res: Response) => {
+  const response = await AdminServices.getAllShop();
+  res.status(200).json(response);
+};
+const updateStatusShop = async (req: Request, res: Response) => {
+  const { shopId } = req.params;
+  const { status } = req.body;
+  const response = await AdminServices.updateStatusShop(Number(shopId), status);
+  res.status(200).json(response);
+};
 export {
   getTotalCustomer,
   getTotalProduct,
@@ -72,4 +82,6 @@ export {
   getAllUser,
   getAllBill,
   updateBillStatus,
+  getAllShop,
+  updateStatusShop,
 };

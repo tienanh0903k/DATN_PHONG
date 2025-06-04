@@ -15,6 +15,7 @@ type Props = {
 const ModalAddress = ({ onClose }: Props) => {
 	const [value1, setValue] = useState(1);
 	const user = useSelector((state: RootState) => state.auth.userInfo);
+
 	const [address, setAddress] = useState<string>(user?.address || 'Viet Nam');
 	const [provinces, setProvinces] = useState<Array<ILocation>>([]);
 	const [districts, setDistricts] = useState<Array<ILocation>>([]);
@@ -100,34 +101,47 @@ const ModalAddress = ({ onClose }: Props) => {
 	};
 	const handleAddress = async () => {
 		const customerId = user?.customerId;
-		const selectedAddress = {
-			fullAddress: `${selectedLocation.ward?.name || ''}, ${
-				selectedLocation.district?.name || ''
-			}, ${selectedLocation.province?.name || ''}`,
-		};
-		if (selectedAddress.fullAddress === '') {
-			messageApi.open({
-				type: 'error',
-				content: 'Vui lòng chọn địa chỉ giao hàng',
-			});
-			return;
-		}
-		messageApi.open({
-			type: 'success',
-			content: 'Địa chỉ giao hàng đã được cập nhật',
-		});
+		let addressToUpdate: string;
 
-		setAddress(selectedAddress.fullAddress);
+		if (value1 === 1) {
+			addressToUpdate = address;
+		} else {
+			const selectedAddress = {
+				fullAddress: `${selectedLocation.ward?.name || ''}, ${
+					selectedLocation.district?.name || ''
+				}, ${selectedLocation.province?.name || ''}`,
+			};
+
+			if (!selectedAddress.fullAddress.trim()) {
+				messageApi.open({
+					type: 'error',
+					content: 'Vui lòng chọn địa chỉ giao hàng',
+				});
+				return;
+			}
+			addressToUpdate = selectedAddress.fullAddress;
+		}
+
 		try {
 			const response: any = await customerServices.changeAddress({
 				customerId,
-				address: selectedAddress.fullAddress,
+				address: addressToUpdate,
 			});
 
-			dispatch(setUserInfo(response));
-			onClose();
-		} catch (error) {
-			console.log(error);
+			if (response) {
+				dispatch(setUserInfo(response));
+				setAddress(addressToUpdate);
+				messageApi.open({
+					type: 'success',
+					content: 'Địa chỉ giao hàng đã được cập nhật',
+				});
+				onClose();
+			}
+		} catch (error: any) {
+			messageApi.open({
+				type: 'error',
+				content: error?.message || 'Có lỗi xảy ra khi cập nhật địa chỉ',
+			});
 		}
 	};
 

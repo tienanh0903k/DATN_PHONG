@@ -30,6 +30,12 @@ class AdminServices extends ServicesBase {
 	getAllBill() {
 		return this.service.get('/get-all-bill');
 	}
+	updateStatusShop(shopId: number, status: string) {
+		return this.service.put(`/update-status-shop/${shopId}`, { status });
+	}
+	getAllShop() {
+		return this.service.get('/get-all-shop');
+	}
 	updateBillStatus(billId: number, newStatus: number) {
 		return this.service.put(`/update-bill-status/${billId}`, { newStatus });
 	}

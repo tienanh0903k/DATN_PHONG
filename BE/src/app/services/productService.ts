@@ -6,6 +6,26 @@ import { getProductByID } from "../controllers/products/products.controller";
 const ProductService = {
   createProduct: async (product: any) => {
     try {
+      // Kiểm tra trạng thái shop trước
+      const shop = await Prismaclient.shop.findUnique({
+        where: {
+          shopId: product.shopId,
+        },
+        select: {
+          status: true,
+        },
+      });
+
+      if (!shop) {
+        throw new Error("Shop không tồn tại");
+      }
+
+      if (shop.status !== "active") {
+        throw new Error(
+          "Shop không hoạt động. Vui lòng liên hệ admin để được duyệt."
+        );
+      }
+
       const createProduct = await Prismaclient.products.create({
         data: {
           productName: product.productName,
@@ -38,7 +58,7 @@ const ProductService = {
       return createProduct;
     } catch (error) {
       console.error("Error creating product:", error);
-      throw new Error("Failed to create product");
+      throw error;
     }
   },
   getAllProducts: async () => {
@@ -210,7 +230,6 @@ const ProductService = {
     }
   },
   searchProduct: async (search: string) => {
-    console.log(search);
     try {
       const product = await Prismaclient.products.findMany({
         where: {
