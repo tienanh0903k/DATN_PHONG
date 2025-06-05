@@ -31,6 +31,23 @@ const ChatwithShop = ({ handleClose }: Props) => {
 	const debouncedSearchTerm = useDebounce(searchTerm, 1000);
 	const containerRef = useRef<any>(null);
 	const customer = useSelector((state: RootState) => state.auth.userInfo);
+
+	useEffect(() => {
+		if (selectedShop?.shopId && customer?.customerId) {
+			if (selectedShop.shopId) {
+				socket.emit('leave_chat', {
+					customerId: customer.customerId,
+					shopId: selectedShop.shopId,
+				});
+			}
+
+			socket.emit('join_chat', {
+				customerId: customer.customerId,
+				shopId: selectedShop.shopId,
+			});
+		}
+	}, [selectedShop, customer]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			if (debouncedSearchTerm.trim()) {
@@ -53,6 +70,7 @@ const ChatwithShop = ({ handleClose }: Props) => {
 
 		fetchData();
 	}, [debouncedSearchTerm]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			const response: any = await servicesChat.getShopsChattedWithCustomer(customer.customerId);
@@ -60,20 +78,19 @@ const ChatwithShop = ({ handleClose }: Props) => {
 		};
 		fetchData();
 	}, []);
+
 	const scrollToBottom = () => {
 		if (containerRef.current) {
 			containerRef.current.scrollTop = containerRef.current.scrollHeight;
-		} else {
-			console.log('Container ref is null');
 		}
 	};
+
 	const handleSelectShop = (shop: Ishop) => {
 		if (customer.customerId && shop.shopId) {
 			setSelectedShop(shop);
 			const fetchChats = async () => {
 				try {
 					const response = await servicesChat.getShopMessages(customer.customerId, shop.shopId);
-					console.log(response);
 					setChats(response.data);
 				} catch (error) {
 					console.log(error);
@@ -82,9 +99,11 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			fetchChats();
 		}
 	};
+
 	useEffect(() => {
 		scrollToBottom();
 	}, [chats]);
+
 	const { register, handleSubmit, reset } = useForm<any>();
 
 	const onSubmit = async (data: any) => {
@@ -100,10 +119,11 @@ const ChatwithShop = ({ handleClose }: Props) => {
 
 			try {
 				const response = await servicesChat.createChat(datasend);
-				console.log(response);
 				socket.emit('sendMessage', {
 					content: data.message,
 					senderType: 'CUSTOMER',
+					customerId: customer.customerId,
+					shopId: selectedShop.shopId,
 					createdAt: response.data.createdAt,
 				});
 			} catch (error) {
@@ -112,6 +132,7 @@ const ChatwithShop = ({ handleClose }: Props) => {
 		}
 		reset();
 	};
+
 	useEffect(() => {
 		socket.on('receiveMessage', (data: any) => {
 			setChats((prev) => [...prev, data]);
@@ -122,6 +143,18 @@ const ChatwithShop = ({ handleClose }: Props) => {
 			socket.off('receiveMessage');
 		};
 	}, [socket]);
+
+	// Cleanup when component unmounts
+	useEffect(() => {
+		return () => {
+			if (selectedShop?.shopId && customer?.customerId) {
+				socket.emit('leave_chat', {
+					customerId: customer.customerId,
+					shopId: selectedShop.shopId,
+				});
+			}
+		};
+	}, [selectedShop, customer]);
 
 	return (
 		<div className="flex h-[500px] w-[700px] border rounded shadow bg-white overflow-hidden">

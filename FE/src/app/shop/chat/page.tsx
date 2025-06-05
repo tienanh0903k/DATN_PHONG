@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form';
 import { Ichat } from '@/models/chat/Ichat';
 import io from 'socket.io-client';
 const socket = io(URL_SOCKET);
+
 export default function ChatPage() {
 	const { register, handleSubmit, reset } = useForm<any>();
 
@@ -32,6 +33,25 @@ export default function ChatPage() {
 	const servicesChat = new ServicesChat(URL_SERVICE || '', () => {});
 	const shop = useSelector((state: RootState) => state.shop.shopInfo);
 
+	// Join chat room when selecting a customer
+	useEffect(() => {
+		if (selectedCustomer?.customerId && shop?.shopId) {
+			// Leave previous room if exists
+			if (selectedCustomer.customerId) {
+				socket.emit('leave_chat', {
+					customerId: selectedCustomer.customerId,
+					shopId: shop.shopId,
+				});
+			}
+
+			// Join new room
+			socket.emit('join_chat', {
+				customerId: selectedCustomer.customerId,
+				shopId: shop.shopId,
+			});
+		}
+	}, [selectedCustomer, shop]);
+
 	useEffect(() => {
 		const fetchData = async () => {
 			if (debouncedSearchTerm.trim()) {
@@ -40,7 +60,6 @@ export default function ChatPage() {
 				const delayTimer = setTimeout(async () => {
 					try {
 						const response: any = await servicesChat.searchCustomer(debouncedSearchTerm);
-
 						setCustomers(response.data);
 					} catch (error) {
 						console.log(error);
@@ -60,14 +79,13 @@ export default function ChatPage() {
 		const fetchDataCustomer = async () => {
 			try {
 				const response = await servicesChat.getCustomerChattedWithShop(shop?.shopId);
-				console.log(response);
 				setCustomers(response.data);
 			} catch (error) {
 				console.error('Error fetching customers:', error);
 			}
 		};
 		fetchDataCustomer();
-	}, []);
+	}, [socket]);
 	const scrollToBottom = () => {
 		if (containerRef.current) {
 			containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -75,6 +93,7 @@ export default function ChatPage() {
 			console.log('Container ref is null');
 		}
 	};
+
 	const onSubmit = async (data: any) => {
 		if (!data.message.trim()) return;
 		if (selectedCustomer.customerId && shop.shopId) {
@@ -91,6 +110,8 @@ export default function ChatPage() {
 				socket.emit('sendMessage', {
 					content: data.message,
 					senderType: 'SHOP',
+					customerId: selectedCustomer.customerId,
+					shopId: shop.shopId,
 					createdAt: response.data.createdAt,
 				});
 			} catch (error) {
@@ -99,14 +120,18 @@ export default function ChatPage() {
 		}
 		reset();
 	};
+
 	useEffect(() => {
 		socket.on('receiveMessage', (data: any) => {
 			setChats((prev) => [...prev, data]);
+			scrollToBottom();
 		});
+
 		return () => {
 			socket.off('receiveMessage');
 		};
 	}, [socket]);
+
 	const handleChat = (customer: any) => {
 		setActiveCustomer(customer.customerId);
 		if (customer.customerId && shop.shopId) {
@@ -114,7 +139,6 @@ export default function ChatPage() {
 			const fetchChats = async () => {
 				try {
 					const response = await servicesChat.getShopMessages(customer.customerId, shop.shopId);
-					console.log(response);
 					setChats(response.data);
 				} catch (error) {
 					console.log(error);
@@ -127,6 +151,19 @@ export default function ChatPage() {
 	useEffect(() => {
 		scrollToBottom();
 	}, [chats]);
+
+	// Cleanup when component unmounts
+	useEffect(() => {
+		return () => {
+			if (selectedCustomer?.customerId && shop?.shopId) {
+				socket.emit('leave_chat', {
+					customerId: selectedCustomer.customerId,
+					shopId: shop.shopId,
+				});
+			}
+		};
+	}, [selectedCustomer, shop]);
+
 	return (
 		<div className="flex h-[85vh] container-base mt-10 bg-gray-50">
 			{/* Sidebar */}
@@ -154,9 +191,7 @@ export default function ChatPage() {
 								/>
 								<div>
 									<p className="font-medium text-sm">{c.customerName}</p>
-									{/* <p className="text-xs text-gray-500">{c.title}</p> */}
 								</div>
-								{/* <span className="ml-auto text-xs text-gray-400">{c.time}</span> */}
 							</li>
 						))
 					)}
@@ -188,7 +223,7 @@ export default function ChatPage() {
 				<div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
 					{chats.length === 0 ? (
 						<p className="text-center text-gray-400">
-							{/* Chưa có tin nhắn với {selectedCustomer.customerName} */}
+							Chưa có tin nhắn với {selectedCustomer?.customerName}
 						</p>
 					) : (
 						chats.map((msg: any, i: number) => (
