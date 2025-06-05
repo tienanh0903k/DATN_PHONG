@@ -58,7 +58,7 @@ const CheckOut = () => {
 						type: 'success',
 						content: 'Đặt hàng thành công! Đơn hàng sẽ được giao trong thời gian sớm nhất.',
 					});
-					// router.push('/customer/order');
+					router.push('/customer/order');
 					socket.emit('payment', response.data);
 				}
 			} else if (paymentMethod != '1') {
