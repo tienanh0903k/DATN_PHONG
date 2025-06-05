@@ -36,6 +36,24 @@ const PayMentServices = {
             })),
           },
         },
+        include: {
+          BillDetail: {
+            include: {
+              ProductVariant: {
+                include: {
+                  VariantValue: true,
+                  Products: {
+                    include: {
+                      Shop: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+          StatusBill: true,
+          Customer: true,
+        },
       });
 
       for (const item of data.cartItems) {
@@ -49,9 +67,25 @@ const PayMentServices = {
         });
       }
 
-      return bill;
+      const billWithStatus = {
+        ...bill,
+        statusbill: bill.StatusBill.statusName,
+        ...bill.BillDetail,
+        ...bill.Customer,
+        shopId: bill.BillDetail[0].ProductVariant.Products.Shop.shopId,
+      };
+
+      return {
+        status: 200,
+        message: "Order created successfully",
+        data: billWithStatus,
+      };
     } catch (error) {
-      throw new Error("Failed to create order paylater");
+      return {
+        status: 500,
+        message: "Failed to create order paylater",
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
     }
   },
   updateBill: async (billId: number, status: number) => {

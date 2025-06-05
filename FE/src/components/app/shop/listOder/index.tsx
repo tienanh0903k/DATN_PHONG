@@ -5,7 +5,7 @@ import { formatPrice } from '@/utils/formatprice';
 import { Truck, Package } from 'lucide-react';
 import ShopServicer from '@/services/shopServicer/shopServicer';
 import { URL_SERVICE } from '@/constant/constant';
-import { Button, Tag, Modal } from 'antd';
+import { Button, Tag } from 'antd';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import PrintBill from '@/components/app/bills/PrintBill';
@@ -24,20 +24,6 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 	const [dataStatus, setDataStatus] = useState<StatusOrder[]>([]);
 	const shopServices = new ShopServicer(URL_SERVICE, () => {});
 	const [activeStatusId, setActiveStatusId] = useState(null);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const showModal = (data: any) => {
-		console.log(data);
-		setIsModalOpen(true);
-	};
-
-	const handleOk = () => {
-		setIsModalOpen(false);
-	};
-
-	const handleCancel = () => {
-		setIsModalOpen(false);
-	};
-	console.log(orderList);
 
 	const fetchSTatusOrder = async () => {
 		try {
@@ -123,11 +109,11 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 							</div>
 						</div>
 
-						{order.BillDetail.map((item: any) => (
-							<div key={item.productId} className="flex gap-4 mb-3">
+						{order.BillDetail.map((item: any, index: number) => (
+							<div key={index} className="flex gap-4 mb-3">
 								<Image
 									src={item.ProductVariant.img}
-									alt={item.ProductVariant.id}
+									alt={item.ProductVariant.img}
 									width={80}
 									height={80}
 									className="w-20 h-20 object-cover rounded border"
@@ -179,18 +165,6 @@ const ListOrder = ({ orderList, onStatusChange }: OrderListProps) => {
 										{({ loading }) => (loading ? 'Đang tạo PDF...' : 'Tải hóa đơn PDF')}
 									</PDFDownloadLink>
 								</Button>
-								<Button onClick={() => showModal(order)}>Xem hóa đơn</Button>
-								<Modal
-									width={600}
-									height={900}
-									closable={{ 'aria-label': 'Custom Close Button' }}
-									open={isModalOpen}
-									onOk={handleOk}
-									onCancel={handleCancel}
-									footer={null}
-								>
-									<PrintBill data={order} />
-								</Modal>
 							</div>
 							<div className="text-right">
 								Tổng tiền:{' '}

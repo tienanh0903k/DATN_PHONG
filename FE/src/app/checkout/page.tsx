@@ -8,7 +8,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import PaymentServices from '@/services/payment/paymentServices';
-import { URL_SERVICE } from '@/constant/constant';
+import { URL_SERVICE, URL_SOCKET } from '@/constant/constant';
+import io from 'socket.io-client';
+const socket = io(URL_SOCKET);
 
 const CheckOut = () => {
 	const [deliveryMethod, setDeliveryMethod] = useState('standard');
@@ -49,14 +51,15 @@ const CheckOut = () => {
 		setIsLoading(true);
 		try {
 			if (paymentMethod === '1') {
-				const response = await paymentServices.createOrderPaylate(data);
-
+				const response: any = await paymentServices.createOrderPaylate(data);
+				console.log(response);
 				if (response) {
 					messageApi.open({
 						type: 'success',
 						content: 'Đặt hàng thành công! Đơn hàng sẽ được giao trong thời gian sớm nhất.',
 					});
-					router.push('/customer/order');
+					// router.push('/customer/order');
+					socket.emit('payment', response.data);
 				}
 			} else if (paymentMethod != '1') {
 				const response: any = await paymentServices.createOrder(data);

@@ -14,8 +14,8 @@ import useDebounce from '@/utils/useDebounce';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
-import io from 'socket.io-client';
 import { Ichat } from '@/models/chat/Ichat';
+import io from 'socket.io-client';
 const socket = io(URL_SOCKET);
 export default function ChatPage() {
 	const { register, handleSubmit, reset } = useForm<any>();

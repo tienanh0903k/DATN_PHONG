@@ -6,8 +6,11 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import ShopServicer from '@/services/shopServicer/shopServicer';
-import { URL_SERVICE } from '@/constant/constant';
+import { URL_SERVICE, URL_SOCKET } from '@/constant/constant';
 import ListOrder from '@/components/app/shop/listOder';
+
+import io from 'socket.io-client';
+const socket = io(URL_SOCKET);
 
 const OrdersPage = () => {
 	const [orders, setOrders] = useState<any[]>([]);
@@ -18,6 +21,7 @@ const OrdersPage = () => {
 		try {
 			const response = await shopServices.getOrderListByShopId(shop?.shopId);
 			setOrders(response.data);
+			console.log(response.data);
 		} catch (error) {
 			console.error('Error fetching orders:', error);
 		}
@@ -41,6 +45,22 @@ const OrdersPage = () => {
 			fetchOrders();
 		}
 	}, [shop?.shopId]);
+
+	useEffect(() => {
+		if (shop?.shopId) {
+			socket.emit('shop_join', shop.shopId);
+		}
+
+		socket.on('receivePayment', (data: any) => {
+			console.log(data);
+			setOrders((prev) => [data, ...prev]);
+		});
+
+		return () => {
+			socket.disconnect();
+			socket.off('receivePayment');
+		};
+	}, [socket]);
 
 	const handleStatusChange = (newStatusId: number) => {
 		if (newStatusId) {
