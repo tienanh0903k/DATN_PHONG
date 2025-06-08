@@ -7,6 +7,7 @@ const getAllCategories = async (req: Request, res: Response) => {
     const dataCategories = await CategoryServices.getAllCategories();
     res.status(200).json(dataCategories);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

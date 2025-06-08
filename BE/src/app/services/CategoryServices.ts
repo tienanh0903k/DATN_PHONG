@@ -2,10 +2,10 @@ import { ICategory } from "./interfaces/ICategories";
 import Prismaclient from "../../../prisma";
 
 export const CategoryServices = {
-  getAllCategories: async (): Promise<ICategory[]> => {
-    const categories = await Prismaclient.categories.findMany();
-    return categories;
-  },
+    getAllCategories: async (): Promise<ICategory[]> => {
+      const categories = await Prismaclient.categories.findMany();
+      return categories;
+    },
   createCategory: async (category: ICategory): Promise<ICategory> => {
     const newCategory = await Prismaclient.categories.create({
       data: {
