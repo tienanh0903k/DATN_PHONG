@@ -6,6 +6,7 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
+
 model Account {
   accountId        Int      @id @default(autoincrement())
   accountTypeId    Int
@@ -15,13 +16,16 @@ model Account {
   Salt             String
   Customer         Customer?
   AccountType      AccountType @relation(fields: [accountTypeId], references: [accountTypeId])
+  @@map("account")
 }
 
 model AccountType {
   accountTypeId    Int      @id @default(autoincrement())
   accountTypeName  String
   Account          Account[]
+  @@map("accounttype")
 }
+
 model Customer {
   customerId       Int      @id @default(autoincrement())
   accountId        Int      @unique
@@ -40,11 +44,11 @@ model Customer {
   DeliveryAddress  DeliveryAddress[]
   Notification     Notification[]
   Rating           Rating[]
-  Shop            Shop?
+  Shop             Shop?
   Cart             Cart[]
   Message          Message[]
+  @@map("customer")
 }
-
 
 model Categories {
   categoryId       Int      @id @default(autoincrement())
@@ -53,15 +57,15 @@ model Categories {
   status           String
   Products         Products[]
   VariantType      VariantType[]
+  @@map("categories")
 }
-
-
 
 model DeliveryAddress {
   addressId        Int      @id @default(autoincrement())
   customerId       Int
   addressDetail    String
   Customer         Customer @relation(fields: [customerId], references: [customerId])
+  @@map("deliveryaddress")
 }
 
 model Follower {
@@ -71,6 +75,7 @@ model Follower {
   createAt         DateTime @default(now())
   Customer         Customer @relation(fields: [customerId], references: [customerId])
   Shop             Shop @relation(fields: [shopId], references: [shopId])
+  @@map("follower")
 }
 
 model Notification {
@@ -82,12 +87,14 @@ model Notification {
   status           String
   Customer         Customer @relation(fields: [customerId], references: [customerId])
   NotificationType NotificationType @relation(fields: [notifyTypeId], references: [notifyTypeId])
+  @@map("notification")
 }
 
 model NotificationType {
   notifyTypeId     Int      @id @default(autoincrement())
   notifyTypeName   String
   Notification     Notification[]
+  @@map("notificationtype")
 }
 
 model Products {
@@ -102,6 +109,7 @@ model Products {
   Categories       Categories @relation(fields: [categoryId], references: [categoryId])
   Shop             Shop @relation(fields: [shopId], references: [shopId])
   ProductVariant   ProductVariant[]
+  @@map("products")
 }
 
 model ProductVariant {
@@ -115,6 +123,7 @@ model ProductVariant {
   BillDetail       BillDetail[]
   VariantValue     VariantValue @relation(fields: [typeValueId], references: [typeValueId])
   Cart             Cart[]
+  @@map("productvariant")
 }
 
 model Cart {
@@ -124,6 +133,7 @@ model Cart {
   quantity         Int
   ProductVariant   ProductVariant @relation(fields: [id], references: [id])
   Customer         Customer @relation(fields: [customerId], references: [customerId])
+  @@map("cart")
 }
 
 model VariantType {
@@ -132,6 +142,7 @@ model VariantType {
   categoryId       Int
   Categories       Categories @relation(fields: [categoryId], references: [categoryId])
   VariantValue     VariantValue[]
+  @@map("varianttype")
 }
 
 model VariantValue {
@@ -140,7 +151,9 @@ model VariantValue {
   typeValue        String
   VariantType      VariantType @relation(fields: [typeId], references: [typeId])
   ProductVariant   ProductVariant[]
+  @@map("variantvalue")
 }
+
 model Shop {
   shopId           Int      @id @default(autoincrement())
   customerId       Int      @unique
@@ -157,26 +170,28 @@ model Shop {
   Products         Products[]
   Follower         Follower[]
   Message          Message[]
+  @@map("shop")
 }
+
 model Message {
   messageId     Int       @id @default(autoincrement())
-  senderId      Int                    
-  senderType    SenderType             
-  customerId    Int?                      
-  shopId        Int?                     
+  senderId      Int
+  senderType    SenderType
+  customerId    Int?
+  shopId        Int?
   content       String
   isRead        Boolean   @default(false)
   createdAt     DateTime  @default(now())
-
-
   Customer      Customer? @relation(fields: [customerId], references: [customerId])
   Shop          Shop?     @relation(fields: [shopId], references: [shopId])
+  @@map("message")
 }
 
 enum SenderType {
   CUSTOMER
   SHOP
 }
+
 model Bill {
   billId           Int      @id @default(autoincrement())
   customerId       Int
@@ -187,12 +202,16 @@ model Bill {
   BillDetail       BillDetail[]
   Customer         Customer @relation(fields: [customerId], references: [customerId])
   StatusBill       StatusBill @relation(fields: [statusId], references: [statusId])
+  @@map("bill")
 }
+
 model StatusBill {
   statusId         Int      @id @default(autoincrement())
   statusName       String
   Bill             Bill[]
+  @@map("statusbill")
 }
+
 model BillDetail {
   billDetailId     Int      @id @default(autoincrement())
   billId           Int
@@ -202,7 +221,9 @@ model BillDetail {
   Bill             Bill @relation(fields: [billId], references: [billId])
   ProductVariant   ProductVariant @relation(fields: [id], references: [id])
   Rating           Rating?
+  @@map("billdetail")
 }
+
 model Rating {
   ratingId         Int      @id @default(autoincrement())
   billDetailId     Int      @unique
@@ -213,7 +234,5 @@ model Rating {
   createdAt        DateTime  @default(now())
   BillDetail       BillDetail @relation(fields: [billDetailId], references: [billDetailId])
   Customer         Customer @relation(fields: [customerId], references: [customerId])
+  @@map("rating")
 }
-
-
-
