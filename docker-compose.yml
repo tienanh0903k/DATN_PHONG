@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: phong123
+      MYSQL_DATABASE: phong123
+      MYSQL_USER: phong123
+      MYSQL_PASSWORD: phong123
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  be:
+    build: ./BE
+    restart: always
+    env_file: ./BE/.env
+    ports:
+      - "5001:5000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: mysql://phong123:phong123@db:3306/phong123
+
+volumes:
+  dbdata:
