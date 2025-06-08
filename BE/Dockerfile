@@ -17,10 +17,8 @@
     COPY package*.json ./
     RUN npm install --production
     
-    # COPY thêm thư mục prisma và dist
     COPY --from=build /app/dist ./dist
-    COPY --from=build /app/prisma ./prisma
-    COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma  # Bổ sung cho chắc
+    COPY --from=build /app/prisma ./prisma      
     COPY .env .
     
     RUN npx prisma generate
